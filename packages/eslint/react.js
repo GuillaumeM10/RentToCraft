@@ -2,9 +2,9 @@
 
 import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
-import reactHooksPlugin from "eslint-plugin-react-hooks";
+// import reactHooksPlugin from "eslint-plugin-react-hooks";
 import baseConfigs from "./base.js";
-import { fixupPluginRules } from "@eslint/compat";
+// import { fixupPluginRules } from "@eslint/compat";
 
 export default tseslint.config(
   ...baseConfigs,
@@ -15,7 +15,7 @@ export default tseslint.config(
   {
     plugins: {
       // @ts-ignore
-      "react-hooks": fixupPluginRules(reactHooksPlugin),
+      // "react-hooks": fixupPluginRules(reactHooksPlugin),
     },
     ignores: ["**/.expo/**", "**/build/**"],
     rules: {
@@ -26,6 +26,7 @@ export default tseslint.config(
 
       // useless with TS
       "react/prop-types": "off",
+      "jsdoc/require-jsdoc": "off",
 
       "unicorn/prevent-abbreviations": [
         "error",

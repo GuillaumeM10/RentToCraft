@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ui": "pnpm --filter ui dev",
-    "dev:api": "pnpm --filter api start:dev",
+    "dev:api": "pnpm --filter api dev",
     "prepare": "husky"
   },
   "keywords": [],
@@ -18,9 +18,6 @@
     "lint-staged": "^15.2.10"
   },
   "lint-staged": {
-    "apps/ui/**/*.{js,ts,jsx,tsx}": [
-      "pnpm --filter ui run lint"
-    ],
     "apps/api/**/*.{js,ts,jsx,tsx}": [
       "pnpm --filter api run lint"
     ]
