@@ -1,0 +1,11 @@
+.idea
+.husky
+.github
+.git
+.gitignore
+
+node_modules
+dist
+
+*.md
+*.spec.*

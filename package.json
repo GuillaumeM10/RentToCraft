@@ -1,0 +1,30 @@
+{
+  "name": "rent-to-craft",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:ui": "pnpm --filter ui dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rent-to-craft/tsconfig": "workspace:^",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
+  },
+  "lint-staged": {
+    "apps/ui/**/*.{js,ts,jsx,tsx}": [
+      "pnpm --filter ui run lint"
+    ],
+    "apps/api/**/*.{js,ts,jsx,tsx}": [
+      "pnpm --filter api run lint"
+    ]
+  },
+  "dependencies": {
+  }
+}
