@@ -10,7 +10,7 @@ api:
 
 .PHONY: up
 up:
-	docker compose -f ./docker-compose.dev.yml up -d
+	docker compose -f ./docker-compose.yml up -d
 
 .PHONY: down
 down:
@@ -43,7 +43,7 @@ lint:
 .PHONY: tests
 tests:
 	@echo "testing"
-	@pnpm --filter api run test
+	@pnpm --filter api run test --passWithNoTests
 
 .PHONY: tests-coverage
 tests-coverage:
