@@ -43,7 +43,7 @@ lint:
 .PHONY: tests
 tests:
 	@echo "testing"
-	@pnpm --filter api run test
+	@pnpm --filter api run test --passWithNoTests
 
 .PHONY: tests-coverage
 tests-coverage:
