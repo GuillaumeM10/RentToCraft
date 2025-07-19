@@ -1,7 +1,16 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { TokenResetPasswordModule } from './token-reset-password/token-reset-password.module';
+import { UserModule } from './user/user.module';
+import { ValidTokenModule } from './valid-token/valid-token.module';
 
 @Module({
   imports: [
@@ -18,13 +27,28 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.POSTGRES_DB,
       synchronize: true,
       logging: false,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    UserModule,
+    AuthModule,
+    TokenResetPasswordModule,
+    MailModule,
+    ValidTokenModule,
   ],
-  controllers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+
+  constructor() {
+    console.log('sercret', process.env.JWT_SECRET);
+  }
+}
