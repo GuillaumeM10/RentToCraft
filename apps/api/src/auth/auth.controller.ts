@@ -6,16 +6,16 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { UserDto } from 'src/user/dtos';
-
-import { User } from '../decorator/user.decorator';
-import { AuthService } from './auth.service';
 import {
   CreateTokenResetPasswordDto,
   ResetPasswordDto,
   SigninAuthDto,
   SignupAuthDto,
-} from './dtos';
+  UserDto,
+} from '@rent-to-craft/dtos';
+
+import { User } from '../decorator/user.decorator';
+import { AuthService } from './auth.service';
 import { AuthGuard } from './guard/jwt-passport.guard';
 
 @Controller('auth')

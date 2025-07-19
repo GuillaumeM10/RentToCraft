@@ -1,9 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  CreateTokenResetPasswordDto,
+  MessageDto,
+  ValidtokenDto,
+} from '@rent-to-craft/dtos';
 import { plainToInstance } from 'class-transformer';
-import { CreateTokenResetPasswordDto } from 'src/auth/dtos';
-import { MessageDto } from 'src/dtos';
-import { ValidtokenDto } from 'src/valid-token/dtos';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 

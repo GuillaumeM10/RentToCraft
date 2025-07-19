@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { CreateTokenResetPasswordDto } from 'src/auth/dtos';
+import { CreateTokenResetPasswordDto } from '@rent-to-craft/dtos';
 
 import { TokenResetPasswordService } from './token-reset-password.service';
 

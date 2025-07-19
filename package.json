@@ -7,7 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ui": "pnpm --filter ui dev",
     "dev:api": "pnpm --filter api dev",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:ui": "pnpm --filter ui build",
+    "build:api": "pnpm --filter api build",
+    "build:libs": "pnpm --filter libs build",
+    "build:all": "pnpm --filter ui build && pnpm --filter api build",
+    "lint": "pnpm --filter api run lint && pnpm --filter ui run lint"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +27,11 @@
       "pnpm --filter api run lint"
     ]
   },
-  "dependencies": {
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "libs/*",
+      "packages/*"
+    ]
   }
 }

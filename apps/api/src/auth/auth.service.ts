@@ -4,23 +4,23 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import {
+  CreateTokenResetPasswordDto,
+  MessageDto,
+  PayloadDto,
+  ResetPasswordDto,
+  SigninAuthDto,
+  SignupAuthDto,
+  TokenDto,
+  UserDto,
+} from '@rent-to-craft/dtos';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { MessageDto } from 'src/dtos';
-import { UserDto } from 'src/user/dtos';
-import { TokenDto } from 'src/valid-token/dtos';
 
 import { MailService } from '../mail/mail.service';
 import { TokenResetPasswordService } from '../token-reset-password/token-reset-password.service';
 import { UserService } from '../user/user.service';
 import { ValidTokenService } from '../valid-token/valid-token.service';
-import {
-  CreateTokenResetPasswordDto,
-  PayloadDto,
-  ResetPasswordDto,
-  SigninAuthDto,
-  SignupAuthDto,
-} from './dtos';
 
 @Injectable()
 export class AuthService {
@@ -49,8 +49,6 @@ export class AuthService {
   }
 
   async signin(signinAuthDto: SigninAuthDto) {
-    console.log(signinAuthDto);
-
     const user = await this.usersService.findOneByEmail(
       signinAuthDto.email,
       true,

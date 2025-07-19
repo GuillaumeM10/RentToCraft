@@ -5,13 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  MessageDto,
+  SignupAuthDto,
+  UserDto,
+  UserUpdateDto,
+} from '@rent-to-craft/dtos';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { SignupAuthDto } from 'src/auth/dtos';
-import { MessageDto } from 'src/dtos';
 import { Repository } from 'typeorm';
 
-import { UserDto, UserUpdateDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
 
 const salt = 10;

@@ -1,7 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { CreateTokenResetPasswordDto } from 'src/auth/dtos';
-import { UserDto } from 'src/user/dtos';
+import { CreateTokenResetPasswordDto, UserDto } from '@rent-to-craft/dtos';
 
 @Injectable()
 export class MailService {

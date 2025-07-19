@@ -10,10 +10,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { UserDto, UserUpdateDto } from '@rent-to-craft/dtos';
 
 import { AuthGuard } from '../auth/guard/jwt-passport.guard';
 import { User } from '../decorator/user.decorator';
-import { UserDto, UserUpdateDto } from './dtos';
 import { UserService } from './user.service';
 
 @Controller('users')

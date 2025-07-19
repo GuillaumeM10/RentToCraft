@@ -7,10 +7,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserDto } from 'src/user/dtos';
+import { CreateValidTokenDto, UserDto } from '@rent-to-craft/dtos';
 
 import { User } from '../decorator/user.decorator';
-import { CreateValidTokenDto } from './dtos';
 import { ValidTokenService } from './valid-token.service';
 
 @Controller('valid-jwt')

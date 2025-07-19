@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateValidTokenDto } from '@rent-to-craft/dtos';
 import { Repository } from 'typeorm';
 
-import { CreateValidTokenDto } from './dtos';
 import { ValidTokenEntity } from './entities/valid-token.entity';
 
 @Injectable()

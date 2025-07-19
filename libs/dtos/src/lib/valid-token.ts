@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { UserDto } from 'src/user/dtos';
+import { UserDto } from './user';
 
 export class CreateValidTokenDto {
   token: string;
