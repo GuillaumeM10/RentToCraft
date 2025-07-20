@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:ui": "pnpm --filter ui dev",
+    "dev:ui": "pnpm build:libs && pnpm --filter ui dev",
     "dev:api": "pnpm --filter api dev",
     "prepare": "husky",
     "build:ui": "pnpm --filter ui build",
     "build:api": "pnpm --filter api build",
-    "build:libs": "pnpm --filter libs build",
+    "build:libs": "pnpm --filter dtos build",
     "build:all": "pnpm --filter ui build && pnpm --filter api build",
     "lint": "pnpm --filter api run lint && pnpm --filter ui run lint"
   },
@@ -19,8 +19,8 @@
   "license": "ISC",
   "devDependencies": {
     "@rent-to-craft/tsconfig": "workspace:^",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2"
   },
   "lint-staged": {
     "apps/api/**/*.{js,ts,jsx,tsx}": [

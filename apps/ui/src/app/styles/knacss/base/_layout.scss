@@ -1,0 +1,140 @@
+/* ----------------------------  */
+/* ==Layout classes              */
+/* ----------------------------- */
+
+/* Global container */
+.layout-maxed {
+  display: grid;
+  grid-template-columns:
+    minmax($layout-paddings, 1fr) minmax(auto, 576px) minmax($layout-paddings, 1fr);
+
+  @each $key,
+  $value in $breakpoints {
+    @media (min-width: #{$value}) {
+      grid-template-columns:
+        minmax($layout-paddings, 1fr) minmax(auto, $value) minmax($layout-paddings, 1fr);
+    }
+  }
+}
+
+/* Center all children */
+.layout-maxed>* {
+  grid-column: 2;
+}
+
+/* Hero box  */
+.layout-hero {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: inherit;
+}
+
+.layout-hero>* {
+  grid-column: 2;
+}
+
+/* Hero image */
+.layout-hero-img {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 100%;
+}
+
+.liquid {
+  display: grid;
+  grid-template-columns: [liquid-start] minmax($layout-paddings, 1fr) [content-start] minmax(0, calc(100% - 2 * #{$layout-paddings})) [half] minmax(0, calc(100% - 2 * #{$layout-paddings})) [content-end] minmax($layout-paddings, 1fr) [liquid-end];
+
+  @each $key,
+  $value in $breakpoints {
+    @media (min-width: #{$value}) {
+      grid-template-columns: [liquid-start] minmax($layout-paddings, 1fr) [content-start] minmax(0, calc($value / 2)) [half] minmax(0, calc($value / 2)) [content-end] minmax($layout-paddings, 1fr) [liquid-end];
+    }
+  }
+
+  &>* {
+    grid-column: content;
+  }
+}
+
+
+/* ---------------------------- */
+/* == Splash Section            */
+/* ---------------------------- */
+
+.splash,
+.splash-start,
+.splash-end,
+.splash-half-start,
+.splash-half-end {
+  display: grid;
+  grid-template-columns: subgrid;
+
+  &>* {
+    grid-column: content;
+  }
+}
+
+.splash {
+  grid-column: liquid;
+}
+
+.splash-start {
+  grid-column: liquid-start / content-end;
+}
+
+.splash-end {
+  grid-column: content-start / liquid-end;
+}
+
+.splash-half-start {
+  grid-column: liquid-start / half;
+
+  &>* {
+    grid-column: content-start / half;
+  }
+}
+
+.splash-half-end {
+  grid-column: half / liquid-end;
+
+  &>* {
+    grid-column: half / content-end;
+  }
+}
+
+/* ---------------------------- */
+/* == Hero Image Section        */
+/* ---------------------------- */
+
+.hero-img {
+  justify-self: center;
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+@media screen and (max-width: $medium) {
+  .liquid {
+
+    display: grid;
+    grid-template-columns:
+      [liquid-start] minmax($layout-paddings, 1fr) [content-start] minmax(auto, calc($small / 2)) [half] minmax(auto, calc($small / 2)) [content-end] minmax($layout-paddings, 1fr) [liquid-end];
+
+    &>* {
+      grid-column: content;
+    }
+  }
+
+  .splash,
+  .splash-start,
+  .splash-end,
+  .splash-half-start,
+  .splash-half-end {
+    display: grid;
+    grid-template-columns: subgrid;
+
+    &>* {
+      grid-column: content;
+    }
+  }
+}
