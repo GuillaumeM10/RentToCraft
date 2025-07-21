@@ -3,7 +3,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   return (
     <ProtectedRoute>

@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth-token");
   const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
   const isProtectedRoute =
-    request.nextUrl.pathname.startsWith("/dashboard") ||
+    request.nextUrl.pathname.startsWith("/dashboard") ??
     request.nextUrl.pathname.startsWith("/profile");
 
   if (isProtectedRoute && !token) {

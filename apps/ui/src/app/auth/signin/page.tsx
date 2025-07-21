@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useAuth } from "../../contexts/auth.context";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { useAuth } from "../../contexts/auth.context";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -15,16 +16,18 @@ export default function SignInPage() {
   const { signin } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (element: React.FormEvent) => {
+    element.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
       await signin(email, password);
       router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur de connexion");
+    } catch (thisError) {
+      setError(
+        thisError instanceof Error ? thisError.message : "Erreur de connexion",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +49,7 @@ export default function SignInPage() {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(thisError) => setEmail(thisError.target.value)}
             className="form-input"
             required
           />
@@ -60,7 +63,7 @@ export default function SignInPage() {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(thisError) => setPassword(thisError.target.value)}
             className="form-input"
             required
           />

@@ -1,29 +1,28 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { type UserDto } from "@rent-to-craft/dtos";
 import { jwtDecode } from "jwt-decode";
-import { UserDto } from "@rent-to-craft/dtos";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth-token");
 
-    if (!token) {
+    if (token) {
+      try {
+        const decodedToken: UserDto = jwtDecode(token.value);
+        return NextResponse.json({
+          authenticated: true,
+          user: decodedToken,
+        });
+      } catch {
+        cookieStore.delete("auth-token");
+        return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+      }
+    } else {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-
-    try {
-      const decodedToken: UserDto = jwtDecode(token.value);
-      return NextResponse.json({
-        authenticated: true,
-        user: decodedToken,
-      });
-    } catch (error) {
-      const cookieStore = await cookies();
-      cookieStore.delete("auth-token");
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-    }
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Authentication check failed" },
       { status: 500 },
