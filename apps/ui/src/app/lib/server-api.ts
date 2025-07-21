@@ -6,7 +6,7 @@ export async function createServerApiClient() {
   const token = cookieStore.get("auth-token");
 
   return axios.create({
-    baseURL: process.env.API_URL || "http://localhost:3000",
+    baseURL: process.env.API_URL ?? "http://localhost:3000",
     headers: {
       "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token.value}` }),

@@ -9,6 +9,7 @@
     "dev:api": "pnpm --filter api dev",
     "prepare": "husky",
     "build:ui": "pnpm --filter ui build",
+    "start:ui": "pnpm --filter ui start",
     "build:api": "pnpm --filter api build",
     "build:libs": "pnpm --filter dtos build",
     "build:all": "pnpm --filter ui build && pnpm --filter api build",

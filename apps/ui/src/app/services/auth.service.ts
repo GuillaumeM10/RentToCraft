@@ -1,14 +1,16 @@
+import { type UserDto } from "@rent-to-craft/dtos";
+
 type AuthServiceType = {
-  signin: (email: string, password: string) => Promise<boolean | string>;
-  logout: () => Promise<void>;
+  getCurrentUser: () => Promise<UserDto | null>;
   isAuthenticated: () => Promise<boolean>;
+  logout: () => Promise<void>;
+  signin: (email: string, password: string) => Promise<boolean | string>;
   signup: (
     email: string,
     password: string,
     firstName: string,
     lastName?: string,
   ) => Promise<boolean | string>;
-  getCurrentUser: () => Promise<any>;
 };
 
 const AuthService: AuthServiceType = {
@@ -27,7 +29,12 @@ const AuthService: AuthServiceType = {
         return true;
       }
 
-      return `Error: ${data.error || "Unknown error"}`;
+      const errorMessage =
+        typeof data.error === "string"
+          ? data.error
+          : (data.error?.message ?? "Unknown error");
+
+      return `Error: ${errorMessage}`;
     } catch (error) {
       console.log(error);
       return `Network error: ${error instanceof Error ? error.message : "Unknown error"}`;
@@ -48,7 +55,7 @@ const AuthService: AuthServiceType = {
     try {
       const response = await fetch("/api/auth/me");
       return response.ok;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
@@ -74,7 +81,7 @@ const AuthService: AuthServiceType = {
         return true;
       }
 
-      return `Error: ${data.error || "Registration failed"}`;
+      return `Error: ${data.error ?? "Registration failed"}`;
     } catch (error) {
       return `Network error: ${error instanceof Error ? error.message : "Unknown error"}`;
     }
@@ -88,7 +95,7 @@ const AuthService: AuthServiceType = {
         return data.user;
       }
       return null;
-    } catch (error) {
+    } catch {
       return null;
     }
   },

@@ -1,12 +1,13 @@
 "use client";
 
-import { useAuth } from "../contexts/auth.context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+
+import { useAuth } from "../contexts/auth.context";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
