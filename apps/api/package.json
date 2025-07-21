@@ -32,8 +32,9 @@
     "@nestjs/swagger": "^8.1.0",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.4.8",
+    "@rent-to-craft/dtos": "workspace:*",
     "@types/bcrypt": "^5.0.2",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
     "express": "^4.21.1",
     "handlebars": "^4.7.8",
@@ -43,8 +44,7 @@
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
-    "uuid": "^9.0.1",
-    "@rent-to-craft/dtos": "workspace:*"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
