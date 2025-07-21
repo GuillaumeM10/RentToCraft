@@ -34,10 +34,12 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  await app.listen(process.env.PORT ?? 3000);
-  Logger.log(`Server running on http://localhost:${process.env.PORT ?? 3000}`);
+  await app.listen(process.env.API_PORT ?? 3000);
   Logger.log(
-    `API Documentation available at http://localhost:${process.env.PORT ?? 3000}/api`,
+    `Server running on http://localhost:${process.env.API_PORT ?? 3000}`,
+  );
+  Logger.log(
+    `API Documentation available at http://localhost:${process.env.API_PORT ?? 3000}/api`,
   );
 }
 
