@@ -14,11 +14,11 @@ up:
 
 .PHONY: down
 down:
-	docker compose -f ./docker-compose.dev.yml down
+	docker compose -f ./docker-compose.yml down
 
 .PHONY: stop
 stop:
-	docker compose -f ./docker-compose.dev.yml stop
+	docker compose -f ./docker-compose.yml stop
 
 .PHONY: install
 install:

@@ -1,0 +1,41 @@
+body,
+html {
+  font-family: 'Montserrat', sans-serif;
+  background-color: $body-bg;
+}
+
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+.buttonSecondary,
+.buttonSecondaryLight {
+  padding: 8px 50px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.buttonSecondary {
+  background: $primary300;
+  color: $primary100;
+  border: solid 1px $primary300;
+
+  &:hover {
+    color: $primary300;
+    border: solid 1px $primary300;
+    background: $body-bg;
+  }
+}
+
+.buttonSecondaryLight {
+  color: $primary300;
+  border: solid 1px $primary300;
+
+  &:hover {
+    background: $primary300;
+    color: $primary100;
+  }
+}
