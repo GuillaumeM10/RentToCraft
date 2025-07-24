@@ -11,7 +11,7 @@ import {
   UserDto,
   UserUpdateDto,
 } from '@rent-to-craft/dtos';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 

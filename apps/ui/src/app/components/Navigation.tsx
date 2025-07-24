@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "../contexts/auth.context";
 import { useRouter } from "next/navigation";
+
+import { useAuth } from "../contexts/auth.context";
 
 export function Navigation() {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
@@ -11,6 +12,36 @@ export function Navigation() {
   const handleLogout = async () => {
     await logout();
     router.push("/");
+  };
+
+  const renderAuthSection = () => {
+    if (isLoading) {
+      return <div>Chargement...</div>;
+    }
+
+    if (isAuthenticated) {
+      return (
+        <div className="flex items-center gap-md">
+          <span className="text-secondary">
+            {`Bonjour, ${user?.firstName ?? "utilisateur"}`}
+          </span>
+          <button onClick={handleLogout} className="btn btn--secondary">
+            Déconnexion
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <Link href="/auth/signin" className="text-secondary hover:text-primary">
+          Connexion
+        </Link>
+        <Link href="/auth/signup" className="btn btn--primary">
+          {`S'inscrire`}
+        </Link>
+      </>
+    );
   };
 
   return (
@@ -43,32 +74,7 @@ export function Navigation() {
             )}
           </div>
 
-          <div className="flex items-center gap-md">
-            {isLoading ? (
-              <div>Chargement...</div>
-            ) : isAuthenticated ? (
-              <div className="flex items-center gap-md">
-                <span className="text-secondary">
-                  Bonjour, {user?.firstName}
-                </span>
-                <button onClick={handleLogout} className="btn btn--secondary">
-                  Déconnexion
-                </button>
-              </div>
-            ) : (
-              <>
-                <Link
-                  href="/auth/signin"
-                  className="text-secondary hover:text-primary"
-                >
-                  Connexion
-                </Link>
-                <Link href="/auth/signup" className="btn btn--primary">
-                  S'inscrire
-                </Link>
-              </>
-            )}
-          </div>
+          <div className="flex items-center gap-md">{renderAuthSection()}</div>
         </div>
       </div>
     </nav>

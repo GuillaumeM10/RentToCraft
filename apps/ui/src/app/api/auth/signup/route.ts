@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { email, password, firstName, lastName } = await request.json();
@@ -28,13 +28,13 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: response.data.message || "Registration failed" },
+      { error: response.data.message ?? "Registration failed" },
       { status: response.status },
     );
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json(
-        { error: error.response.data.message || "Registration failed" },
+        { error: error.response.data.message ?? "Registration failed" },
         { status: error.response.status },
       );
     }

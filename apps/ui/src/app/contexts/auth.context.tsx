@@ -1,20 +1,23 @@
 "use client";
 
+import { type UserDto } from "@rent-to-craft/dtos";
 import {
   createContext,
+  type ReactNode,
+  useCallback,
   useContext,
-  ReactNode,
-  useState,
   useEffect,
+  useMemo,
+  useState,
 } from "react";
-import { UserDto } from "@rent-to-craft/dtos";
-import { AuthContextType } from "../interfaces/authContext.interface";
+
+import { type AuthContextType } from "../interfaces/authContext.interface";
 import AuthService from "../services/auth.service";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -23,51 +26,57 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user;
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = useCallback(async () => {
     try {
       const userData = await AuthService.getCurrentUser();
       setUser(userData);
     } catch (error) {
       console.error("Auth check failed:", error);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const signin = async (email: string, password: string) => {
-    try {
+  useEffect(() => {
+    void checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const signin = useCallback(
+    async (email: string, password: string) => {
       const result = await AuthService.signin(email, password);
       if (result === true) {
         await checkAuthStatus();
         return true;
       }
       throw new Error(typeof result === "string" ? result : "Login failed");
-    } catch (error) {
-      throw error;
-    }
-  };
+    },
+    [checkAuthStatus],
+  );
 
-  const logout = async () => {
-    await AuthService.logout();
-    setUser(null);
-    window.location.href = "/auth/signin";
-  };
-
-  const register = async (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName?: string,
-  ) => {
+  const logout = useCallback(async () => {
     try {
+      await AuthService.logout();
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setUser(null);
+    } finally {
+      window.location.href = "/auth/signin";
+    }
+  }, []);
+
+  const register = useCallback(
+    async (
+      email: string,
+      password: string,
+      firstName: string,
+      lastName?: string,
+    ) => {
       const result = await AuthService.signup(
         email,
         password,
@@ -75,24 +84,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
         lastName,
       );
       if (result === true) {
-        return signin(email, password);
+        const signinResult = await signin(email, password);
+        return signinResult;
       }
       throw new Error(
         typeof result === "string" ? result : "Registration failed",
       );
-    } catch (error) {
-      throw error;
-    }
-  };
+    },
+    [signin],
+  );
 
-  const value: AuthContextType = {
-    user,
-    isAuthenticated,
-    isLoading,
-    signin,
-    logout,
-    register,
-  };
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user,
+      isAuthenticated,
+      isLoading,
+      signin,
+      logout,
+      register,
+    }),
+    [user, isAuthenticated, isLoading, signin, logout, register],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

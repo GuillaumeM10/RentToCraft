@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const Error = () => {
+const ErrorPage = () => {
   return (
     <div>
       <h1>Error Page</h1>
@@ -10,4 +10,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default ErrorPage;

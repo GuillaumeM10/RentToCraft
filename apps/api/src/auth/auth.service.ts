@@ -14,7 +14,7 @@ import {
   TokenDto,
   UserDto,
 } from '@rent-to-craft/dtos';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { plainToInstance } from 'class-transformer';
 
 import { MailService } from '../mail/mail.service';
