@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "npm install -g pnpm@latest && pnpm install --frozen-lockfile && pnpm run build:libs && pnpm --filter ui run build",
+  "buildCommand": "pnpm install --frozen-lockfile && pnpm run build:libs && pnpm --filter ui run build",
   "outputDirectory": "apps/ui/.next",
-  "installCommand": "npm install -g pnpm@latest && pnpm install --frozen-lockfile",
+  "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs",
   "functions": {
     "apps/ui/pages/api/**/*.{js,ts}": {
-      "runtime": "@vercel/node@3.0.13"
+      "runtime": "nodejs18.x"
     }
   },
   "env": {
