@@ -5,16 +5,10 @@
   "installCommand": "npm install -g pnpm@latest && pnpm install --frozen-lockfile",
   "framework": "nextjs",
   "functions": {
-    "apps/ui/pages/api/**/*.js": {
-      "runtime": "nodejs18.x"
+    "apps/ui/pages/api/**/*.{js,ts}": {
+      "runtime": "@vercel/node@3.0.13"
     }
   },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/apps/ui/$1"
-    }
-  ],
   "env": {
     "NODE_ENV": "production",
     "PNPM_VERSION": "latest"
