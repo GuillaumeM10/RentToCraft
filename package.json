@@ -1,0 +1,39 @@
+{
+  "name": "rent-to-craft",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:ui": "pnpm build:libs && pnpm --filter ui dev",
+    "dev:api": "pnpm --filter api dev",
+    "prepare": "husky",
+    "build:ui": "pnpm --filter ui build",
+    "start:ui": "pnpm --filter ui start",
+    "build:api": "pnpm --filter api build",
+    "build:libs": "pnpm --filter dtos build",
+    "build:all": "pnpm --filter ui build && pnpm --filter api build",
+    "build:vercel": "pnpm run build:libs && pnpm run build:ui",
+    "lint": "pnpm --filter api run lint && pnpm --filter ui run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rent-to-craft/tsconfig": "workspace:^",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2"
+  },
+  "lint-staged": {
+    "apps/api/**/*.{js,ts,jsx,tsx}": [
+      "pnpm --filter api run lint"
+    ]
+  },
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "libs/*",
+      "packages/*"
+    ]
+  }
+}

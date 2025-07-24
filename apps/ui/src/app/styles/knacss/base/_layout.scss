@@ -1,0 +1,125 @@
+/* ----------------------------  */
+/* ==Layout classes              */
+/* ----------------------------- */
+$space: 20px;
+
+/* Global container */
+@mixin layout-maxed {
+  display: grid;
+  grid-template-columns:
+    minmax($space, 1fr) minmax(auto, 576px) minmax($space, 1fr);
+
+  @each $key,
+  $value in $breakpoints {
+    @media (min-width: #{$value}) {
+      grid-template-columns:
+        minmax($space, 1fr) minmax(auto, $value) minmax($space, 1fr);
+    }
+  }
+
+  /* Center all children */
+  >* {
+    grid-column: 2;
+  }
+}
+
+.layout-maxed {
+  @include layout-maxed;
+}
+
+@mixin layout-hero {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: inherit;
+
+  >* {
+    grid-column: 2;
+  }
+}
+
+/* Hero box  */
+.layout-hero {
+  @include layout-hero;
+  position: relative;
+}
+
+@mixin layout-maxed-4col {
+  display: grid;
+  grid-template-columns:
+    minmax($space, 1fr) minmax(auto, 288px) minmax(auto, 288px) minmax($space, 1fr);
+
+  @each $key,
+  $value in $breakpoints {
+    @media (min-width: #{$value}) {
+      grid-template-columns:
+        minmax($space, 1fr) minmax(auto, $value/2) minmax(auto, $value/2) minmax($space, 1fr);
+    }
+  }
+
+  >* {
+    grid-column: 2 / 4;
+  }
+}
+
+.layout-maxed-4col {
+  @include layout-maxed-4col;
+}
+
+@mixin layout-hero-4col {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: inherit;
+  gap: 0;
+
+  > :first-child {
+    grid-column: 2 / 2;
+  }
+
+  > :last-child {
+    grid-column: 3 / 4;
+  }
+
+  @media screen and (max-width: $medium) {
+
+    > :first-child,
+    > :last-child {
+      grid-column: 2 / 4;
+    }
+  }
+}
+
+/* Hero box  */
+.layout-hero-4col {
+  @include layout-hero-4col;
+  position: relative;
+}
+
+/* Hero image */
+.layout-hero-img {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 100%;
+}
+
+.d-none {
+  display: none !important;
+}
+
+// ---------------    SIZE Width / Height     ---------------
+$sizes: (100: 100%, 75: 75%, 50: 50%, 25: 25%);
+
+@each $size,
+$value in $sizes {
+  .w-#{$size} {
+    width: $value;
+  }
+
+  .h-#{$size} {
+    height: $value;
+  }
+}
+
+// ---------------    Wordpress default editor     ---------------
+body .wp-block-columns-is-layout-flex {
+  @include layout-hero-4col;
+}

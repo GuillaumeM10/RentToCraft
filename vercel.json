@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "buildCommand": "npm install -g pnpm@latest && pnpm install --frozen-lockfile && pnpm run build:libs && pnpm --filter ui run build",
+  "outputDirectory": "apps/ui/.next",
+  "installCommand": "npm install -g pnpm@latest && pnpm install --frozen-lockfile",
+  "framework": "nextjs",
+  "functions": {
+    "apps/ui/pages/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/apps/ui/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PNPM_VERSION": "latest"
+  }
+}

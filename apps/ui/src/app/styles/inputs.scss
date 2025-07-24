@@ -1,0 +1,39 @@
+input,
+textarea,
+select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.4;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+
+  &:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: #6c757d;
+  }
+}
+
+// Textarea specific
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// Select specific
+select {
+  cursor: pointer;
+}
