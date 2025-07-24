@@ -6,6 +6,7 @@
     "dev": "next dev --port 3001",
     "build": "next build",
     "build:fast": "next build --no-lint",
+    "build:dtos": "cd ../../libs/dtos && npm run build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix"
