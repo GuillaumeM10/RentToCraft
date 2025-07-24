@@ -13,7 +13,6 @@
     "build:api": "pnpm --filter api build",
     "build:libs": "pnpm --filter dtos build",
     "build:all": "pnpm --filter ui build && pnpm --filter api build",
-    "build:vercel": "pnpm run build:libs && pnpm run build:ui",
     "lint": "pnpm --filter api run lint && pnpm --filter ui run lint"
   },
   "keywords": [],
