@@ -6,7 +6,7 @@
   "framework": "nextjs",
   "functions": {
     "apps/ui/pages/api/**/*.{js,ts}": {
-      "runtime": "nodejs18.x"
+      "runtime": "edge"
     }
   },
   "env": {
