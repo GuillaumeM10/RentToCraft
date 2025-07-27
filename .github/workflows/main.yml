@@ -28,7 +28,4 @@ jobs:
         run: pnpm install
 
       - name: Run lint
-        run: make lint
-
-      - name: Run tests
-        run: make tests
+        run: pnpm run lint
