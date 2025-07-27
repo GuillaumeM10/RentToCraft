@@ -8,9 +8,13 @@ import {
   Post,
   Put,
   Query,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UserDto, UserUpdateDto } from '@rent-to-craft/dtos';
+import { File } from 'multer';
 
 import { AuthGuard } from '../auth/guard/jwt-passport.guard';
 import { User } from '../decorator/user.decorator';
@@ -37,12 +41,20 @@ export class UserController {
 
   @Put(':id')
   @UseGuards(AuthGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'profilePicture' }, { name: 'banner' }]),
+  )
   update(
     @Body() updateUserDto: UserUpdateDto,
     @User() user: UserDto,
     @Param('id', ParseIntPipe) id: number,
+    @UploadedFiles()
+    files: {
+      banner?: File[];
+      profilePicture?: File[];
+    },
   ) {
-    return this.userService.update(updateUserDto, user, id);
+    return this.userService.update(updateUserDto, user, id, files);
   }
 
   @Delete(':id')

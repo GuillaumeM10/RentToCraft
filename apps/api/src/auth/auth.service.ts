@@ -49,25 +49,28 @@ export class AuthService {
   }
 
   async signin(signinAuthDto: SigninAuthDto) {
-    const user = await this.usersService.findOneByEmail(
+    const userPassword = await this.usersService.getUserPassword(
       signinAuthDto.email,
-      true,
     );
 
-    const password = bcrypt.compareSync(signinAuthDto.password, user.password);
+    const password = bcrypt.compareSync(signinAuthDto.password, userPassword);
 
-    if (!user || !password) {
+    if (!userPassword || !password) {
       throw new UnauthorizedException();
     }
 
-    const payload = {
+    const user = await this.usersService.findOneByEmail(signinAuthDto.email);
+
+    const payload: PayloadDto = {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      role: user.role,
       id: user.id,
     };
 
     const token = this.generateJwtToken(payload);
+
     await this.validTokenService.create({ token, user: user });
     await this.tokenResetPasswordService.clearUserTokens(user.id);
 
@@ -131,11 +134,7 @@ export class AuthService {
       throw new HttpException("Le token n'existe pas", 404);
     }
 
-    try {
-      await this.validTokenService.remove(token, userId);
-    } catch {
-      throw new HttpException('Erreur lors de la suppresion du token', 400);
-    }
+    await this.validTokenService.remove(token, userId);
 
     return plainToInstance(MessageDto, { message: 'Déconnexion réussit' });
   }

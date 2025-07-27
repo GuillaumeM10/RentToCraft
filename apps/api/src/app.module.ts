@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { FileModule } from './file/file.module';
 import { MailModule } from './mail/mail.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { TokenResetPasswordModule } from './token-reset-password/token-reset-password.module';
@@ -60,6 +61,7 @@ console.log('isProductionDB', isProduction);
     TokenResetPasswordModule,
     MailModule,
     ValidTokenModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

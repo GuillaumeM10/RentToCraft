@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FileModule } from 'src/file/file.module';
 
 import { ValidTokenModule } from '../valid-token/valid-token.module';
 import { TokenResetServiceEntity } from './entities/token-reset-password.entity';
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
     TypeOrmModule.forFeature([UserEntity, TokenResetServiceEntity]),
     JwtModule,
     ValidTokenModule,
+    forwardRef(() => FileModule),
   ],
   controllers: [UserController],
   providers: [UserService],

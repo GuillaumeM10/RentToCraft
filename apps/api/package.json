@@ -38,10 +38,12 @@
     "class-transformer": "^0.5.1",
     "express": "^4.21.1",
     "handlebars": "^4.7.8",
+    "multer": "^2.0.2",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "sharp": "^0.34.3",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.1"
