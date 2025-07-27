@@ -1,4 +1,3 @@
-import { Expose } from 'class-transformer';
 import { UserDto } from './user';
 
 export class CreateValidTokenDto {
@@ -11,6 +10,5 @@ export class ValidtokenDto extends CreateValidTokenDto {
 }
 
 export class TokenDto {
-  @Expose()
   accessToken: string;
 }

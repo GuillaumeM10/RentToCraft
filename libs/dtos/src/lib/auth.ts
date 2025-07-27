@@ -1,37 +1,33 @@
-import { Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
+import { UserRole } from "./user";
 
 export class SignupAuthDto {
-  @Expose()
   email: string;
+  @Exclude()
   password: string;
-  @Expose()
   firstName?: string;
-  @Expose()
   lastName?: string;
 }
 
 export class SigninAuthDto {
-  @Expose()
   email: string;
+  @Exclude()
   password: string;
 }
 
 export class ResetPasswordDto {
+  @Exclude()
   password: string;
 }
 
 export class CreateTokenResetPasswordDto {
-  @Expose()
   email: string;
 }
 
 export class PayloadDto {
-  @Expose()
   email: string;
-  @Expose()
   firstName: string;
-  @Expose()
   lastName: string;
-  @Expose()
   id: number;
+  role: UserRole;
 }
