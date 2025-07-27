@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { PayloadDto, UserRole } from '@rent-to-craft/dtos';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserService } from '../../user/user.service';
@@ -11,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
     private userService: UserService,
-    private validTokenService: ValidTokenService
+    private validTokenService: ValidTokenService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -20,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload) {
+  async validate(payload: PayloadDto) {
     const { email } = payload;
 
     if (!email) {
@@ -32,6 +33,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
+
+    if (user.role === UserRole.administrator) {
+      return user;
+    }
+
     const token = ExtractJwt.fromAuthHeaderAsBearerToken();
     const isJwtValid = await this.validTokenService.findOne(token);
 

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { UserRole } from '@rent-to-craft/dtos';
 
 import { IS_PUBLIC_KEY } from '../../decorator/public.decorator';
 import { ValidTokenService } from '../../valid-token/valid-token.service';
@@ -39,9 +40,14 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      request['user'] = await this.jwtService.verifyAsync(token, {
+      const user = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
+      request['user'] = user;
+
+      if (user.role === UserRole.administrator) {
+        return true;
+      }
     } catch {
       throw new UnauthorizedException();
     }

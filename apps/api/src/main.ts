@@ -8,12 +8,16 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { CleanNullInterceptor } from './common/interceptors/clean-null.interceptor';
+import { DateTransformInterceptor } from './common/interceptors/date-transform.interceptor';
 
 /**
  *
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalFilters(new GlobalExceptionFilter());
   registerGlobals(app);
 
   const config = new DocumentBuilder()
@@ -49,9 +53,11 @@ async function bootstrap() {
 export function registerGlobals(app: INestApplication) {
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector), {
-      strategy: 'excludeAll',
+      strategy: 'exposeAll',
       excludeExtraneousValues: false,
     }),
+    new CleanNullInterceptor(),
+    new DateTransformInterceptor(),
   );
 }
 
