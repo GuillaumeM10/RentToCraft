@@ -1,0 +1,112 @@
+$plus: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>';
+$minus: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg"><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"/></svg>';
+
+.accordion {
+  padding: 80px 0;
+
+  .title {
+    font-size: 50px;
+    font-weight: $weight-medium;
+  }
+
+  .description {
+    font-size: 21px;
+    line-height: 32px;
+    margin-bottom: 40px;
+    max-width: 655px;
+  }
+
+  .accordion-wrapper {
+    border-bottom: 1px solid #000;
+  }
+
+  .st-accordion__content {
+    transition: all .2s ease-in-out;
+    opacity: 1;
+    max-height: 1000px;
+
+    &:not(.st-accordion__content--visible) {
+      max-height: 0;
+      opacity: 0;
+    }
+
+  }
+
+  .accordion-title-wrapper {
+    border-top: 1px solid #000;
+  }
+
+  .accordion-title {
+    position: relative;
+    font-weight: $weight-medium;
+    font-size: 28px;
+    line-height: 56px;
+    padding: 8px 20px 8px 0;
+    margin: 0;
+
+    .chevron {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+
+      &:after {
+        content: url($plus);
+      }
+    }
+  }
+
+  .st-accordion__item:has(.st-accordion__content--visible) .accordion-title .chevron:after {
+    content: url($minus);
+  }
+
+  .accordion-description {
+
+    p,
+    li {
+      font-size: 21px;
+      line-height: 32px;
+    }
+
+    p,
+    li:last-child {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  @media screen and (max-width: $medium) {
+    .title {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 18px;
+      line-height: 28px;
+      margin-bottom: 32px;
+    }
+
+    .accordion-title {
+      font-size: 22px;
+      line-height: 48px;
+    }
+
+    .accordion-description {
+
+      p,
+      li {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+  }
+}

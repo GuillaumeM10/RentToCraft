@@ -1,0 +1,44 @@
+.landing {
+  position: relative;
+  margin-top: -200px;
+  min-height: 814px;
+  padding-bottom: 96px;
+
+  .page-title {
+    font-size: 68px;
+    padding: 0 0 16px 0;
+    font-weight: $weight-medium;
+  }
+
+  .description {
+    color: white;
+    font-size: 21px;
+    line-height: 32px;
+    margin-bottom: 20px;
+    max-width: 655px;
+  }
+
+  .btn {
+    width: fit-content;
+    line-height: 24px;
+  }
+
+  .icon {
+    font-size: 12px;
+    margin-left: 7px;
+  }
+
+  .rotate-arrow .icon {
+    transform: rotate(-90deg);
+  }
+
+  @media screen and (max-width: $small) {
+    .page-title {
+      font-size: 52px;
+    }
+
+    .btn .icon {
+      display: none;
+    }
+  }
+}

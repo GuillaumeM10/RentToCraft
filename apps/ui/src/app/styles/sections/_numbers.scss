@@ -1,0 +1,25 @@
+.numbers {
+  padding: 70px 0;
+
+  .block-number {
+    font-size: 90px;
+    line-height: 110px;
+  }
+
+  .title {
+    font-size: 21px;
+    line-height: 32px;
+  }
+
+  @media screen and (max-width: $medium) {
+    .block-number {
+      font-size: 60px;
+      line-height: 70px;
+    }
+
+    .title {
+      font-size: 18px;
+      line-height: 28px;
+    }
+  }
+}

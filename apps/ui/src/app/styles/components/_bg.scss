@@ -1,0 +1,7 @@
+@each $color,
+$value in $colors {
+    .bg-#{$color} {
+        background-color: $value;
+        color: color-yiq($value);
+    }
+}

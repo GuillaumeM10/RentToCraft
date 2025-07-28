@@ -34,9 +34,11 @@ html {
 
 body {
   margin: 0;
-  font-family: $font-family-base;
+  font-family: $ff;
   font-size: $font-size-base;
   line-height: $line-height-base;
+  background-color: $body-bg;
+  color: $body-color;
 }
 
 /*
@@ -55,17 +57,23 @@ h5,
 .h5-like,
 h6,
 .h6-like {
-  color: $gray-900;
+  color: $dark;
+  font-weight: 500;
 }
 
 /*
  * Links
  */
 
-a,
+a {
+  color: $link-color;
+  text-decoration: none;
+}
+
 a:focus,
 a:hover,
 a:active {
+  color: $gray-5;
   text-decoration: none;
 }
 

@@ -1,0 +1,27 @@
+.nav-pill{
+    display: flex;
+    .nav-item{
+        padding: 0 5px;
+        &:hover,
+        &.active{
+            background-color: rgba($primary, 0.1);
+        }
+    }
+    .link{
+        display: inline-block;
+        font-size: 14px;
+        font-family: $ff;
+        color: $primary;
+        min-width: 280px;
+        line-height: 70px;
+        padding: 0 25px;
+        .icon{
+            margin-left: 8px;
+        }
+        &:hover,
+        &.active{
+            color: darken($primary, 20);
+            border-bottom: 3px solid $primary;
+        }
+    }
+}

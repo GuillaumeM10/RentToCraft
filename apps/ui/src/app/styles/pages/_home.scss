@@ -1,0 +1,9 @@
+.page-home {
+  @media screen and (max-width: $medium) {
+
+    .numbers,
+    .accordion {
+      padding-top: 0;
+    }
+  }
+}

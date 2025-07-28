@@ -1,0 +1,33 @@
+.caret {
+    position: relative;
+    display: inline-block;
+    width: 8px;
+    height: 2px;
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        border-radius: 9999px;
+        background-color: $primary;
+        width: 8px;
+        height: 2px;
+        top: calc(50% - 1px);
+        right: 0;
+        transform-origin: calc(100% - 1px) 50%;
+    }
+    &::before {
+        transform: rotate(45deg);
+    }
+    &::after {
+        transform: rotate(-45deg);
+    }
+}
+
+.caret-bottom{
+    transform: rotate(90deg);
+}
+
+.caret-start{
+    transform: rotate(180deg);
+}

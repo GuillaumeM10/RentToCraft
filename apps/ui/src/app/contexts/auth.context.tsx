@@ -13,6 +13,9 @@ import {
 
 import { type AuthContextType } from "../interfaces/authContext.interface";
 import AuthService from "../services/auth.service";
+import { usePathname } from "next/navigation";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -23,6 +26,9 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
+  const slug = pathname.slice(1).replace(/\//g, "-") || "home";
+  const isTransparentOnTop = pathname === "/" || pathname === "/tools";
 
   const isAuthenticated = !!user;
 
@@ -102,11 +108,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signin,
       logout,
       register,
+      isTransparentOnTop,
     }),
     [user, isAuthenticated, isLoading, signin, logout, register],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <Header isTransparentOnTop={!!isTransparentOnTop} />
+      <main className={`page-${slug}`}>{children}</main>
+      <Footer />
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

@@ -1,0 +1,171 @@
+// ----------------
+// Valeurs de Breakpoints
+// Hypothèse : smartphone portrait/paysage < 576px < gros smartphone paysage + tablette portrait < 992px < tablette paysage < 1330px < laptop et plus
+$breakpoints: (sm: 576px, // Mobile
+  md: 992px, // tablette payssage et portrait 768 !
+  lg: 1200px, // petit écran de bureau
+  xl: 1400px, // trés grand écran de bureau
+) !default;
+
+$small: map-get($breakpoints, sm) !default;
+$medium: map-get($breakpoints, md) !default;
+$large: map-get($breakpoints, lg) !default;
+$xlarge: map-get($breakpoints, xl) !default;
+
+// ---------------    COLORS     ---------------
+$gray-1 : #F7F4EE;
+$gray-2 : #F3F4F5;
+$gray-3 : #B9B9B9;
+$gray-4 : #4D4D4D;
+$gray-5 : #212529;
+
+$white: #fff;
+$gray: $gray-2;
+$light: $gray-1;
+$dark: $gray-5;
+
+$blue: #1f242c;
+$ligh-blue: #253c44;
+$green: #0B3422;
+$red: #ef6869;
+$orange: #F49A54;
+$cyan: #17a2b8;
+
+$black: #0F0F0F;
+$orange: #EAB633;
+
+$body-color: $green;
+$body-bg: $gray-1;
+
+
+$primary : $green;
+$secondary: $gray-1;
+$warning: $orange;
+$danger: $red;
+$info: $cyan;
+
+$primary-5: rgba($primary, 0.05);
+$primary-10: rgba($primary, 0.1);
+$primary-20: rgba($primary, 0.2);
+$primary-30: rgba($primary, 0.3);
+$primary-40: rgba($primary, 0.4);
+$primary-50: rgba($primary, 0.5);
+$primary-70: rgba($primary, 0.7);
+
+$body-bg: $white;
+$body-color: $primary;
+$link-color: $dark;
+
+$colors: () !default;
+$colors: map-merge(("primary": $primary,
+    "secondary": $secondary,
+    "success": $green,
+    "danger": $danger,
+    "warning": $warning,
+    "info": $cyan,
+    "gray": $gray-2,
+    "white": $white,
+    "dark": $dark,
+    "light": $light,
+    "text": $dark,
+    "blue": $blue,
+  ),
+  $colors);
+
+// ----------------
+// Spacers
+$spacer: 1rem;
+$spacers: ("0": 0, // none
+  "1": 1px, // mono
+  "2": 0.125rem, // nano
+  "4": 0.25rem, // micro
+  "8": 0.5rem, // mini
+  "10": 0.625rem,
+  "12": 0.75rem, // small
+  "16": 1rem, // medium
+  "20": 1.25rem, // large
+  "24": 1.5rem, // wide
+  "30": 1.875rem, // ultra
+  "36": 2.25rem,
+  "40": 2.5rem,
+  "70": 4.375rem,
+  "auto": auto,
+);
+
+$spacer-none: map-get($spacers, "0") !default;
+$spacer-tiny: map-get($spacers, "2") !default;
+$spacer-tiny-plus: map-get($spacers, "5") !default;
+$spacer-small: map-get($spacers, "8") !default;
+$spacer-small-plus: map-get($spacers, "10") !default;
+$spacer-medium: map-get($spacers, "16") !default;
+$spacer-medium-plus: map-get($spacers, "20") !default;
+$spacer-large: map-get($spacers, "24") !default;
+$spacer-large-plus: map-get($spacers, "36") !default;
+
+// ----------------
+// Grid layout
+$grid-columns: 6 !default;
+$gaps: ("0": 0,
+  "5": 0.313rem,
+  "10": 0.625rem,
+  "16": 1rem,
+  "20": 1.25rem,
+  "30": 1.875rem,
+  "36": 2.25rem,
+  "40": 2.5rem,
+  "70": 4.375rem,
+) !default;
+
+// Font sizes
+$font-size: ("10": 0.625rem,
+  "11": 0.6875rem,
+  "12": 0.75rem,
+  "14": 0.875rem,
+  "16": 1rem,
+  "18": 1.125rem,
+  "20": 1.25rem,
+  "24": 1.5rem,
+  "30": 1.875rem,
+  "36": 2.25rem,
+  "base": 1rem,
+  "inherit": inherit,
+);
+
+
+$line-height-base: 1.1;
+$font-size-html: 100%;
+$font-size-base: 1rem;
+
+// Graisses des Fonts
+$weight-light: 200;
+$weight-book: 300;
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+$weights : ("light": $weight-light,
+  "book": $weight-book,
+  "regular": $weight-regular,
+  "medium": $weight-medium,
+  "semibold": $weight-semibold,
+  "bold": $weight-bold,
+);
+
+// Links
+$link-decoration: underline;
+$link-decoration-hover: underline;
+
+// Border radius
+$radius-none: 0;
+$radius-small: 0.5rem;
+$radius-medium: 1rem;
+$radius-large: 20rem;
+$radius-circle: 50%;
+
+$dynamic-height: calc(var(--vh, 1vh) * 100);
+
+// ----------------
+// Fonts
+$ff : "Inter",
+sans-serif !default;

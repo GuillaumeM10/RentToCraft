@@ -1,0 +1,98 @@
+.table{
+    position: relative;
+    width: 100%;
+    font-size: 14px;
+    th{
+        padding: 25px 0;
+        border-bottom: 2px solid $gray-3;
+        &:last-child,
+        &:first-child{
+            width: 30px;
+            padding: 0;
+        }
+        .link{
+            margin-left: 16px;
+            padding: 12px 10px 8px 18px;
+            font-size: 14px;
+            color: $primary;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: $ff;
+            border-radius: 8px;
+            &:hover{
+                opacity: 0.8;
+                background-color: $gray-3;
+                transition: 0.3s;
+            }
+            .icon{
+                margin-left: 12px;
+                font-size: 20px;
+                &.icon-transfert{
+                    position: relative;
+                    top: -3px;
+                    font-size: 26px;
+                }
+            }
+        }
+        .links-right{
+            position: absolute;
+            right: 30px;
+            top: 12px;
+            width: 500px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+    td{
+        padding: 25px 0;
+        border-bottom: 1px solid $gray-3;
+        color: $gray-4;
+        font-family: $ff;
+        &:last-child,
+        &:first-child{
+            width: 30px;
+            padding: 0;
+            border-bottom: none;
+        }
+        &.actions{
+            .dropdown{
+                &:after{
+                    display: none;
+                }
+            }
+        }
+    }
+    .link-sign{
+        text-transform: uppercase;
+        color: $primary;
+        padding: 13px 11px 9px 15px;
+        border-radius: 8px;
+        transition: 0.3s;
+        .icon{
+            font-size: 20px;
+            margin: -8px 0 0 11px;
+        }
+        &:hover{
+            opacity: 0.8;
+            background-color: $gray-3;
+            transition: 0.3s;
+        }
+    }
+
+    .icon-option{
+        color: $gray-4;
+        font-size: 25px;
+    }
+
+    .date{
+        color: $gray;
+        font-size: 12px;
+        font-family: $ff;
+        text-transform: uppercase;
+        .day{
+            font-size: 18px;
+            color: $primary;
+        }
+    }
+}

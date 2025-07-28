@@ -21,8 +21,8 @@ export function Navigation() {
 
     if (isAuthenticated) {
       return (
-        <div className="flex items-center gap-md">
-          <span className="text-secondary">
+        <div className="flex align-items-center gap-10">
+          <span className="">
             {`Bonjour, ${user?.firstName ?? "utilisateur"}`}
           </span>
           <button onClick={handleLogout} className="btn btn--secondary">
@@ -34,10 +34,10 @@ export function Navigation() {
 
     return (
       <>
-        <Link href="/auth/signin" className="text-secondary hover:text-primary">
+        <Link href="/auth/signin" className="btn btn-outline-secondary">
           Connexion
         </Link>
-        <Link href="/auth/signup" className="btn btn--primary">
+        <Link href="/auth/signup" className="btn btn-primary">
           {`S'inscrire`}
         </Link>
       </>
@@ -45,36 +45,36 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b">
-      <div className="container">
-        <div className="flex-between py-md">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            RentToCraft
+    <nav className="layout-maxed">
+      <div className="nav-container flex justify-between align-items-center">
+        <Link href="/" className="">
+          RentToCraft
+        </Link>
+
+        <div className="hidden md:flex items-center gap-10">
+          <Link href="/tools" className="">
+            Outils
           </Link>
+          {isAuthenticated && (
+            <>
+              <Link href="/dashboard" className="">
+                Dashboard
+              </Link>
+              <Link href="/dashboard/tools" className="">
+                Mes outils
+              </Link>
+            </>
+          )}
+        </div>
 
-          <div className="hidden md:flex items-center gap-lg">
-            <Link href="/tools" className="text-secondary hover:text-primary">
-              Outils
-            </Link>
-            {isAuthenticated && (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="text-secondary hover:text-primary"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/dashboard/tools"
-                  className="text-secondary hover:text-primary"
-                >
-                  Mes outils
-                </Link>
-              </>
-            )}
-          </div>
+        <div className="flex items-center gap-16">{renderAuthSection()}</div>
 
-          <div className="flex items-center gap-md">{renderAuthSection()}</div>
+        <div className="offcanvas-container">
+          <button type="button" className="burger-open link">
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </button>
         </div>
       </div>
     </nav>

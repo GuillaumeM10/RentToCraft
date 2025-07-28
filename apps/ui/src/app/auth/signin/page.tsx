@@ -34,7 +34,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div>
+    <div className="layout-maxed auth-container py-40">
       <div className="auth-header">
         <h1>Connexion</h1>
         <p>Connectez-vous à votre compte RentToCraft</p>

@@ -1,0 +1,17 @@
+.alert{
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.alert-title{
+    display: inline-block;
+    font-weight: 900;
+}
+
+@each $color, $value in $colors {
+    .alert-#{$color}{
+        color: darken($value,0.4);
+        border: solid 1px $value;
+        background-color: rgba($value, 0.2);
+    }
+}

@@ -38,3 +38,27 @@ $bp-aliases: (
     +"Please make sure it is defined in `$bp-aliases` map.";
   }
 }
+
+@function color-yiq($color) {
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+  @if ($yiq >= 150) {
+    @return $primary; // darken($color, 30);
+  } @else {
+    @return $white;
+  }
+}
+
+
+@mixin check-icon($color,$height,$width,$border-width) {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: $height;
+  width: $width;
+  border-bottom: $border-width solid $color;
+  border-right: $border-width solid $color;
+}

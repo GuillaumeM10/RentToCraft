@@ -1,0 +1,321 @@
+$select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12.226' height='7.017' viewBox='0 0 12.226 7.017'%3E%3Cpath id='Tracé_28153' data-name='Tracé 28153' d='M11.137,15.013a.877.877,0,0,1-.622-.254L5.254,9.5A.88.88,0,0,1,6.5,8.254L11.137,12.9l4.638-4.638A.877.877,0,0,1,17.011,9.5l-5.26,5.26a.877.877,0,0,1-.614.254Z' transform='translate(-4.996 -7.996)' fill='rgba(31,39,73,0.3)'/%3E%3C/svg%3E";
+
+%group {
+  margin-bottom: 18px;
+}
+
+%label {
+  display: block;
+  font-size: 14px;
+  font-weight: $weight-regular;
+  color: $primary;
+  margin: 0 0 5px 0;
+  transition: all .3s;
+}
+
+%input {
+  display: block;
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 16px;
+  line-height: 25px;
+  border: solid 1px rgba($primary, .2);
+  background-color: transparent;
+  border-radius: 5px;
+  color: $primary;
+  font-family: $ff;
+  transition: all .3s;
+
+  &::placeholder {
+    color: rgba($primary, .5);
+  }
+}
+
+%caret {
+  // background-image: url(../img/icon/caret_blue.png);
+  background-repeat: no-repeat;
+  background-position: top 50% right 15px;
+  background-size: 13px;
+}
+
+.input {
+
+  &.file,
+  &.text,
+  &.textarea,
+  &.email,
+  &.tel,
+  &.number,
+  &.date,
+  &.password {
+    @extend %group;
+
+    label {
+      @extend %label;
+    }
+
+    input {
+      @extend %input;
+
+      &:focus-visible {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: $gray-3;
+      }
+    }
+  }
+
+  &.radio {
+    @extend %group;
+    accent-color: chocolate;
+
+    label {
+      @extend %label;
+    }
+
+    input {
+      margin-right: 10px;
+    }
+
+    .radio-group {
+      display: inline-block;
+      margin-right: 20px;
+    }
+  }
+
+  &.checkbox {
+    @extend %group;
+    display: flex;
+    font-family: $ff;
+
+    label {
+      @extend %label;
+      padding-left: 38px;
+    }
+
+    input {
+      margin-right: 10px;
+      margin-left: -36px;
+      top: 6px;
+      position: relative;
+    }
+
+  }
+
+  &.select {
+    @extend %group;
+
+    label {
+      @extend %label;
+    }
+
+    select {
+      @extend %input;
+      @extend %caret;
+
+      option[value=""] {
+        display: none;
+      }
+    }
+  }
+
+  &.required {
+    >label:after {
+      content: '*';
+      padding-left: 6px;
+      font-size: 15px;
+    }
+  }
+
+  &.error {
+    label {
+      color: $red;
+    }
+
+    input {
+      border-color: $red;
+    }
+  }
+}
+
+.error-message {
+  color: $red;
+  font-size: 14px;
+}
+
+.gform_heading {
+  display: none;
+}
+
+.gform_wrapper.gravity-theme form {
+  .gform_fields {
+    column-gap: 30px;
+  }
+
+  .gfield_label {
+    @extend %label;
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  input[type=number],
+  textarea,
+  select {
+    @extend %input;
+  }
+
+  select,
+  textarea,
+  input,
+  ul,
+  li {
+    outline: none !important;
+
+    &:focus-visible {
+      outline: none !important;
+    }
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .ginput_container_select {
+    position: relative;
+
+    &:after {
+      content: url($select-arrow);
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-block;
+      width: 15px;
+      height: 20px;
+      fill: currentColor;
+      transition: all .3s ease-in-out;
+    }
+
+    &:has(select:focus) {
+      &:after {
+        transform: translateY(-50%) rotate(180deg);
+      }
+    }
+  }
+
+  select {
+    @extend %caret;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input[type=checkbox] {
+    cursor: pointer;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  input[type=submit] {
+    width: 100%;
+    background-color: rgba($primary, .05);
+    border-radius: 5px;
+    color: rgba($primary, .5);
+    white-space: break-spaces;
+    font-size: 16px;
+    font-weight: $weight-regular;
+    white-space: nowrap;
+    transition: all .3s;
+
+    &:hover {
+      background-color: rgba($primary, .10);
+      color: $primary;
+    }
+
+    &.active {
+      color: $primary;
+    }
+  }
+
+  .gfield:has(input:not([type='radio'], [type='checkbox']):focus),
+  .gfield:has(textarea:focus) {
+
+    input,
+    textarea {
+      border-color: $secondary;
+    }
+
+    label {
+      color: $secondary;
+    }
+  }
+
+  .gfield:has(input[type='radio']) {
+
+    label {
+      font-size: 16px;
+      font-weight: $weight-regular;
+    }
+
+    input {
+      accent-color: chocolate;
+      width: 27px;
+      height: 27px;
+      margin-right: 15px;
+    }
+  }
+
+  .gfield--type-consent {
+    legend {
+      display: none;
+    }
+
+    .ginput_container {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+
+      label {
+        font-size: 14px;
+        font-weight: $weight-regular;
+        color: $primary;
+
+        a {
+          text-decoration: underline;
+          color: $primary;
+        }
+      }
+
+      input {
+        accent-color: chocolate;
+      }
+    }
+  }
+
+  .ginput_container_number .gfield_description {
+    display: none;
+  }
+
+  .gform_footer {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.info-required {
+  font-size: 12px;
+  font-weight: $weight-regular;
+  color: rgba($primary, .5);
+  margin-bottom: 10px;
+  transform: translateY(-10px);
+}

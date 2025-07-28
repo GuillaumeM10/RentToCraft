@@ -1,0 +1,33 @@
+.breadcrumbs{
+  padding: 40px 0;
+
+  > span {
+    span:nth-child(1){
+      a{
+        margin-left: 0;
+      }
+    }
+  }
+
+  a {
+    margin: 0 8px;
+  }
+  .breadcrumb_last{
+    margin-left: 8px;
+  }
+
+  @media screen and (min-width: $small){
+  }
+}
+
+.breadcrumbs-white{
+  .breadcrumbs{
+    padding: 50px 0;
+    span, a {
+      color: white;
+    }
+    a {
+      opacity: 0.5;
+    }
+  }
+}

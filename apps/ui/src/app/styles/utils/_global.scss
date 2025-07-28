@@ -1,0 +1,137 @@
+// ----------------
+// Liste des propriétés utilitaires (note display: grid se trouve dans Grillade)
+// ----------------
+$utils: ((hidden, display, none),
+        (block, display, block),
+        (inline, display, inline),
+        (inline-block, display, inline-block),
+        (flex, display, flex),
+        (flex-row, flex-direction, row),
+        (flex-row-reverse, flex-direction, row-reverse),
+        (flex-col, flex-direction, column),
+        (flex-col-reverse, flex-direction, column-reverse),
+        (flex-wrap, flex-wrap, wrap),
+        (flex-no-wrap, flex-wrap, nowrap),
+        (flex-shrink, flex-shrink, 1),
+        (flex-no-shrink, flex-shrink, 0),
+        (flex-grow, flex-grow, 1),
+        (flex-no-grow, flex-grow, 0),
+        (float-left, float, left),
+        (float-right, float, right),
+        (float-none, float, none),
+        (text-bold, font-weight, bold),
+        (text-italic, font-style, italic),
+        (text-uppercase, text-transform, uppercase),
+        (text-lowercase, text-transform, lowercase),
+        (text-smaller, font-size, smaller),
+        (text-larger, font-size, larger),
+        (text-left, text-align, left),
+        (text-center, text-align, center),
+        (text-right, text-align, right),
+        (text-justify, text-align, justify),
+        (text-wrap, overflow-wrap, break-word),
+        (justify-start, justify-content, flex-start),
+        (justify-end, justify-content, flex-end),
+        (justify-center, justify-content, center),
+        (justify-between, justify-content, space-between),
+        (justify-around, justify-content, space-around),
+        (justify-evenly, justify-content, space-evenly),
+        (justify-items-start, justify-items, start),
+        (justify-items-end, justify-items, end),
+        (justify-items-center, justify-items, center),
+        (align-start, align-content, start),
+        (align-end, align-content, end),
+        (align-center, align-content, center),
+        (align-between, align-content, space-between),
+        (align-around, align-content, space-around),
+        (align-evenly, align-content, space-evenly),
+        (align-items-start, align-items, flex-start),
+        (align-items-end, align-items, flex-end),
+        (align-items-center, align-items, center),
+        (place-center, place-content, center),
+        (justify-self-auto, justify-self, auto),
+        (justify-self-start, justify-self, start),
+        (justify-self-end, justify-self, end),
+        (justify-self-center, justify-self, center),
+        (justify-self-stretch, justify-self, stretch),
+        (align-self-auto, align-self, auto),
+        (align-self-start, align-self, flex-start),
+        (align-self-end, align-self, flex-end),
+        (align-self-center, align-self, center),
+        (align-self-stretch, align-self, stretch),
+        (align-top, vertical-align, top),
+        (align-bottom, vertical-align, bottom),
+        (align-middle, vertical-align, middle),
+        (item-first, order, -100),
+        (item-last, order, 100)) !default;
+
+@each $class, $prop, $value in $utils {
+  .#{$class} {
+    #{$prop}: #{$value};
+  }
+}
+
+// loop for each breakpoint
+@each $class, $prop, $value in $utils {
+  @each $bp, $bpv in $breakpoints {
+    @media (min-width: #{$bpv}) {
+      .#{$bp}\:#{$class} {
+        #{$prop}: #{$value};
+      }
+    }
+  }
+}
+
+// line-clamp
+$values: (1, 2, 3, 4);
+@each $value in $values {
+  .lc-#{$value} {
+    -webkit-line-clamp: $value;
+  }
+}
+
+// multi-properties utils
+.is-unstyled {
+  list-style: none;
+  padding-left: 0;
+}
+.is-disabled,
+[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  filter: grayscale(1);
+}
+.text-normal {
+  font-weight: normal;
+  font-style: normal;
+  text-transform: none;
+}
+
+// loop for each breakpoint
+@each $bp, $bpv in $breakpoints {
+  @media (min-width: #{$bpv}) {
+    .#{$bp}\:visually-hidden {
+      position: absolute !important;
+      border: 0 !important;
+      height: 1px !important;
+      width: 1px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+    }
+    .#{$bp}\:is-unstyled {
+      list-style: none;
+      padding-left: 0;
+    }
+    .#{$bp}\:is-disabled {
+      opacity: 0.6;
+      cursor: not-allowed !important;
+      filter: grayscale(1);
+    }
+    .#{$bp}\:text-normal {
+      font-weight: normal;
+      font-style: normal;
+      text-transform: none;
+    }
+  }
+}

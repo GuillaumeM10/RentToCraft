@@ -1,0 +1,103 @@
+%btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+  line-height: 1.5;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.25s;
+  transition-property: box-shadow, background-color, color, border;
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 200px;
+}
+
+.btn,
+.button {
+  @extend %btn;
+  &:focus {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// button state variants
+.btn,
+.button {
+  &-small {
+    padding: $spacer-tiny-plus $spacer-small;
+    font-size: .8em;
+  }
+
+  &-big {
+    padding: $spacer-medium $spacer-medium;
+    font-size: 1.4em;
+  }
+
+  &-block {
+    width: 100% !important;
+    display: block;
+  }
+
+  &-unstyled {
+    padding: 0;
+    border: none;
+    text-align: left;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}
+
+// button color theme
+@each $color, $value in $colors {
+  .btn-#{$color}{
+    color: color-yiq($value);
+    background-color: $value;
+    &:focus,
+    &:active,
+    &:hover{
+      color: color-yiq($value);
+      background-color: darken($value, 14);
+    }
+  }
+}
+
+@each $color, $value in $colors {
+  .btn-outline-#{$color}{
+    color: $value;
+    background-color: transparent;
+    border: 2px solid $value;
+    padding: 10px 24px;
+
+    .icon{color: $value;}
+    
+    &:focus,
+    &:active,
+    &:hover{
+      color: $white;
+      background-color: $value;
+
+      .icon{color: $white;} 
+    }
+  }
+}
+
+.btn-outline-white {
+  &:focus,
+  &:active,
+  &:hover {
+    color: $primary;
+    .icon { color: $primary; }
+  }
+}

@@ -1,0 +1,24 @@
+.badge {
+  display: inline-block;
+  padding: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 15px;
+  &:empty {
+    display: none;
+  }
+}
+
+@each $color, $value in $colors {
+  .badge-#{$color}{
+    background-color: $value;
+    color: white;
+  }
+}
+// Override badge special
+.badge-light{
+  color: $primary;
+}

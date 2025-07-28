@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400,600,900&display=swap');
+
+.tac {
+    text-align: center;
+}
+.tar {
+    text-align: right;
+}
+
+@each $color, $value in $colors {
+    .text-#{$color} {
+        color: $value !important;
+    }
+}
+
+@each $weight, $value in $weights {
+    .weight-#{$weight} {
+        font-weight: $value !important;
+    }
+}
+
+
+$title-sizes: (
+    "30": 30px,
+    "40": 40px,
+    "50": 50px,
+    "60": 60px,
+);
+@each $size, $value in $title-sizes {
+    .title-#{$size} {
+        font-size: $value;
+        line-height: $value+10px;
+        font-weight: 600;
+        padding: 30px 0;
+        margin: 0;
+    }
+}
+.page-title {
+    @extend .title-50;
+}
+
+@media screen and (min-width: $small) {
+}
+
+@media screen and (min-width: $medium) {
+}

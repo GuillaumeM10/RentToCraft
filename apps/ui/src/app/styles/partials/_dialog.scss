@@ -1,0 +1,266 @@
+.dialog-menu{
+  &[open]{
+    display: flex;
+  }
+  flex-direction: column;
+  padding: 48px;
+
+  .heading{
+    margin-bottom: 64px;
+
+    .icon-site-logo{
+      font-size: 100px;
+      height: 20px;
+    }
+  }
+
+  .close{
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50px;
+    transition: all .3s ease-in-out;
+    width: 48px;
+    height: 48px;
+
+    .icon{
+      font-size: 12px;  
+      opacity: .5;
+      transition: all .3s ease-in-out;
+    }
+
+    &:hover {
+      background-color: #d2d3d5;
+      .icon{
+        opacity: 1;
+      }
+    }
+  }
+
+  .close-button{
+    cursor: pointer;
+
+    .icon{
+      transform: rotate(180deg);
+    }
+  }
+
+  .sub-menu{
+    display: none;
+  }
+
+  .menu-link{
+    font-size: 22px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 12px 0;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    
+    &:first-child{
+      padding-top: 0;
+    }
+    &:last-child{
+      padding-bottom: 16px;
+    }
+    
+    &.small{font-size: 16px;}
+    .icon{font-size: 24px;}
+  }
+
+  .menu-sub-link{
+    transition: all .3s ease-in-out;
+  }
+
+  .main-menu{
+    list-style: none;;
+    padding-left: 0;
+  }
+
+  .main-menu,
+  .sub-menu{
+    &:hover li:not(:has(img), .col-title){
+      opacity: .5;
+  
+      &:hover{
+        opacity: 1;
+      }
+    }
+  }
+
+  .content,
+  .sub-menu{
+    grid-template-columns: auto auto;
+  }
+
+  .sub-menu.active{
+    display: grid;
+  }
+
+  .sub-menu{
+    gap: 100px;
+
+    ul{
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 32px;
+    }
+
+    .col-title{
+      font-weight: $weight-bold;
+    }
+
+    li:not(.card-img){
+      padding: 16px 0 12px;
+      white-space: nowrap;
+
+      &:first-child{
+        padding-top: 0;
+      }
+      &:last-child{
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .cards-img-container{
+    padding: 0 54px;
+  }
+  .card-img{
+    width: 298px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding: 16px;
+    overflow: hidden;
+
+    .img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      filter: brightness(.8);
+      transition: all .3s ease-in-out;
+    }
+
+    .title,
+    .text{
+      color: $white;
+    }
+
+    .title{
+      font-size: 22px;
+      line-height: 32px;
+      font-weight: $weight-bold;
+    }
+
+    .text{
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    &:hover{
+      .img{
+        transform: scale(1.05);
+      }
+    }
+
+    &:first-child{
+      margin-bottom: 16px;
+    }
+  }
+
+  .footer{
+    margin-top: 44px;
+
+    .btn{
+      width: fit-content;
+      line-height: 24px;
+    }
+  }
+
+  .current-lang{
+    display: none;
+  }
+
+  @media screen and (max-width: $medium) {
+    padding: 32px 38px 32px 24px ;
+
+    .current-lang{
+      display: flex;
+    }
+
+    .close-button,
+    .sub-menu-container{
+      display: none;
+    }
+
+    .sub-menu-container .sub-menu > .title{
+      font-size: 22px;
+      margin-bottom: 54px;
+      color: #212529;
+    }
+
+    &:has(.sub-menu.active){
+      .main-menu,
+      .footer,
+      .icon.icon-site-logo {
+        display: none;
+      }
+
+      .close-button,
+      .sub-menu-container{
+        display: block;
+      }
+
+      .close-button .icon{
+        font-size: 24px;
+      }
+
+      .heading{
+        margin-bottom: 40px;
+      }
+    }
+
+    .sub-menu.active{
+      display: block;
+    }
+
+    .footer .btn{
+      width: 100%;
+      padding: 8px 16px;
+    }
+
+    .cards-img-container{
+      padding-right: 0;
+      .card-img{width: 100%;}
+    }
+
+    .langs li:not(.lang-item){
+      display: none;
+    }
+    .lang-item{
+      margin-bottom: 20px;
+      padding: 0;
+
+      span{
+        font-size: 22px;
+        font-weight: $weight-semibold;
+        color: #212529;
+      }
+      img{
+        margin-right: 8px;
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 50px;
+      }
+    }
+  }
+}

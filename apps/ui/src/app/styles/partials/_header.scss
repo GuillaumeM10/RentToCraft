@@ -1,0 +1,66 @@
+.header-site {
+  position: sticky;
+  z-index: 999999;
+  top: 0;
+  padding: 18px 0;
+  background-color: transparent;
+  transition: all .3s ease-in-out;
+
+  color: $white;
+
+  a {
+    color: $white;
+  }
+
+
+  .burger-open {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+
+    .bar {
+      background-color: $white;
+      width: 30px;
+      height: 2px;
+      display: inline-block;
+      transition: background-color .3s ease-in-out;
+    }
+  }
+
+
+  .link:not(.btn-white),
+  .nav-link {
+    color: $white;
+  }
+
+  .btn-white {
+    line-height: 24px;
+  }
+
+  &.header-light {
+    background-color: $white;
+    color: $primary;
+    box-shadow: 0 3px 6px rgba(black, .08);
+
+    a,
+    p,
+    span {
+      color: $primary;
+    }
+
+    .burger-open {
+      .bar {
+        background-color: $primary;
+      }
+    }
+
+  }
+
+  @media screen and (max-width: $medium) {
+    .offcanvas-container {
+      order: 1;
+      margin-left: 16px;
+    }
+  }
+}
