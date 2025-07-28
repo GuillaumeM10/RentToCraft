@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RentalModule } from 'src/rental/rental.module';
 import { UserModule } from 'src/user/user.module';
 import { ValidTokenModule } from 'src/valid-token/valid-token.module';
 
@@ -12,6 +13,7 @@ import { FileService } from './file.service';
     TypeOrmModule.forFeature([FileEntity]),
     ValidTokenModule,
     forwardRef(() => UserModule),
+    forwardRef(() => RentalModule),
   ],
   controllers: [FileController],
   providers: [FileService],

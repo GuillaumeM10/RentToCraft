@@ -1,5 +1,7 @@
 import { UserRole } from '@rent-to-craft/dtos';
 import { FileEntity } from 'src/file/entities/file.entity';
+import { RentalEntity } from 'src/rental/entities/rental.entity';
+import { RentalCommentEntity } from 'src/rental-comment/entities/rental-comment.entity';
 import {
   Column,
   Entity,
@@ -71,9 +73,21 @@ export class UserEntity extends Timestamp {
   @JoinColumn()
   banner: FileEntity;
 
+  @OneToMany(() => RentalEntity, (rental) => rental.user, {
+    cascade: ['insert', 'update', 'remove'],
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  rentals: RentalEntity[];
+
+  @OneToMany(() => RentalCommentEntity, (comment) => comment.author, {
+    cascade: ['insert', 'update', 'remove'],
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  rentalComments: RentalCommentEntity[];
+
   // posts Post
-  // rentals Rental
-  // rentalComments RentalComment
   // city City
   // orders Order
   // postComments PostComment

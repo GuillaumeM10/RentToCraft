@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { MailModule } from './mail/mail.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { RentalModule } from './rental/rental.module';
+import { RentalCatModule } from './rental-cat/rental-cat.module';
+import { RentalCommentModule } from './rental-comment/rental-comment.module';
 import { TokenResetPasswordModule } from './token-reset-password/token-reset-password.module';
 import { UserModule } from './user/user.module';
 import { ValidTokenModule } from './valid-token/valid-token.module';
@@ -62,6 +65,9 @@ console.log('isProductionDB', isProduction);
     MailModule,
     ValidTokenModule,
     FileModule,
+    RentalModule,
+    RentalCatModule,
+    RentalCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

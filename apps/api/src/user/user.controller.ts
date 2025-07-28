@@ -20,7 +20,7 @@ import { AuthGuard } from '../auth/guard/jwt-passport.guard';
 import { User } from '../decorator/user.decorator';
 import { UserService } from './user.service';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

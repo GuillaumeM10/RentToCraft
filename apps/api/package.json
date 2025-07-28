@@ -44,6 +44,7 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sharp": "^0.34.3",
+    "slugify": "^1.6.6",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.1"

@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   MessageDto,
@@ -105,67 +110,42 @@ export class UserService {
   }
 
   async update(updateUserDto: UserUpdateDto, user: UserDto, id: number, files) {
-    if (user.id !== id) {
-      throw new HttpException('Unauthorized', 401);
-    }
-
     const getUser = await this.findOne(user.id);
-
-    if (getUser) {
-      if (getUser.id !== user.id) {
-        throw new NotFoundException(
-          `Impossible de trouver l'utilisateur #${user.id}.`,
-        );
-      }
-
-      const handleFile = async (fileArr) => {
-        if (fileArr && fileArr.length > 0) {
-          const optimizedFile = await this.fileService.optimizeFile(fileArr[0]);
-          return this.fileService.create({
-            name: fileArr[0].originalname as string,
-            file: optimizedFile,
-            id: null,
-          });
-        }
-        return null;
-      };
-
-      if (files?.profilePicture) {
-        updateUserDto.profilePicture = await handleFile(files.profilePicture);
-      } else if (
-        files?.profilePicture === '' ||
-        files?.profilePicture === undefined
-      ) {
-        updateUserDto.profilePicture = null;
-      }
-      if (files?.banner) {
-        updateUserDto.banner = await handleFile(files.banner);
-      } else if (files?.banner === '' || files?.banner === undefined) {
-        updateUserDto.banner = null;
-      }
-
-      if (files === undefined) {
-        updateUserDto.profilePicture = getUser.profilePicture;
-        updateUserDto.banner = getUser.banner;
-      }
-
-      const userUpdate = {
-        ...getUser,
-        ...updateUserDto,
-      };
-
-      if (userUpdate.password) {
-        userUpdate.password = bcrypt.hashSync(userUpdate.password, salt);
-      }
-
-      await this.userRepository.save(userUpdate);
-
-      return plainToInstance(UserDto, userUpdate);
-    } else {
+    if (!getUser || getUser.id !== user.id) {
       throw new NotFoundException(
         `Impossible de trouver l'utilisateur #${user.id}.`,
       );
     }
+
+    if (user.id !== id && user.role !== 'administrator') {
+      throw new UnauthorizedException(
+        `Vous ne pouvez pas modifier un autre utilisateur.`,
+      );
+    }
+
+    updateUserDto.profilePicture = files?.profilePicture && files.profilePicture.length > 0 ? (await this.fileService.create(
+        files.profilePicture[0],
+      )) : null;
+
+    updateUserDto.banner = files?.banner && files.banner.length > 0 ? (await this.fileService.create(files.banner[0])) : null;
+
+    if (files === undefined) {
+      updateUserDto.profilePicture = getUser.profilePicture;
+      updateUserDto.banner = getUser.banner;
+    }
+
+    const userUpdate = {
+      ...getUser,
+      ...updateUserDto,
+    };
+
+    if (userUpdate.password) {
+      userUpdate.password = bcrypt.hashSync(userUpdate.password, salt);
+    }
+
+    await this.userRepository.save(userUpdate);
+
+    return plainToInstance(UserDto, userUpdate);
   }
 
   async getUserPassword(email: string) {
@@ -206,19 +186,19 @@ export class UserService {
 
     if (getUser.id === user.id) {
       throw new NotFoundException(`Impossible de supprimer votre compte.`);
-    } else {
-      const userToRemove = await this.userRepository.softDelete(id);
-
-      if (!userToRemove) {
-        throw new NotFoundException(
-          `Impossible de trouver l'utilisateur #${id}.`,
-        );
-      }
-
-      return plainToInstance(MessageDto, {
-        message: `L'utilisateur #${id} a été supprimé.`,
-      });
     }
+
+    const userToRemove = await this.userRepository.softDelete(id);
+
+    if (!userToRemove) {
+      throw new NotFoundException(
+        `Impossible de trouver l'utilisateur #${id}.`,
+      );
+    }
+
+    return plainToInstance(MessageDto, {
+      message: `L'utilisateur #${id} a été supprimé.`,
+    });
   }
 
   async getAllFilesIds() {

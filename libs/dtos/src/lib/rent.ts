@@ -20,8 +20,8 @@ export class RentalDto {
 export class RentalCatDto {
   id: number | null;
   name: string;
+  description: string | null;
   slug: string;
-  quantity: number;
 
   rentals: RentalDto[] | null;
 }

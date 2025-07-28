@@ -9,6 +9,7 @@ import { FileDto } from '@rent-to-craft/dtos';
 import { plainToInstance } from 'class-transformer';
 import { File } from 'multer';
 import * as sharp from 'sharp';
+import { RentalService } from 'src/rental/rental.service';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 
@@ -21,10 +22,24 @@ export class FileService {
     private readonly fileRepository: Repository<FileEntity>,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => RentalService))
+    private readonly rentalService: RentalService,
   ) {}
 
-  async create(file: FileDto) {
-    const newFile = this.fileRepository.create(file);
+  async create(file: File): Promise<FileDto> {
+    const optimizedFile = await this.optimizeFile(file);
+
+    const fileName = file.originalname.split('.');
+    fileName[fileName.length - 1] = 'webp';
+    file.originalname = fileName.join('.');
+
+    const fileDto = {
+      name: file.originalname,
+      file: optimizedFile,
+      id: null,
+    };
+
+    const newFile = this.fileRepository.create(fileDto);
     return plainToInstance(FileDto, await this.fileRepository.save(newFile));
   }
 
@@ -77,21 +92,36 @@ export class FileService {
   }
 
   async clearNotUsedFiles() {
-    console.log('cleaning');
-    let userFiles = await this.userService.getAllFilesIds();
+    const [userFiles, rentalFiles] = await Promise.all([
+      this.userService.getAllFilesIds(),
+      this.rentalService.getAllFilesIds(),
+    ]);
 
-    if (!Array.isArray(userFiles)) {
-      userFiles = [];
-    }
+    const normalizeIds = (files: unknown): number[] => {
+      if (!Array.isArray(files)) return [];
+      return files.map(Number).filter((id) => !Number.isNaN(id));
+    };
 
-    userFiles = userFiles.map(Number);
+    const userFileIds = normalizeIds(userFiles);
+    const rentalFileIds = normalizeIds(rentalFiles);
+
+    const allUsedFileIds = [...new Set([...rentalFileIds, ...userFileIds])];
 
     const query = this.fileRepository.createQueryBuilder('file');
-    query.where('file.id NOT IN (:...userFiles)', { userFiles });
+
+    if (allUsedFileIds.length > 0) {
+      query.where('file.id NOT IN (:...usedIds)', { usedIds: allUsedFileIds });
+    }
+
     const unusedFiles = await query.getMany();
+
     if (unusedFiles.length > 0) {
       await this.fileRepository.remove(unusedFiles);
+      console.log(`${unusedFiles.length} fichiers supprimés`);
+    } else {
+      console.log('Aucun fichier à supprimer');
     }
+
     return unusedFiles.map((file) => plainToInstance(FileDto, file));
   }
 }
