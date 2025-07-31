@@ -25,8 +25,8 @@ export class UserDto {
 
   posts: PostDto[] | null;
   postComments: PostCommentDto[] | null;
-  banner: FileDto | null;
-  profilePicture: FileDto | null;
+  banner: FileDto | File | null;
+  profilePicture: FileDto | File | null;
   city: CityDto | null;
   rentals: RentalDto[] | null;
   rentalComments: RentalCommentDto[] | null;

@@ -1,0 +1,20 @@
+.dashboard-template {
+  .dashboard-link {
+    font-size: 26px;
+    color: $primary;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+
+
+    &.active,
+    &:hover {
+      border-bottom: 2px solid $primary;
+    }
+  }
+
+  h1 {
+    font-size: 36px;
+    color: $primary;
+    margin-bottom: 20px;
+  }
+}

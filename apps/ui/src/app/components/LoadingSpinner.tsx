@@ -1,6 +1,7 @@
 interface LoadingSpinnerProps {
   readonly className?: string;
   readonly size?: "large" | "medium" | "small";
+  readonly light?: boolean;
 }
 
 function getSizeClass(size: "large" | "medium" | "small"): string {
@@ -20,8 +21,13 @@ function getSizeClass(size: "large" | "medium" | "small"): string {
 export function LoadingSpinner({
   size = "medium",
   className = "",
+  light = false,
 }: LoadingSpinnerProps) {
   const sizeClass = getSizeClass(size);
 
-  return <div className={`loading-spinner ${sizeClass} ${className}`} />;
+  return (
+    <div
+      className={`loading-spinner ${sizeClass} ${className} ${light ? "loading-spinner--light" : ""}`}
+    />
+  );
 }

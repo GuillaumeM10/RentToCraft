@@ -29,24 +29,19 @@ input,
 select,
 textarea {
   margin: 0;
-  background-color: transparent; /* 1 */
-  color: inherit; /* 1 */
-  font-family: inherit; /* 2 */
-  font-size: inherit; /* 2 */
-  line-height: inherit; /* 2 */
-  letter-spacing: inherit; /* 2 */
+  background-color: transparent;
+  /* 1 */
+  color: inherit;
+  /* 1 */
+  font-family: inherit;
+  /* 2 */
+  font-size: inherit;
+  /* 2 */
+  line-height: inherit;
+  /* 2 */
+  letter-spacing: inherit;
+  /* 2 */
   vertical-align: middle;
-}
-
-/*
- * Basic User Interface reset
- */
-
-button,
-input:not([type="radio"]):not([type="checkbox"]),
-select,
-textarea {
-  border: 0;
 }
 
 /*
@@ -58,8 +53,10 @@ pre,
 code,
 kbd,
 samp {
-  font-family: monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
 }
 
 pre {
@@ -79,7 +76,7 @@ input {
   overflow: visible;
 }
 
-/* 
+/*
  * Remove the inheritance of text transform in Firefox
  */
 
@@ -158,8 +155,10 @@ template {
  */
 
 [type="search"] {
-  -webkit-appearance: textfield; /* 1 */
-  outline-offset: -2px; /* 2 */
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
 }
 
 /*
@@ -194,8 +193,10 @@ template {
  */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button; /* 1 */
-  font: inherit; /* 2 */
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
 }
 
 /*

@@ -2,7 +2,7 @@ import axios from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { email, password, firstName, lastName } = await request.json();
+  const { email, password } = await request.json();
 
   try {
     const response = await axios.post(
@@ -10,8 +10,6 @@ export async function POST(request: NextRequest) {
       {
         email,
         password,
-        firstName,
-        lastName,
       },
       {
         headers: {
@@ -23,23 +21,23 @@ export async function POST(request: NextRequest) {
     if (response.status === 201 || response.status === 200) {
       return NextResponse.json({
         success: true,
-        message: "Registration successful",
+        message: "Inscription réussie",
       });
     }
 
     return NextResponse.json(
-      { error: response.data.message ?? "Registration failed" },
+      { error: response.data.message ?? "Inscription échouée" },
       { status: response.status },
     );
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json(
-        { error: error.response.data.message ?? "Registration failed" },
+        { error: error.response.data.message ?? "Inscription échouée" },
         { status: error.response.status },
       );
     }
     return NextResponse.json(
-      { error: "Network error occurred" },
+      { error: "Une erreur réseau est survenue" },
       { status: 500 },
     );
   }

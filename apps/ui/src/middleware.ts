@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/profile");
 
   if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/auth/signin", request.url));
+    return NextResponse.redirect(new URL("/auth", request.url));
   }
 
   if (isAuthPage && token) {

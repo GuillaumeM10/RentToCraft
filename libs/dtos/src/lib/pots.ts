@@ -9,7 +9,7 @@ export class PostDto {
   published: boolean;
 
   author: UserDto;
-  thumbnail: FileDto;
+  thumbnail: FileDto | File;
   comments: PostCommentDto[];
   cats: PostCatDto[];
 }

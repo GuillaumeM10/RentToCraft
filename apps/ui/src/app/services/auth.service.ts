@@ -5,12 +5,7 @@ type AuthServiceType = {
   isAuthenticated: () => Promise<boolean>;
   logout: () => Promise<void>;
   signin: (email: string, password: string) => Promise<boolean | string>;
-  signup: (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName?: string,
-  ) => Promise<boolean | string>;
+  signup: (email: string, password: string) => Promise<boolean | string>;
 };
 
 const AuthService: AuthServiceType = {
@@ -32,12 +27,12 @@ const AuthService: AuthServiceType = {
       const errorMessage =
         typeof data.error === "string"
           ? data.error
-          : (data.error?.message ?? "Unknown error");
+          : (data.error?.message ?? "Erreur inconnue");
 
-      return `Error: ${errorMessage}`;
+      return `Erreur: ${errorMessage}`;
     } catch (error) {
       console.log(error);
-      return `Network error: ${error instanceof Error ? error.message : "Unknown error"}`;
+      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
     }
   },
 
@@ -60,19 +55,14 @@ const AuthService: AuthServiceType = {
     }
   },
 
-  signup: async (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName?: string,
-  ) => {
+  signup: async (email: string, password: string) => {
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, firstName, lastName }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
@@ -81,9 +71,9 @@ const AuthService: AuthServiceType = {
         return true;
       }
 
-      return `Error: ${data.error ?? "Registration failed"}`;
+      return `Erreur: ${data.error ?? "Échec de l'inscription"}`;
     } catch (error) {
-      return `Network error: ${error instanceof Error ? error.message : "Unknown error"}`;
+      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
     }
   },
 

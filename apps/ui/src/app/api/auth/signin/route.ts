@@ -39,18 +39,18 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: response.data.message ?? "Authentication failed" },
+      { error: response.data.message ?? "Connexion échouée" },
       { status: response.status },
     );
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json(
-        { error: error.response.data.message ?? "Authentication failed" },
+        { error: error.response.data.message ?? "Connexion échouée" },
         { status: error.response.status },
       );
     }
     return NextResponse.json(
-      { error: "Network error occurred" },
+      { error: "Une erreur réseau est survenue" },
       { status: 500 },
     );
   }

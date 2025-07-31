@@ -1,0 +1,17 @@
+.page-auth {
+  .layout-maxed {
+    min-height: 90dvh;
+  }
+
+  .signin-container {
+    border-right: 1px solid $primary;
+  }
+
+  @media screen and (max-width: $medium) {
+    .signin-container {
+      border-right: none;
+      border-bottom: 1px solid $primary;
+    }
+
+  }
+}

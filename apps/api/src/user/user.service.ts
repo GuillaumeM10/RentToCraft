@@ -78,19 +78,18 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    const user = await this.userRepository
+    const getUser = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('user.banner', 'banner')
       .getOne();
-    if (user === null) {
+    if (getUser === null) {
       throw new NotFoundException(
         `Impossible de trouver l'utilisateur #${id}.`,
       );
     }
-
-    return plainToInstance(UserDto, user);
+    return plainToInstance(UserDto, getUser);
   }
 
   async findOneByEmail(email: string) {
@@ -123,15 +122,23 @@ export class UserService {
       );
     }
 
-    updateUserDto.profilePicture = files?.profilePicture && files.profilePicture.length > 0 ? (await this.fileService.create(
-        files.profilePicture[0],
-      )) : null;
+    updateUserDto.profilePicture =
+      files?.profilePicture && files.profilePicture.length > 0
+        ? await this.fileService.create(files.profilePicture[0])
+        : null;
 
-    updateUserDto.banner = files?.banner && files.banner.length > 0 ? (await this.fileService.create(files.banner[0])) : null;
+    updateUserDto.banner =
+      files?.banner && files.banner.length > 0
+        ? await this.fileService.create(files.banner[0])
+        : null;
 
     if (files === undefined) {
       updateUserDto.profilePicture = getUser.profilePicture;
       updateUserDto.banner = getUser.banner;
+    }
+
+    if (typeof updateUserDto.isPublic === 'string') {
+      updateUserDto.isPublic = updateUserDto.isPublic === 'true';
     }
 
     const userUpdate = {

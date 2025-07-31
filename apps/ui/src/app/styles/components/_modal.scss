@@ -1,114 +1,114 @@
 dialog.modal {
-    border: 0;
-    border-radius: 20px;
-    max-width: 600px;
-    width: 100%;
-    padding: 0;
+  border: 0;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  padding: 0;
 
-    .modal-header {
-        border-bottom: solid 1px $primary-10;
-        padding: 30px 40px 31px 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+  .modal-header {
+    border-bottom: solid 1px $primary-10;
+    padding: 30px 40px 31px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-        .btn {
-            background-color: $primary-10;
-            font-size: 16px;
-            gap: 5px;
-        }
+    .btn {
+      background-color: $primary-10;
+      font-size: 16px;
+      gap: 5px;
     }
+  }
 
-    .modal-content {
-        padding: 40px;
+  .modal-content {
+    padding: 40px;
 
-        .description {
-            margin-bottom: 50px;
-            font-size: 20px;
-            line-height: 30px;
-            font-weight: $weight-regular;
-            color: rgba($primary, .7);
-        }
+    .description {
+      margin-bottom: 50px;
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: $weight-regular;
+      color: rgba($primary, .7);
     }
+  }
 
 
-    &::backdrop {
-        background-color: $primary-30;
-        backdrop-filter: blur(7px);
-    }
+  &::backdrop {
+    background-color: $primary-30;
+    backdrop-filter: blur(7px);
+  }
 }
 
 body:has(dialog[open]) {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .off-canvas {
-    position: fixed;
-    width: 100%;
-    max-width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    border: none;
-    overflow: visible auto;
-    animation: translate-in 0.3s linear forwards;
+  position: fixed;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  border: none;
+  overflow: visible auto;
+  animation: translate-in 0.3s linear forwards;
 
-    .close {
-        .icon{
-            color: $primary;
-        }
+  .close {
+    .icon {
+      color: $primary;
     }
+  }
 
-    &[open] {
-        margin-right: auto;
-    }
+  &[open] {
+    margin-left: auto;
+  }
 
-    &::backdrop {
-        background: $primary;
-        opacity: 0;
-        animation: opacity-in 0.3s linear forwards;
-    }
+  &::backdrop {
+    background: $primary;
+    opacity: 0;
+    animation: opacity-in 0.3s linear forwards;
+  }
 
-    @media screen and (min-width: $medium) {
-        width: fit-content;
-    }
+  @media screen and (min-width: $medium) {
+    width: fit-content;
+  }
 }
 
 @keyframes translate-in {
-    0% {
-        transform: translateX(-100%);
-    }
+  0% {
+    transform: translateX(100%);
+  }
 
-    100% {
-        transform: translateX(0);
-    }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 @keyframes translate-out {
-    0% {
-        transform: translateX(0);
-    }
+  0% {
+    transform: translateX(0);
+  }
 
-    100% {
-        transform: translateX(-100%);
-    }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes opacity-in {
-    0% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 0;
+  }
 
-    100% {
-        opacity: 0.5;
-    }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes opacity-out {
-    0% {
-        opacity: 0.5;
-    }
+  0% {
+    opacity: 0.5;
+  }
 
-    100% {
-        opacity: 0;
-    }
+  100% {
+    opacity: 0;
+  }
 }

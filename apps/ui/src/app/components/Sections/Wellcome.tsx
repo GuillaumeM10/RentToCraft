@@ -14,10 +14,10 @@ const Wellcome = () => {
         Connectez-vous pour accéder à votre tableau de bord et gérer vos outils
       </p>
       <div className="flex justify-center mt-4 gap-10">
-        <Link href="/auth/signin" className="btn btn-secondary">
+        <Link href="/auth" className="btn btn-secondary">
           Connexion
         </Link>
-        <Link href="/auth/signup" className="btn btn-primary ml-4">
+        <Link href="/auth" className="btn btn-primary ml-4">
           S'inscrire
         </Link>
       </div>

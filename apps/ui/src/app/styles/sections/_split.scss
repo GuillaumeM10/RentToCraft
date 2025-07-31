@@ -58,8 +58,32 @@ $icon-check: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTMiIGZp
     line-height: 24px;
   }
 
-  @media screen and (max-width: $medium) {
+  &.dark {
+    background: $primary;
+    padding: 70px 0;
+    color: $white;
+
+    .title,
+    .sub-title,
+    .description,
+    .list {
+      color: $white;
+    }
+
     .image-container {
+      grid-column: 3 / 4;
+    }
+  }
+
+  @media screen and (max-width: $medium) {
+
+    &.dark {
+      padding: 0px 0 32px 0;
+    }
+
+    .image-container,
+    &.dark .image-container,
+    &.odd.dark .image-container {
       grid-column: 1 / -1;
     }
 
@@ -105,6 +129,12 @@ $icon-check: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTMiIGZp
         grid-column: 3 / 3;
         margin-left: 80px;
         margin-right: 0px;
+      }
+
+      &.dark {
+        .image-container {
+          grid-column: 2 / 3;
+        }
       }
     }
   }

@@ -39,7 +39,7 @@ export default function HomePage() {
         <Split
           title="Partagez vos compétences"
           description="Partagez vos compétences et aidez les autres à trouver les outils dont ils ont besoin"
-          image="/images/outils.jpeg"
+          image="/images/partage-jardin.jpeg"
         />
 
         <Accordion
@@ -62,6 +62,14 @@ export default function HomePage() {
                 "Pour retourner un outil, veuillez suivre les instructions de retour fournies avec votre commande.",
             },
           ]}
+        />
+
+        <Split
+          title="Rejoignez la communauté"
+          description="Participez à notre communauté pour échanger des conseils et des astuces sur l'utilisation des outils"
+          image="/images/communaute.png"
+          dark
+          odd
         />
       </div>
     </Fragment>

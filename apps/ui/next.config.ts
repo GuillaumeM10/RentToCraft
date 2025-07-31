@@ -6,17 +6,30 @@ config({ path: path.resolve(process.cwd(), "../../.env") });
 
 const nextConfig: NextConfig = {
   sassOptions: {
-    silenceDeprecations: ["legacy-js-api"],
     quietDeps: true,
     verbose: false,
+    silenceDeprecations: ["*"],
     logger: {
-      warn: function (message: string) {
-        if (message.includes("deprecation")) {
-          return;
-        }
-        console.warn(message);
-      },
+      warn: () => {},
+      debug: () => {},
     },
+  },
+  transpilePackages: ["@rent-to-craft/dtos"],
+  webpack: (config, { dev, isServer }) => {
+    config.module.rules.push({
+      test: /\.js$/,
+      include: path.resolve(__dirname, "../../libs/dtos"),
+      type: "javascript/auto",
+    });
+
+    if (dev) {
+      config.infrastructureLogging = {
+        level: "error",
+      };
+      config.stats = "errors-only";
+    }
+
+    return config;
   },
 };
 

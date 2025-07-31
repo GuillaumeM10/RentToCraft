@@ -8,6 +8,8 @@ $primary600: #020035;
 $primary700: #171A21;
 
 $layout-paddings: 20px;
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 // IMPORTS
 @import './styles//main.scss';

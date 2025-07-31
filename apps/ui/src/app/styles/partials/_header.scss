@@ -8,15 +8,12 @@
 
   color: $white;
 
-  a {
-    color: $white;
-  }
-
-
   .burger-open {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
+    padding: 0;
+    border: 0;
     cursor: pointer;
 
     .bar {
@@ -26,6 +23,13 @@
       display: inline-block;
       transition: background-color .3s ease-in-out;
     }
+  }
+
+  .site-logo {
+    height: 70px;
+    width: auto;
+    filter: invert(1);
+    transition: all .3s ease-in-out;
   }
 
 
@@ -55,12 +59,9 @@
       }
     }
 
-  }
-
-  @media screen and (max-width: $medium) {
-    .offcanvas-container {
-      order: 1;
-      margin-left: 16px;
+    .site-logo {
+      filter: none;
     }
+
   }
 }

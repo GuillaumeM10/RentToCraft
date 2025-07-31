@@ -72,23 +72,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error("Logout error:", error);
       setUser(null);
     } finally {
-      window.location.href = "/auth/signin";
+      window.location.href = "/auth";
     }
   }, []);
 
-  const register = useCallback(
-    async (
-      email: string,
-      password: string,
-      firstName: string,
-      lastName?: string,
-    ) => {
-      const result = await AuthService.signup(
-        email,
-        password,
-        firstName,
-        lastName,
-      );
+  const signup = useCallback(
+    async (email: string, password: string) => {
+      const result = await AuthService.signup(email, password);
       if (result === true) {
         const signinResult = await signin(email, password);
         return signinResult;
@@ -107,10 +97,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isLoading,
       signin,
       logout,
-      register,
+      signup,
       isTransparentOnTop,
     }),
-    [user, isAuthenticated, isLoading, signin, logout, register],
+    [user, isAuthenticated, isLoading, signin, logout, signup],
   );
 
   return (

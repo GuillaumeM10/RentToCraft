@@ -20,7 +20,7 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   font-size: 16px;
   line-height: 25px;
   border: solid 1px rgba($primary, .2);
-  background-color: transparent;
+  background-color: $white;
   border-radius: 5px;
   color: $primary;
   font-family: $ff;
@@ -38,109 +38,8 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   background-size: 13px;
 }
 
-.input {
-
-  &.file,
-  &.text,
-  &.textarea,
-  &.email,
-  &.tel,
-  &.number,
-  &.date,
-  &.password {
-    @extend %group;
-
-    label {
-      @extend %label;
-    }
-
-    input {
-      @extend %input;
-
-      &:focus-visible {
-        outline: none;
-      }
-
-      &::placeholder {
-        color: $gray-3;
-      }
-    }
-  }
-
-  &.radio {
-    @extend %group;
-    accent-color: chocolate;
-
-    label {
-      @extend %label;
-    }
-
-    input {
-      margin-right: 10px;
-    }
-
-    .radio-group {
-      display: inline-block;
-      margin-right: 20px;
-    }
-  }
-
-  &.checkbox {
-    @extend %group;
-    display: flex;
-    font-family: $ff;
-
-    label {
-      @extend %label;
-      padding-left: 38px;
-    }
-
-    input {
-      margin-right: 10px;
-      margin-left: -36px;
-      top: 6px;
-      position: relative;
-    }
-
-  }
-
-  &.select {
-    @extend %group;
-
-    label {
-      @extend %label;
-    }
-
-    select {
-      @extend %input;
-      @extend %caret;
-
-      option[value=""] {
-        display: none;
-      }
-    }
-  }
-
-  &.required {
-    >label:after {
-      content: '*';
-      padding-left: 6px;
-      font-size: 15px;
-    }
-  }
-
-  &.error {
-    label {
-      color: $red;
-    }
-
-    input {
-      border-color: $red;
-    }
-  }
-}
-
 .error-message {
+  font-weight: 700;
   color: $red;
   font-size: 14px;
 }
@@ -149,12 +48,12 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   display: none;
 }
 
-.gform_wrapper.gravity-theme form {
-  .gform_fields {
-    column-gap: 30px;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-  .gfield_label {
+  label {
     @extend %label;
   }
 
@@ -162,6 +61,7 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   input[type=email],
   input[type=tel],
   input[type=number],
+  input[type=password],
   textarea,
   select {
     @extend %input;
@@ -183,29 +83,6 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     resize: none;
   }
 
-  .ginput_container_select {
-    position: relative;
-
-    &:after {
-      content: url($select-arrow);
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: inline-block;
-      width: 15px;
-      height: 20px;
-      fill: currentColor;
-      transition: all .3s ease-in-out;
-    }
-
-    &:has(select:focus) {
-      &:after {
-        transform: translateY(-50%) rotate(180deg);
-      }
-    }
-  }
-
   select {
     @extend %caret;
     appearance: none;
@@ -223,14 +100,16 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   }
 
   input[type=number] {
+    appearance: textfield;
     -moz-appearance: textfield;
   }
 
-  input[type=submit] {
+  input[type=submit],
+  button {
     width: 100%;
-    background-color: rgba($primary, .05);
+    background-color: $primary;
     border-radius: 5px;
-    color: rgba($primary, .5);
+    color: $white;
     white-space: break-spaces;
     font-size: 16px;
     font-weight: $weight-regular;
@@ -238,29 +117,26 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     transition: all .3s;
 
     &:hover {
-      background-color: rgba($primary, .10);
-      color: $primary;
+      background-color: rgba($primary, .90);
     }
 
-    &.active {
-      color: $primary;
-    }
   }
 
-  .gfield:has(input:not([type='radio'], [type='checkbox']):focus),
-  .gfield:has(textarea:focus) {
+  .form-group:has(input:not([type='radio'], [type='checkbox']):focus),
+  .form-group:has(textarea:focus) {
 
     input,
     textarea {
-      border-color: $secondary;
+      border-color: $primary;
     }
 
     label {
-      color: $secondary;
+      color: darken($color: $primary, $amount: 20%);
+      font-weight: 700;
     }
   }
 
-  .gfield:has(input[type='radio']) {
+  .form-group:has(input[type='radio']) {
 
     label {
       font-size: 16px;
@@ -275,7 +151,7 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     }
   }
 
-  .gfield--type-consent {
+  .form-group:has([type='radio'], [type='checkbox']) {
     legend {
       display: none;
     }
@@ -302,20 +178,4 @@ $select-arrow : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     }
   }
 
-  .ginput_container_number .gfield_description {
-    display: none;
-  }
-
-  .gform_footer {
-    margin: 0;
-    padding: 0;
-  }
-}
-
-.info-required {
-  font-size: 12px;
-  font-weight: $weight-regular;
-  color: rgba($primary, .5);
-  margin-bottom: 10px;
-  transform: translateY(-10px);
 }

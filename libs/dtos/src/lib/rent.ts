@@ -10,7 +10,7 @@ export class RentalDto {
   description: string | null;
   quantity: number = 1;
 
-  images: FileDto[];
+  images: FileDto[] | File[];
   cats: RentalCatDto[] | null;
   user: UserDto;
   orderItems: OrderItemDto[] | null;

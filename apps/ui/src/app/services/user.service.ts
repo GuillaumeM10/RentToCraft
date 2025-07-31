@@ -1,48 +1,52 @@
-import { type UserDto } from "@rent-to-craft/dtos";
+import { UserDto } from "@rent-to-craft/dtos";
 import axios from "axios";
 
 type UserServiceType = {
-  update: (user: UserDto) => Promise<void>;
-  getUsersService: () => Promise<UserDto[] | string>;
+  update: (userId: number, user: Partial<UserDto>) => Promise<boolean | string>;
+  getOne: (userId: number) => Promise<UserDto | null>;
 };
 const UserService: UserServiceType = {
-  update: async (user: UserDto) => {
+  update: async (userId, user) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        },
-      );
+      const formData = new FormData();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message ?? "Failed to update user");
+      Object.entries(user).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value as string | Blob);
+        }
+      });
+
+      const response = await fetch(`/api/user/update/${userId}`, {
+        method: "PUT",
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        return true;
       }
+
+      const errorMessage =
+        typeof data.error === "string"
+          ? data.error
+          : (data.error?.message ?? "Erreur inconnue");
+
+      return `Erreur: ${errorMessage}`;
     } catch (error) {
-      console.error("Update user error:", error);
-      throw error;
+      console.log(error);
+      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
     }
   },
 
-  getUsersService: async () => {
+  getOne: async (userId) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
-        method: "GET",
-      });
-      const data = await response.json();
-      const users: UserDto[] = data.users;
-      return users;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorData = error.response.data;
-        return `Error: ${errorData.message ?? "Unknown error"}`;
+      const response = await axios.get<UserDto>(`/api/user/getOne/${userId}`);
+      if (response.status === 200) {
+        return response.data;
       }
-      return `Network error: ${error instanceof Error ? error.message : "Unknown error"}`;
+      return null;
+    } catch (error) {
+      console.error("Erreur de récupération de l'utilisateur:", error);
+      return null;
     }
   },
 };
