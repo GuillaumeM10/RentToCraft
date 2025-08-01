@@ -28,7 +28,7 @@
 @import "partials/_form";
 @import "partials/_breadcrumb";
 @import "partials/_dialog";
-// @import "partials/_table";
+@import "partials/_table";
 
 // COMPONENTS
 @import "components/_button";
@@ -45,6 +45,7 @@
 // @import "components/_nav";
 
 // CARDS
+@import "cards/_rental";
 
 // sections
 @import "sections/_landing";

@@ -179,6 +179,7 @@ html:has(#wpadminbar) {
 
   table {
     border-collapse: collapse;
+    border: 1px solid $primary;
     margin: 0 0 20px 0;
     caption-side: bottom;
 
@@ -296,6 +297,10 @@ html:has(#wpadminbar) {
 }
 
 .top-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .pp {
     margin-top: -50px;
   }

@@ -1,0 +1,70 @@
+.rental-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: $white;
+  border: 1px solid $primary;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .image {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .card-image {
+    position: relative;
+  }
+
+  .card-category {
+    margin: 0 0 15px 0;
+    width: calc(100% - 20px);
+    min-height: 23px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-cat {
+    background-color: $primary;
+    color: $white;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+  }
+
+  .quantity {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: $primary;
+    color: $white;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    aspect-ratio: 1 / 1;
+    font-weight: 800;
+  }
+
+  .card-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    .pp {
+      width: 50px;
+      height: 50px;
+      border-width: 1px;
+    }
+  }
+}
