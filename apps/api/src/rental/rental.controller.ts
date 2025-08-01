@@ -48,24 +48,44 @@ export class RentalController {
     return this.rentalService.findAllByUser(user);
   }
 
+  @Get('slug/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.rentalService.findOne(slug);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.rentalService.findOne(id);
   }
 
+  @Put('/file/:rentalId')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files' }]))
+  uploadFile(
+    @Param('rentalId', ParseIntPipe) rentalId: number,
+    @UploadedFiles()
+    files: {
+      files: File[];
+    },
+    @User() user: UserDto,
+  ) {
+    return this.rentalService.uploadFile(files.files, user, rentalId);
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'images' }]))
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRentalDto: RentalDto,
     @User() user: UserDto,
-    @UploadedFiles()
-    files: {
-      images?: File[];
-    },
   ) {
-    return this.rentalService.update(id, updateRentalDto, user, files);
+    return this.rentalService.update(id, updateRentalDto, user);
+  }
+
+  @Delete('/file/:fileId')
+  @UseGuards(AuthGuard)
+  deleteFile(@Param('fileId', ParseIntPipe) fileId: number) {
+    return this.rentalService.deleteFile(fileId);
   }
 
   @Delete(':id')

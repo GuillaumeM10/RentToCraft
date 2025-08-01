@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RentalDto, UserDto } from '@rent-to-craft/dtos';
+import { MessageDto, RentalDto, UserDto } from '@rent-to-craft/dtos';
 import { plainToInstance } from 'class-transformer';
 import slugify from 'slugify';
 import { FileService } from 'src/file/file.service';
@@ -38,7 +38,7 @@ export class RentalService {
       createRentalDto.images = uploadedImages;
     }
 
-    if (files === undefined) {
+    if (files?.images === undefined) {
       throw new HttpException('Aucune image fournie.', 400);
     }
 
@@ -47,12 +47,16 @@ export class RentalService {
     }
 
     if (createRentalDto.slug === undefined) {
-      createRentalDto.slug = slugify(createRentalDto.name, {
-        lower: true,
-        strict: true,
-        locale: 'fr',
-        replacement: '-',
-      });
+      const uuid = Date.now().toString();
+      createRentalDto.slug =
+        slugify(createRentalDto.name, {
+          lower: true,
+          strict: true,
+          locale: 'fr',
+          replacement: '-',
+        }) +
+        '-' +
+        uuid;
     }
 
     if (createRentalDto.cats && createRentalDto.cats.length > 0) {
@@ -115,6 +119,7 @@ export class RentalService {
       .where('rental.user.id = :userId', { userId: user.id })
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
+      .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('rental.cats', 'cats')
       .leftJoinAndSelect('rental.comments', 'comments')
       .getMany();
@@ -128,21 +133,28 @@ export class RentalService {
     return rentals.map((rental) => plainToInstance(RentalDto, rental));
   }
 
-  async findOne(id: number) {
-    const rental = await this.rentalRepository
+  async findOne(id: number | string) {
+    const query = this.rentalRepository
       .createQueryBuilder('rental')
-      .where('rental.id = :id', { id })
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
       .leftJoinAndSelect('rental.cats', 'cats')
       .leftJoinAndSelect('rental.comments', 'comments')
-      .leftJoinAndSelect('comments.author', 'commentAuthor')
-      .getOne();
+      .leftJoinAndSelect('comments.author', 'commentAuthor');
+
+    if (typeof id === 'number') {
+      query.where('rental.id = :id', { id });
+    }
+
+    if (typeof id === 'string') {
+      query.where('rental.slug = :slug', { slug: id });
+    }
+
+    const rental = await query.getOne();
 
     if (!rental) {
       throw new NotFoundException(`Impossible de trouver la location #${id}.`);
     }
-
     return plainToInstance(RentalDto, rental);
   }
 
@@ -164,12 +176,7 @@ export class RentalService {
     return plainToInstance(RentalDto, rental);
   }
 
-  async update(
-    id: number,
-    updateRentalDto: RentalDto,
-    user: UserDto,
-    files: { images?: File[] },
-  ) {
+  async update(id: number, updateRentalDto: RentalDto, user: UserDto) {
     const getRental = await this.findOne(id);
 
     if (!getRental) {
@@ -186,15 +193,6 @@ export class RentalService {
         strict: true,
         locale: 'fr',
       });
-    }
-
-    if (files?.images && files.images.length > 0) {
-      const uploadedImages = await Promise.all(
-        files.images.map((image) => this.fileService.create(image)),
-      );
-      updateRentalDto.images = uploadedImages;
-    } else {
-      updateRentalDto.images = getRental.images;
     }
 
     if (updateRentalDto.cats && updateRentalDto.cats.length > 0) {
@@ -216,6 +214,38 @@ export class RentalService {
 
     await this.rentalRepository.save(rentalUpdate);
     return plainToInstance(RentalDto, rentalUpdate);
+  }
+
+  async deleteFile(fileId: number) {
+    await this.fileService.remove(fileId);
+    return plainToInstance(MessageDto, {
+      message: `Le fichier #${fileId} a été supprimé.`,
+    });
+  }
+
+  async uploadFile(files: File[], user: UserDto, rentalId: number) {
+    const getRental = await this.findOne(rentalId);
+    if (!getRental) {
+      throw new NotFoundException(
+        `Impossible de trouver la location #${rentalId}.`,
+      );
+    }
+
+    if (getRental.user.id !== user.id && user.role !== 'administrator') {
+      throw new HttpException('Unauthorized', 401);
+    }
+
+    const uploadedFiles = await Promise.all(
+      files.map(async (file) => this.fileService.create(file)),
+    );
+
+    getRental.images = [
+      ...(getRental.images || []),
+      ...uploadedFiles,
+    ] as File[];
+
+    await this.rentalRepository.save(getRental);
+    return plainToInstance(MessageDto, getRental);
   }
 
   async remove(id: number, user: UserDto) {
@@ -252,37 +282,5 @@ export class RentalService {
     }, []);
 
     return filesIds;
-  }
-
-  async addCategory(rentalId: number, categoryId: number, user: UserDto) {
-    const rental = await this.findOne(rentalId);
-    const category = await this.rentalCatService.findOne(categoryId);
-
-    if (rental.user.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
-    }
-
-    if (!rental.cats?.find((cat) => cat.id === categoryId)) {
-      if (!rental.cats) rental.cats = [];
-      rental.cats.push(category);
-      await this.rentalRepository.save(rental);
-    }
-
-    return plainToInstance(RentalDto, rental);
-  }
-
-  async removeCategory(rentalId: number, categoryId: number, user: UserDto) {
-    const rental = await this.findOne(rentalId);
-
-    if (rental.user.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
-    }
-
-    if (rental.cats) {
-      rental.cats = rental.cats.filter((cat) => cat.id !== categoryId);
-      await this.rentalRepository.save(rental);
-    }
-
-    return plainToInstance(RentalDto, rental);
   }
 }

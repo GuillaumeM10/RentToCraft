@@ -36,8 +36,6 @@ export class AuthController {
   async forgotPassword(
     @Body() createTokenResetPasswordDto: CreateTokenResetPasswordDto,
   ) {
-    console.log(createTokenResetPasswordDto);
-
     return this.authService.forgotPassword(createTokenResetPasswordDto);
   }
 

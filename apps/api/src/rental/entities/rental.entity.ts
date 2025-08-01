@@ -21,7 +21,10 @@ export class RentalEntity extends Timestamp {
 
   @Column()
   name: string;
-  @Column()
+  @Column({
+    unique: true,
+    nullable: true,
+  })
   slug: string;
   @Column({ nullable: true })
   description: string;

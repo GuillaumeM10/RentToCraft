@@ -50,8 +50,6 @@ export class UserController {
     @User() user: UserDto,
     @Body('type') type: 'banner' | 'profilePicture',
   ) {
-    console.log(`Uploading file of type: ${type} for user ID: ${user.id}`);
-
     return this.userService.uploadFile(type, files.file[0], user);
   }
 
