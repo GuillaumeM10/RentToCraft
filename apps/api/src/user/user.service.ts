@@ -108,7 +108,7 @@ export class UserService {
     return plainToInstance(UserDto, user);
   }
 
-  async update(updateUserDto: UserUpdateDto, user: UserDto, id: number, files) {
+  async update(updateUserDto: UserUpdateDto, user: UserDto, id: number) {
     const getUser = await this.findOne(user.id);
     if (!getUser || getUser.id !== user.id) {
       throw new NotFoundException(
@@ -120,21 +120,6 @@ export class UserService {
       throw new UnauthorizedException(
         `Vous ne pouvez pas modifier un autre utilisateur.`,
       );
-    }
-
-    updateUserDto.profilePicture =
-      files?.profilePicture && files.profilePicture.length > 0
-        ? await this.fileService.create(files.profilePicture[0])
-        : null;
-
-    updateUserDto.banner =
-      files?.banner && files.banner.length > 0
-        ? await this.fileService.create(files.banner[0])
-        : null;
-
-    if (files === undefined) {
-      updateUserDto.profilePicture = getUser.profilePicture;
-      updateUserDto.banner = getUser.banner;
     }
 
     if (typeof updateUserDto.isPublic === 'string') {
@@ -153,6 +138,54 @@ export class UserService {
     await this.userRepository.save(userUpdate);
 
     return plainToInstance(UserDto, userUpdate);
+  }
+
+  async deleteFile(type: 'banner' | 'profilePicture', user: UserDto) {
+    const getUser = await this.findOne(user.id);
+    if (!getUser) {
+      throw new NotFoundException(
+        `Impossible de trouver l'utilisateur #${user.id}.`,
+      );
+    }
+
+    if (type === 'profilePicture' && getUser.profilePicture) {
+      getUser.profilePicture = null;
+    } else if (type === 'banner' && getUser.banner) {
+      getUser.banner = null;
+    } else {
+      throw new NotFoundException(
+        `Aucun fichier trouvé pour l'utilisateur #${user.id}.`,
+      );
+    }
+
+    await this.userRepository.save(getUser);
+    return plainToInstance(UserDto, getUser);
+  }
+
+  async uploadFile(
+    type: 'banner' | 'profilePicture',
+    file: File,
+    user: UserDto,
+  ) {
+    const getUser = await this.findOne(user.id);
+    if (!getUser) {
+      throw new NotFoundException(
+        `Impossible de trouver l'utilisateur #${user.id}.`,
+      );
+    }
+
+    const uploadedFile = await this.fileService.create(file);
+
+    if (type === 'profilePicture') {
+      getUser.profilePicture = uploadedFile;
+    } else if (type === 'banner') {
+      getUser.banner = uploadedFile;
+    } else {
+      throw new NotFoundException(`Type de fichier non reconnu.`);
+    }
+
+    await this.userRepository.save(getUser);
+    return plainToInstance(MessageDto, getUser);
   }
 
   async getUserPassword(email: string) {

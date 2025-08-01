@@ -39,22 +39,39 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @Put('/file')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'file' }]))
+  uploadFile(
+    @UploadedFiles()
+    files: {
+      file: File[];
+    },
+    @User() user: UserDto,
+    @Body('type') type: 'banner' | 'profilePicture',
+  ) {
+    console.log(`Uploading file of type: ${type} for user ID: ${user.id}`);
+
+    return this.userService.uploadFile(type, files.file[0], user);
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard)
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'profilePicture' }, { name: 'banner' }]),
-  )
   update(
     @Body() updateUserDto: UserUpdateDto,
     @User() user: UserDto,
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFiles()
-    files: {
-      banner?: File[];
-      profilePicture?: File[];
-    },
   ) {
-    return this.userService.update(updateUserDto, user, id, files);
+    return this.userService.update(updateUserDto, user, id);
+  }
+
+  @Delete('/file')
+  @UseGuards(AuthGuard)
+  deleteFile(
+    @Body('type') type: 'banner' | 'profilePicture',
+    @User() user: UserDto,
+  ) {
+    return this.userService.deleteFile(type, user);
   }
 
   @Delete(':id')
