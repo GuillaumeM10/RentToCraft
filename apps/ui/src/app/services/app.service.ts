@@ -160,22 +160,25 @@ class AppServiceClass {
     form?: FormData,
   ): FormData => {
     const formData = form ?? new FormData();
-    console.log("Converting object to FormData:", object);
 
     for (const [key, value] of Object.entries(object)) {
       if (value === null || value === undefined) continue;
-      console.log(`Processing key: ${key}, value:`, value);
 
       if (value instanceof File) {
         formData.append(key, value, value.name);
       } else if (Array.isArray(value)) {
+        if (value.length > 0 && value[0] instanceof File) {
+          continue;
+        }
         value.forEach((item, index) => {
-          this.objectToFormData({ [index]: item }, formData);
+          if (typeof item === "object" && item !== null) {
+            this.objectToFormData({ [`${key}[${index}]`]: item }, formData);
+          } else {
+            formData.append(`${key}[${index}]`, String(item));
+          }
         });
-      } else if (typeof value === "object") {
+      } else if (typeof value === "object" && !(value instanceof Date)) {
         this.objectToFormData(value as Record<string, unknown>, formData);
-      } else if (typeof value === "boolean") {
-        formData.append(key, value ? "true" : "false");
       } else {
         formData.append(key, String(value));
       }

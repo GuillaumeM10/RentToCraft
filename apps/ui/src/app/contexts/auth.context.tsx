@@ -27,10 +27,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
-  const slug = pathname.slice(1).replaceAll('/', "-") || "home";
+  const slug = pathname.slice(1).replaceAll("/", "-") || "home";
   const isTransparentOnTop = pathname === "/" || pathname === "/tools";
 
   const isAuthenticated = !!user;
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const checkAuthStatus = useCallback(async () => {
     try {
@@ -106,6 +112,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isTransparentOnTop,
     ],
   );
+
+  if (!isHydrated) {
+    return <div>{children}</div>;
+  }
 
   return (
     <AuthContext.Provider value={value}>

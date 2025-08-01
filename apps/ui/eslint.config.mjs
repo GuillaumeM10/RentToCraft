@@ -24,6 +24,7 @@ const eslintConfig = [
       "sonarjs/slow-regex": "off",
       "unicorn/no-document-cookie": "off",
       "sonarjs/sonar-prefer-read-only-props": "off",
+      "sonarjs/no-nested-functions": "off",
     },
   },
 ];

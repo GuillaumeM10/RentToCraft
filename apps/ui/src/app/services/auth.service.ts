@@ -89,21 +89,18 @@ const AuthService: AuthServiceType = {
     try {
       if (typeof window === "undefined") return null;
 
-      const cookies = document.cookie.split(";");
-      const authCookie = cookies.find((cookie) =>
-        cookie.trim().startsWith("auth-token="),
-      );
-
-      if (!authCookie) {
-        return null;
-      }
-
-      const token = authCookie.split("=")[1];
+      const token = AppService.getCookie();
       if (!token) {
         return null;
       }
 
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const tokenParts = token.split(".");
+      if (tokenParts.length !== 3) {
+        AppService.deleteCookie("auth-token");
+        return null;
+      }
+
+      const payload = JSON.parse(atob(tokenParts[1]));
 
       if (payload.exp && payload.exp < Date.now() / 1000) {
         AppService.deleteCookie("auth-token");
