@@ -1,5 +1,8 @@
 import { type UserDto } from "@rent-to-craft/dtos";
 
+import api from "./api.service";
+import AppService from "./app.service";
+
 type AuthServiceType = {
   getCurrentUser: () => Promise<UserDto | null>;
   isAuthenticated: () => Promise<boolean>;
@@ -8,48 +11,62 @@ type AuthServiceType = {
   signup: (email: string, password: string) => Promise<boolean | string>;
 };
 
+interface ApiError {
+  message?: string;
+  response?: {
+    data?: {
+      error?: string;
+    };
+  };
+}
+
+interface ErrorWithStatus {
+  message: string;
+  status?: number;
+  response?: {
+    data?: Record<string, unknown> | string;
+    message?: string;
+  };
+}
+
 const AuthService: AuthServiceType = {
   signin: async (email: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
+      const response = await api.post("/auth/signin", { email, password });
+      if (response.data?.accessToken) {
+        AppService.setCookie("auth-token", response.data.accessToken);
         return true;
       }
 
       const errorMessage =
-        typeof data.error === "string"
-          ? data.error
-          : (data.error?.message ?? "Erreur inconnue");
+        typeof response.data.error === "string"
+          ? response.data.error
+          : (response.data.error?.message ?? "Erreur inconnue");
 
       return `Erreur: ${errorMessage}`;
-    } catch (error) {
-      console.log(error);
-      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as ApiError).response?.data?.error ??
+        (error as Error).message ??
+        "Erreur inconnue";
+      return `Erreur réseau: ${errorMessage}`;
     }
   },
 
   logout: async () => {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      });
+      await api.post("/auth/logout");
     } catch (error) {
       console.error("Logout error:", error);
+    } finally {
+      AppService.deleteCookie("auth-token");
     }
   },
 
   isAuthenticated: async () => {
     try {
-      const response = await fetch("/api/auth/me");
-      return response.ok;
+      const response = await api.get("/auth/me");
+      return response.status === 200;
     } catch {
       return false;
     }
@@ -57,35 +74,52 @@ const AuthService: AuthServiceType = {
 
   signup: async (email: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        return true;
+      const response = await api.post("/auth/signup", { email, password });
+      if (response.status === 201 || response.status === 200) {
+        return "Inscription réussie";
       }
 
-      return `Erreur: ${data.error ?? "Échec de l'inscription"}`;
+      return `Erreur: ${response.data.error ?? "Échec de l'inscription"}`;
     } catch (error) {
-      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
+      return AppService.errorMessages(error as ErrorWithStatus);
     }
   },
 
   getCurrentUser: async () => {
     try {
-      const response = await fetch("/api/auth/me");
-      if (response.ok) {
-        const data = await response.json();
-        return data.user;
+      if (typeof window === "undefined") return null;
+
+      const cookies = document.cookie.split(";");
+      const authCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("auth-token="),
+      );
+
+      if (!authCookie) {
+        return null;
       }
-      return null;
-    } catch {
+
+      const token = authCookie.split("=")[1];
+      if (!token) {
+        return null;
+      }
+
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      if (payload.exp && payload.exp < Date.now() / 1000) {
+        AppService.deleteCookie("auth-token");
+        return null;
+      }
+
+      return {
+        id: payload.id,
+        email: payload.email,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        role: payload.role,
+      } as UserDto;
+    } catch (error) {
+      console.error("Error parsing auth token:", error);
+      AppService.deleteCookie("auth-token");
       return null;
     }
   },

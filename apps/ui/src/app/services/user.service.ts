@@ -1,34 +1,72 @@
-import { UserDto } from "@rent-to-craft/dtos";
-import axios from "axios";
+import { type UserDto } from "@rent-to-craft/dtos";
+
+import api from "./api.service";
 
 type UserServiceType = {
   update: (userId: number, user: Partial<UserDto>) => Promise<boolean | string>;
+  deleteFile: (type: "banner" | "profilePicture") => Promise<boolean | string>;
+  uploadFile: (
+    type: "banner" | "profilePicture",
+    file: File,
+  ) => Promise<boolean | string>;
   getOne: (userId: number) => Promise<UserDto | null>;
 };
 const UserService: UserServiceType = {
   update: async (userId, user) => {
     try {
-      const formData = new FormData();
+      const response = await api.put(`/user/${userId}`, user);
 
-      Object.entries(user).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value as string | Blob);
-        }
-      });
-
-      const response = await fetch(`/api/user/update/${userId}`, {
-        method: "PUT",
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.ok && data.success) {
+      if (response.status === 200) {
         return true;
       }
 
       const errorMessage =
-        typeof data.error === "string"
-          ? data.error
-          : (data.error?.message ?? "Erreur inconnue");
+        typeof response.data.error === "string"
+          ? response.data.error
+          : (response.data.error?.message ?? "Erreur inconnue");
+
+      return `Erreur: ${errorMessage}`;
+    } catch (error) {
+      console.log(error);
+      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
+    }
+  },
+
+  deleteFile: async (type: "banner" | "profilePicture") => {
+    try {
+      const response = await api.delete(`/user/file`, { data: { type } });
+      if (response.status === 200) {
+        return true;
+      }
+
+      const errorMessage =
+        typeof response.data.error === "string"
+          ? response.data.error
+          : (response.data.error?.message ?? "Erreur inconnue");
+
+      return `Erreur: ${errorMessage}`;
+    } catch (error) {
+      console.log(error);
+      return `Erreur réseau: ${error instanceof Error ? error.message : "Erreur inconnue"}`;
+    }
+  },
+
+  uploadFile: async (type: "banner" | "profilePicture", file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      formData.append("type", type);
+
+      const response = await api.put(`/user/file`, formData);
+
+      if (response.status === 200) {
+        return true;
+      }
+
+      const errorMessage =
+        typeof response.data.error === "string"
+          ? response.data.error
+          : (response.data.error?.message ?? "Erreur inconnue");
 
       return `Erreur: ${errorMessage}`;
     } catch (error) {
@@ -39,7 +77,7 @@ const UserService: UserServiceType = {
 
   getOne: async (userId) => {
     try {
-      const response = await axios.get<UserDto>(`/api/user/getOne/${userId}`);
+      const response = await api.get<UserDto>(`/user/${userId}`);
       if (response.status === 200) {
         return response.data;
       }
