@@ -60,7 +60,6 @@ const UpdateUserFiles = ({ onSuccess, initData }: UpdateUserFilesProps) => {
 
     try {
       const result = await UserService.deleteFile(type);
-      console.log("Delete result:", result);
 
       if (result === true) {
         if (onSuccess) {

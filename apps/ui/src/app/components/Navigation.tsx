@@ -63,8 +63,8 @@ export function Navigation() {
           autoCloseOnClick={true}
         >
           <nav className="offcanvas-nav">
-            <Link href="/tools" className="">
-              Outils
+            <Link href="/rental" className="">
+              Objets
             </Link>
 
             <Link href="/about" className="">
