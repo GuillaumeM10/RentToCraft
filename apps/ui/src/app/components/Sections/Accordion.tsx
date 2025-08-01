@@ -2,9 +2,9 @@
 import { useState } from "react";
 
 interface AccordionProps {
-  title: string;
-  description: string;
-  items: {
+  readonly description: string;
+  readonly title: string;
+  readonly items: {
     title: string;
     content: string;
   }[];
@@ -42,13 +42,16 @@ const Accordion = ({ title, description, items }: AccordionProps) => {
       <div className="accordion-wrapper col-span-2">
         <div className="st-accordion">
           {items.map((element, index) => (
-            <div key={index} className="st-accordion__item">
+            <div
+              key={`${element.title}-${index}`}
+              className="st-accordion__item"
+            >
               <div className="accordion-title-wrapper">
                 <a
                   href={`#content${index + 1}`}
                   className={`w-full items-center`}
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={(thisElement) => {
+                    thisElement.preventDefault();
                     toggleItem(index);
                   }}
                 >

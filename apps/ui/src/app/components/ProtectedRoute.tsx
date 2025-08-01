@@ -1,15 +1,15 @@
 "use client";
 
+import { UserRole } from "@rent-to-craft/dtos";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useAuth } from "../contexts/auth.context";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { UserRole } from "@rent-to-craft/dtos";
 
 interface ProtectedRouteProps {
   readonly children: React.ReactNode;
-  onlyAdmin?: boolean;
+  readonly onlyAdmin?: boolean;
 }
 
 export function ProtectedRoute({ children, onlyAdmin }: ProtectedRouteProps) {
@@ -23,7 +23,7 @@ export function ProtectedRoute({ children, onlyAdmin }: ProtectedRouteProps) {
     if (onlyAdmin && isAuthenticated && user?.role !== UserRole.administrator) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, onlyAdmin, user?.role]);
 
   if (isLoading) {
     return (

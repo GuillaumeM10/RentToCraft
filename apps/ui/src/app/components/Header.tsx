@@ -1,9 +1,10 @@
 "use client";
-import { Navigation } from "./Navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { Navigation } from "./Navigation";
+
 interface HeaderProps {
-  isTransparentOnTop: boolean;
+  readonly isTransparentOnTop: boolean;
 }
 
 const Header = ({ isTransparentOnTop }: HeaderProps) => {

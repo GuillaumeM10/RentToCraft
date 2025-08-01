@@ -1,63 +1,52 @@
 "use client";
 
+import { type UserDto } from "@rent-to-craft/dtos";
+import { useState } from "react";
+
 import UserService from "@/app/services/user.service";
-import { useEffect, useState } from "react";
+
 import { LoadingSpinner } from "../../LoadingSpinner";
-import { CityDto, UserDto } from "@rent-to-craft/dtos";
 
 interface UpdateUserProps {
-  userId: number;
-  userIsPublic: boolean | undefined;
+  readonly userId: number;
+  readonly initData?: Partial<UserDto> | null;
+  readonly onSuccess?: () => void;
 }
 
-const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [description, setDescription] = useState("");
-  const [city, setCity] = useState<CityDto | null>(null);
-  const [isPublic, setIsPublic] = useState(false);
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [banner, setBanner] = useState<File | null>(null);
+const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
+  const [email, setEmail] = useState(initData?.email ?? "");
+  const [firstName, setFirstName] = useState(initData?.firstName ?? "");
+  const [lastName, setLastName] = useState(initData?.lastName ?? "");
+  const [description, setDescription] = useState(initData?.description ?? "");
+  // const [city, setCity] = useState<CityDto | null>(initData?.city ?? null);
+  const [isPublic, setIsPublic] = useState(initData?.isPublic ?? false);
+  const [address, setAddress] = useState(initData?.address ?? "");
+  const [phone, setPhone] = useState(initData?.phone ?? "");
+  const [contactEmail, setContactEmail] = useState(
+    initData?.contactEmail ?? "",
+  );
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (userIsPublic !== undefined) {
-      setIsPublic(userIsPublic);
-    }
-  }, [userIsPublic]);
-
-  useEffect(() => {
-    console.log("isPublic", isPublic);
-  }, [isPublic]);
 
   const handleSubmit = async (element: React.FormEvent) => {
     element.preventDefault();
     setError("");
     setIsLoading(true);
 
-    const updateIUser: Partial<UserDto> = {};
+    const updateUser: Partial<UserDto> = {};
 
-    if (email) updateIUser.email = email;
-    if (firstName) updateIUser.firstName = firstName;
-    if (lastName) updateIUser.lastName = lastName;
-    if (address) updateIUser.address = address;
-    if (phone) updateIUser.phone = phone;
-    if (contactEmail) updateIUser.contactEmail = contactEmail;
-    if (description) updateIUser.description = description;
-    if (city) updateIUser.city = city;
-    if (profilePicture) updateIUser.profilePicture = profilePicture;
-    if (banner) updateIUser.banner = banner;
-
-    console.log("updateIUser", updateIUser);
+    if (email) updateUser.email = email;
+    if (firstName) updateUser.firstName = firstName;
+    if (lastName) updateUser.lastName = lastName;
+    if (address) updateUser.address = address;
+    if (phone) updateUser.phone = phone;
+    if (contactEmail) updateUser.contactEmail = contactEmail;
+    if (description) updateUser.description = description;
+    // if (city) updateUser.city = city;
 
     try {
       await UserService.update(+userId, {
-        ...updateIUser,
+        ...updateUser,
         isPublic,
       });
     } catch (thisError) {
@@ -66,8 +55,12 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
       );
     } finally {
       setIsLoading(false);
+      if (onSuccess) {
+        onSuccess();
+      }
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group ">
@@ -77,36 +70,51 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
         <input
           id="email"
           type="email"
-          value={email}
+          defaultValue={initData?.email ?? email}
           onChange={(thisError) => setEmail(thisError.target.value)}
           className="form-input "
         />
       </div>
 
       <div className="form-group ">
-        <label className="form-label" htmlFor="firstName">
-          Prénom
+        <label className="form-label" htmlFor="contactEmail">
+          Email de contact
         </label>
         <input
-          id="firstName"
-          type="text"
-          value={firstName}
-          onChange={(thisError) => setFirstName(thisError.target.value)}
+          id="contactEmail"
+          type="email"
+          defaultValue={initData?.contactEmail ?? contactEmail}
+          onChange={(thisError) => setContactEmail(thisError.target.value)}
           className="form-input "
         />
       </div>
 
-      <div className="form-group ">
-        <label className="form-label" htmlFor="lastName">
-          Nom
-        </label>
-        <input
-          id="lastName"
-          type="text"
-          value={lastName}
-          onChange={(thisError) => setLastName(thisError.target.value)}
-          className="form-input "
-        />
+      <div className="md:grid grid-cols-2 gap-10">
+        <div className="form-group ">
+          <label className="form-label" htmlFor="firstName">
+            Prénom
+          </label>
+          <input
+            id="firstName"
+            type="text"
+            defaultValue={initData?.firstName ?? firstName}
+            onChange={(thisError) => setFirstName(thisError.target.value)}
+            className="form-input "
+          />
+        </div>
+
+        <div className="form-group ">
+          <label className="form-label" htmlFor="lastName">
+            Nom
+          </label>
+          <input
+            id="lastName"
+            type="text"
+            defaultValue={initData?.lastName ?? lastName}
+            onChange={(thisError) => setLastName(thisError.target.value)}
+            className="form-input "
+          />
+        </div>
       </div>
 
       <div className="form-group ">
@@ -115,7 +123,7 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
         </label>
         <textarea
           id="description"
-          value={description}
+          defaultValue={initData?.description ?? description}
           onChange={(thisError) => setDescription(thisError.target.value)}
           className="form-input "
         />
@@ -128,7 +136,7 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
         <input
           id="address"
           type="text"
-          value={address}
+          defaultValue={initData?.address ?? address}
           onChange={(thisError) => setAddress(thisError.target.value)}
           className="form-input "
         />
@@ -141,37 +149,11 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
         <input
           id="phone"
           type="tel"
-          value={phone}
+          defaultValue={initData?.phone ?? phone}
           onChange={(thisError) => setPhone(thisError.target.value)}
           className="form-input "
         />
       </div>
-
-      <div className="form-group ">
-        <label className="form-label" htmlFor="contactEmail">
-          Email de contact
-        </label>
-        <input
-          id="contactEmail"
-          type="email"
-          value={contactEmail}
-          onChange={(thisError) => setContactEmail(thisError.target.value)}
-          className="form-input "
-        />
-      </div>
-
-      {/* <div className="form-group ">
-        <label className="form-label" htmlFor="city">
-          Ville
-        </label>
-        <input
-          id="city"
-          type="text"
-          value={city?.name || ""}
-          onChange={(thisError) => setCity({ name: thisError.target.value })}
-          className="form-input "
-        />
-      </div> */}
 
       <div className="form-group ">
         <label className="form-label" htmlFor="isPublic">
@@ -180,81 +162,11 @@ const UpdateUser = ({ userId, userIsPublic }: UpdateUserProps) => {
         <input
           id="isPublic"
           type="checkbox"
-          checked={isPublic ?? false}
+          checked={initData?.isPublic ?? isPublic}
           onChange={(thisError) => setIsPublic(thisError.target.checked)}
           className="form-checkbox "
         />
-        <span>Rendre mon profil public</span>
-      </div>
-
-      <div className="form-group ">
-        <label className="form-label" htmlFor="profilePicture">
-          Photo de profil
-        </label>
-        <input
-          id="profilePicture"
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            if (e.target.files) {
-              const file = e.target.files[0];
-              if (file) {
-                setProfilePicture(file);
-              }
-            }
-          }}
-          className="form-input "
-        />
-
-        {profilePicture && (
-          <div className="file-preview">
-            <img
-              src={URL.createObjectURL(profilePicture)}
-              alt="Profile"
-              width={100}
-              height={100}
-            />
-            <span>{profilePicture.name}</span>
-            <button type="button" onClick={() => setProfilePicture(null)}>
-              Supprimer
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="form-group ">
-        <label className="form-label" htmlFor="banner">
-          Bannière
-        </label>
-        <input
-          id="banner"
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            if (e.target.files) {
-              const file = e.target.files[0];
-              if (file) {
-                setBanner(file);
-              }
-            }
-          }}
-          className="form-input "
-        />
-
-        {banner && (
-          <div className="file-preview">
-            <img
-              src={URL.createObjectURL(banner)}
-              alt="Banner"
-              width={100}
-              height={100}
-            />
-            <span>{banner.name}</span>
-            <button type="button" onClick={() => setBanner(null)}>
-              Supprimer
-            </button>
-          </div>
-        )}
+        <span className="ml-10">Rendre mon profil public</span>
       </div>
 
       {error && <div className="error-message">{error}</div>}

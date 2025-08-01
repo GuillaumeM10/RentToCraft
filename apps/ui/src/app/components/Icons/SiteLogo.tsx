@@ -1,4 +1,4 @@
-const SiteLogo = ({ className }: { className?: string }) => (
+const SiteLogo = ({ className }: { readonly className?: string }) => (
   <svg
     className={className}
     width="250"

@@ -6,10 +6,10 @@ const AnimatedNumber = ({
   suffix = "",
   duration = 2000,
 }: {
-  value: number;
-  prefix?: string;
-  suffix?: string;
-  duration?: number;
+  readonly value: number;
+  readonly prefix?: string;
+  readonly suffix?: string;
+  readonly duration?: number;
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
   const [isVisible, setIsVisible] = useState(false);

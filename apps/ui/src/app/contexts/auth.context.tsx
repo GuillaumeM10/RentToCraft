@@ -1,6 +1,7 @@
 "use client";
 
 import { type UserDto } from "@rent-to-craft/dtos";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   type ReactNode,
@@ -11,11 +12,10 @@ import {
   useState,
 } from "react";
 
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import { type AuthContextType } from "../interfaces/authContext.interface";
 import AuthService from "../services/auth.service";
-import { usePathname } from "next/navigation";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
-  const slug = pathname.slice(1).replace(/\//g, "-") || "home";
+  const slug = pathname.slice(1).replaceAll('/', "-") || "home";
   const isTransparentOnTop = pathname === "/" || pathname === "/tools";
 
   const isAuthenticated = !!user;
@@ -47,10 +47,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     void checkAuthStatus();
   }, [checkAuthStatus]);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   const signin = useCallback(
     async (email: string, password: string) => {
@@ -100,7 +96,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signup,
       isTransparentOnTop,
     }),
-    [user, isAuthenticated, isLoading, signin, logout, signup],
+    [
+      user,
+      isAuthenticated,
+      isLoading,
+      signin,
+      logout,
+      signup,
+      isTransparentOnTop,
+    ],
   );
 
   return (

@@ -1,7 +1,7 @@
 interface LoadingSpinnerProps {
   readonly className?: string;
-  readonly size?: "large" | "medium" | "small";
   readonly light?: boolean;
+  readonly size?: "large" | "medium" | "small";
 }
 
 function getSizeClass(size: "large" | "medium" | "small"): string {

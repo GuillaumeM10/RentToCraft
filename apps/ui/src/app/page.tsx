@@ -1,8 +1,9 @@
-import Landing from "./components/Sections/Landing";
-import Split from "./components/Sections/Split";
 import { Fragment } from "react";
-import Numbers from "./components/Sections/Numbers";
+
 import Accordion from "./components/Sections/Accordion";
+import Landing from "./components/Sections/Landing";
+import Numbers from "./components/Sections/Numbers";
+import Split from "./components/Sections/Split";
 import Wellcome from "./components/Sections/Wellcome";
 
 export default function HomePage() {
@@ -23,7 +24,7 @@ export default function HomePage() {
           data={[
             { title: "Outils disponibles", value: 120, prefix: "+" },
             { title: "Utilisateurs", value: 3000, prefix: "+" },
-            { title: "Locations effectuées", value: 15000, prefix: "+" },
+            { title: "Locations effectuées", value: 15_000, prefix: "+" },
           ]}
         />
       </div>

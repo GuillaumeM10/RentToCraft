@@ -1,8 +1,10 @@
 "use client";
 
-import { useAuth } from "@/app/contexts/auth.context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+import { useAuth } from "@/app/contexts/auth.context";
+
 import { LoadingSpinner } from "../../LoadingSpinner";
 
 const Signup = () => {

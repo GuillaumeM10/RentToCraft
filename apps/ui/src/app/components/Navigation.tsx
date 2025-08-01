@@ -1,13 +1,12 @@
 "use client";
 
+import { Facebook, Linkedin, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "../contexts/auth.context";
-import OffCanvas from "./OffCanvas";
 import SiteLogo from "./Icons/SiteLogo";
-
-import { Facebook, Linkedin, X } from "lucide-react";
+import OffCanvas from "./OffCanvas";
 
 export function Navigation() {
   const { isAuthenticated, user, logout, isLoading } = useAuth();

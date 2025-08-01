@@ -5,6 +5,6 @@ export interface AuthContextType {
   isLoading: boolean;
   logout: () => Promise<void>;
   signin: (email: string, password: string) => Promise<boolean>;
-  user: UserDto | null;
   signup: (email: string, password: string) => Promise<boolean>;
+  user: UserDto | null;
 }

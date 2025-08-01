@@ -1,8 +1,8 @@
 interface LandingProps {
-  image?: string;
-  title?: string;
-  description?: string;
-  button?: {
+  readonly description?: string;
+  readonly image?: string;
+  readonly title?: string;
+  readonly button?: {
     text: string;
     href: string;
   };

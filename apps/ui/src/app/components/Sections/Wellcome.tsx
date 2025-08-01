@@ -1,6 +1,7 @@
 "use client";
-import { useAuth } from "@/app/contexts/auth.context";
 import Link from "next/link";
+
+import { useAuth } from "@/app/contexts/auth.context";
 
 const Wellcome = () => {
   const { isAuthenticated } = useAuth();

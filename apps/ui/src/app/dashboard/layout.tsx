@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ProtectedRoute } from "../components/ProtectedRoute";
 import { usePathname } from "next/navigation";
+
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 export default function DashboardLayout({
   children,
@@ -11,6 +12,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
+
   return (
     <ProtectedRoute>
       <div className="layout-maxed py-70 dashboard-template">
@@ -18,7 +20,7 @@ export default function DashboardLayout({
           <Link
             href="/dashboard/profile"
             className={`dashboard-link ${
-              isActive("/dashboard/profile") ? "active" : ""
+              isActive("/dashboard") ? "active" : ""
             }`}
           >
             Profil

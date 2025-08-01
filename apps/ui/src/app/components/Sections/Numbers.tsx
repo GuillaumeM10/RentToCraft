@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+
 import AnimatedNumber from "../AnimatedNumber";
 
 interface NumbersProps {
-  title?: string;
-  data?: {
+  readonly title?: string;
+  readonly data?: {
     title: string;
     value: number;
     prefix?: string;
@@ -19,9 +19,9 @@ const Numbers = ({ title, data }: NumbersProps) => {
         <h2 className="text-center mb-8 text-2xl font-bold">{title}</h2>
       )}
       <div className="md:flex justify-between gap-8">
-        {data?.map((item, index) => (
+        {data?.map((item) => (
           <div
-            key={index}
+            key={`${item.title}-${item.value}`}
             className="block-number tac text-center mb-6 md:mb-0"
           >
             <AnimatedNumber

@@ -1,14 +1,14 @@
 interface SplitProps {
-  sub_title?: string;
-  description?: string;
-  title: string;
-  image: string;
-  odd?: boolean;
-  dark?: boolean;
+  readonly image: string;
+  readonly title: string;
+  readonly dark?: boolean;
+  readonly description?: string;
+  readonly odd?: boolean;
+  readonly subTitle?: string;
 }
 
 const Split = ({
-  sub_title,
+  subTitle,
   title,
   description,
   image,
@@ -20,7 +20,7 @@ const Split = ({
       className={`split layout-hero-4col align-items-center ${odd ? "odd" : ""} ${dark ? "dark" : ""}`}
     >
       <div className="content">
-        {sub_title && <h6 className="sub-title">{sub_title}</h6>}
+        {subTitle && <h6 className="sub-title">{subTitle}</h6>}
 
         <h2 className="title">{title}</h2>
 

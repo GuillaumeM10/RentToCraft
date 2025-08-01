@@ -1,5 +1,11 @@
-import { RentalCatDto, RentalDto } from "@rent-to-craft/dtos";
+import {
+  type FileDto,
+  type RentalCatDto,
+  type RentalDto,
+} from "@rent-to-craft/dtos";
 import Link from "next/link";
+
+import AppService from "@/app/services/app.service";
 
 const RentalCard = ({
   name,
@@ -30,8 +36,8 @@ const RentalCard = ({
             )}
             {user?.profilePicture && (
               <img
-                src={user.profilePicture.file}
-                alt={user?.firstName ? user.firstName : "Image de profile"}
+                src={AppService.createImageUrl(user.profilePicture as FileDto)}
+                alt={user?.firstName ?? "Image de profile"}
                 className="card-pp"
               />
             )}

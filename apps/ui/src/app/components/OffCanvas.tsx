@@ -1,20 +1,35 @@
 "use client";
-import React, { Fragment, useRef } from "react";
-import SiteLogo from "./Icons/SiteLogo";
 import { X } from "lucide-react";
 import dynamic from "next/dynamic";
+import React, { Fragment, useRef } from "react";
+
+import SiteLogo from "./Icons/SiteLogo";
 
 interface OffCanvasProps {
-  children: React.ReactNode;
-  buttonContent: React.ReactNode | string;
-  buttonClassName?: string;
-  autoCloseOnClick?: boolean;
+  readonly buttonContent: React.ReactNode | string;
+  readonly children: React.ReactNode;
+  readonly autoCloseOnClick?: boolean;
+  readonly buttonClassName?: string;
+  readonly dialogClassName?: string;
+}
+
+type ReactElementType =
+  | React.ComponentType<Record<string, unknown>>
+  | React.ExoticComponent
+  | string;
+
+interface ChildProps {
+  children?: React.ReactNode;
+  closeCanvas?: () => void;
+  href?: string;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 const OffCanvas = ({
   children,
   buttonContent,
   buttonClassName,
+  dialogClassName,
   autoCloseOnClick = false,
 }: OffCanvasProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -25,85 +40,70 @@ const OffCanvas = ({
     }
   };
 
-  const canReceiveCustomProps = (elementType: any): boolean => {
-    if (typeof elementType === "string") {
-      return false;
-    }
-
-    if (elementType === React.Fragment) {
-      return false;
-    }
-
-    return typeof elementType === "function";
+  const canReceiveCustomProps = (elementType: ReactElementType): boolean => {
+    return typeof elementType === "function" && elementType !== React.Fragment;
   };
 
-  const processChildren = (children: React.ReactNode): React.ReactNode => {
-    return React.Children.map(children, (child) => {
-      if (React.isValidElement(child)) {
-        const props: any = {};
+  const handleAutoCloseClick = (
+    originalOnClick?: (event: React.MouseEvent) => void,
+  ) => {
+    return (event: React.MouseEvent) => {
+      if (originalOnClick) {
+        originalOnClick(event);
+      }
+      handleClose();
+    };
+  };
 
-        if (child.type === React.Fragment) {
-          const fragmentProps = child.props as { children?: React.ReactNode };
-          if (fragmentProps.children) {
-            return React.cloneElement(
+  const shouldAddClickHandler = (
+    child: React.ReactElement,
+    childProps: ChildProps,
+  ): boolean => {
+    return autoCloseOnClick && (child.type === "a" || "href" in childProps);
+  };
+
+  const processChildren = (childrenNodes: React.ReactNode): React.ReactNode => {
+    return React.Children.map(childrenNodes, (child) => {
+      if (!React.isValidElement(child)) {
+        return child;
+      }
+
+      if (child.type === React.Fragment) {
+        const fragmentProps = child.props as { children?: React.ReactNode };
+        return fragmentProps.children
+          ? React.cloneElement(
               child,
               { key: child.key },
               processChildren(fragmentProps.children),
-            );
-          }
-          return child;
-        }
-
-        const childProps = child.props as Record<string, any>;
-
-        if (autoCloseOnClick) {
-          if (
-            child.type === "a" ||
-            (childProps &&
-              typeof childProps === "object" &&
-              "href" in childProps)
-          ) {
-            const originalOnClick = childProps.onClick;
-            props.onClick = (event: React.MouseEvent) => {
-              if (originalOnClick) {
-                originalOnClick(event);
-              }
-              handleClose();
-            };
-          } else if (child.type === "button") {
-            const originalOnClick = childProps.onClick;
-            props.onClick = (event: React.MouseEvent) => {
-              if (originalOnClick) {
-                originalOnClick(event);
-              }
-              handleClose();
-            };
-          }
-        }
-
-        if (canReceiveCustomProps(child.type)) {
-          props.closeCanvas = handleClose;
-        }
-
-        if (
-          childProps &&
-          typeof childProps === "object" &&
-          "children" in childProps
-        ) {
-          props.children = processChildren(
-            childProps.children as React.ReactNode,
-          );
-        }
-
-        return React.cloneElement(child, props);
+            )
+          : child;
       }
-      return child;
+
+      const childProps = child.props as ChildProps;
+      const newProps: ChildProps = {};
+
+      if (shouldAddClickHandler(child, childProps)) {
+        newProps.onClick = handleAutoCloseClick(childProps.onClick);
+      }
+
+      if (canReceiveCustomProps(child.type)) {
+        newProps.closeCanvas = handleClose;
+      }
+
+      if (childProps.children) {
+        newProps.children = processChildren(childProps.children);
+      }
+
+      return React.cloneElement(child, newProps);
     });
   };
 
   return (
     <Fragment>
-      <dialog className="off-canvas dialog-menu" ref={dialogRef}>
+      <dialog
+        className={`off-canvas dialog-menu ${dialogClassName ?? ""}`}
+        ref={dialogRef}
+      >
         <div className="heading flex justify-between align-items-center">
           <SiteLogo className="icon-site-logo" />
 
@@ -119,7 +119,7 @@ const OffCanvas = ({
       </dialog>
       <button
         onClick={() => dialogRef.current?.showModal()}
-        className={`dialog-open ${buttonClassName || ""}`}
+        className={`dialog-open ${buttonClassName ?? ""}`}
       >
         {buttonContent}
       </button>
