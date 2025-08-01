@@ -17,6 +17,19 @@ export class RentalDto {
   comments: RentalCommentDto[] | null;
 }
 
+export class CreateRentalDto {
+  name: string;
+  slug: string;
+  description: string | null;
+  quantity: number = 1;
+
+  images: FileDto[] | File[];
+  cats: number[] | null;
+  user: UserDto;
+  orderItems: OrderItemDto[] | null;
+  comments: RentalCommentDto[] | null;
+}
+
 export class RentalCatDto {
   id: number | null;
   name: string;
