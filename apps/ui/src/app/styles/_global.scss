@@ -280,8 +280,23 @@ html:has(#wpadminbar) {
 
 .pp {
   aspect-ratio: 1 / 1;
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
+  border: solid 5px $primary;
   border-radius: 50px;
   object-fit: cover;
+}
+
+.banner {
+  aspect-ratio: 16 / 5;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: solid 5px $primary;
+}
+
+.top-profile {
+  .pp {
+    margin-top: -50px;
+  }
 }

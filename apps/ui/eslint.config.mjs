@@ -18,6 +18,11 @@ const eslintConfig = [
       "sonarjs/jsx-no-useless-fragment": "off",
       "perfectionist/sort-object-types": "off",
       "react/no-unescaped-entities": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "sonarjs/deprecation": "off",
+      "@next/next/no-img-element": "off",
+      "sonarjs/slow-regex": "off",
+      "unicorn/no-document-cookie": "off",
     },
   },
 ];

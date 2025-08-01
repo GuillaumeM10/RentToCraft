@@ -2,6 +2,13 @@ import type { NextConfig } from "next";
 import path from "path";
 import { config } from "dotenv";
 
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
 config({ path: path.resolve(process.cwd(), "../../.env") });
 
 const nextConfig: NextConfig = {
@@ -33,4 +40,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);
