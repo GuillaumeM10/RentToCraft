@@ -32,12 +32,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user;
 
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
   const checkAuthStatus = useCallback(async () => {
     try {
       const userData = await AuthService.getCurrentUser();
@@ -112,10 +106,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isTransparentOnTop,
     ],
   );
-
-  if (!isHydrated) {
-    return <div>{children}</div>;
-  }
 
   return (
     <AuthContext.Provider value={value}>
