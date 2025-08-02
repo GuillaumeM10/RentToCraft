@@ -1,35 +1,35 @@
 "use client";
+
 import {
   type CreateRentalDto,
   type RentalCatDto,
   type RentalDto,
 } from "@rent-to-craft/dtos";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import RentalService from "@/app/services/rental.service";
 
-type CreateRentalProps = {
+type EditRentalProps = {
   readonly onSuccess?: (rental: RentalDto) => void;
+  readonly rental: RentalDto;
 };
 
-const CreateRental = ({ onSuccess }: CreateRentalProps) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [images, setImages] = useState<File[]>([]);
+const EditRental = ({ onSuccess, rental }: EditRentalProps) => {
+  const [name, setName] = useState(rental.name);
+  const [description, setDescription] = useState(rental.description);
+  const [quantity, setQuantity] = useState(rental.quantity);
   const [cats, setCats] = useState<number[] | null>(null);
   const [existingCats, setExistingCats] = useState<RentalCatDto[]>([]);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleSubmit = async (element: React.FormEvent) => {
     element.preventDefault();
+
+    if (!rental.id) return;
     const catsId = cats
       ? existingCats
           .filter((cat) => cats.includes(cat.id!))
           .map((cat) => cat.id!)
       : null;
-    console.log(catsId);
 
     const rentalData: Partial<CreateRentalDto> = {
       name,
@@ -37,9 +37,22 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
       quantity,
       cats: catsId ?? null,
     };
-    const createdRental = await RentalService.create(rentalData, images);
+    const updateRental = await RentalService.update(rentalData, rental.id);
+
     if (onSuccess) {
-      onSuccess(createdRental);
+      onSuccess(updateRental);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (!rental.id) return;
+      await RentalService.remove(rental.id);
+      if (onSuccess) {
+        onSuccess(rental);
+      }
+    } catch (error) {
+      console.error("Error deleting rental:", error);
     }
   };
 
@@ -50,6 +63,9 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
 
   useEffect(() => {
     void fetchCategories();
+    if (rental.cats) {
+      setCats(rental.cats.map((cat) => cat.id!));
+    }
   }, []);
 
   return (
@@ -61,23 +77,25 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
         <input
           id="name"
           type="text"
-          value={name}
+          defaultValue={name}
           onChange={(element) => setName(element.target.value)}
           className="form-input"
           required
         />
       </div>
+
       <div className="form-group">
         <label className="form-label" htmlFor="description">
           Description
         </label>
         <textarea
           id="description"
-          value={description}
+          defaultValue={description ?? ""}
           onChange={(element) => setDescription(element.target.value)}
           className="form-input"
         />
       </div>
+
       <div className="form-group">
         <label className="form-label" htmlFor="quantity">
           Quantité
@@ -85,68 +103,11 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
         <input
           id="quantity"
           type="number"
-          value={quantity}
+          defaultValue={quantity}
           onChange={(element) => setQuantity(Number(element.target.value))}
           className="form-input"
-          min={1}
+          required
         />
-      </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="images">
-          Images
-        </label>
-        <input
-          id="images"
-          type="file"
-          ref={fileInputRef}
-          multiple
-          onChange={(element) =>
-            setImages(Array.from(element.target.files ?? []))
-          }
-          className="form-input"
-        />
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="btn btn-outline-primary mt-10"
-        >
-          Choisir des images
-        </button>
-
-        {images.length > 0 && (
-          <div className="mt-10">
-            <h3>Images sélectionnées :</h3>
-            <ul>
-              {images.map((file, index) => (
-                <>
-                  <li key={file.name}>
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={`Image ${index + 1}`}
-                      className="img-preview"
-                      width={70}
-                    />
-                    {file.name}
-                  </li>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setImages((previous) =>
-                        previous.filter(
-                          (_, imageIndex) => imageIndex !== index,
-                        ),
-                      )
-                    }
-                    className="btn btn-red mt-5"
-                  >
-                    Supprimer
-                  </button>
-                </>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
       <div className="form-group">
@@ -168,18 +129,27 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
           {existingCats.map(
             (cat) =>
               cat.id && (
-                <option key={cat.id} value={cat.id}>
+                <option
+                  key={cat.id}
+                  value={cat.id}
+                  selected={cats?.includes(cat.id) ?? false}
+                >
                   {cat.name}
                 </option>
               ),
           )}
         </select>
       </div>
+
+      <button type="button" className="btn btn-red" onClick={handleDelete}>
+        Supprimer l'objet
+      </button>
+
       <button type="submit" className="btn btn-primary">
-        Créer l'objet
+        Mettre à jour l'objet
       </button>
     </form>
   );
 };
 
-export default CreateRental;
+export default EditRental;

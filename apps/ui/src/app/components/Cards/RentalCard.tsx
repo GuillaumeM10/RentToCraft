@@ -7,12 +7,29 @@ import Link from "next/link";
 
 import AppService from "@/app/services/app.service";
 
+import EditRental from "../Forms/Rental/EditRental";
+import EditRentalImages from "../Forms/Rental/EditRentalImages";
+import OffCanvas from "../OffCanvas";
+
 type RentalCardProps = {
   readonly rental: RentalDto;
   readonly editMode?: boolean;
+  readonly onSuccess?: (rental: RentalDto) => void;
 };
-const RentalCard = ({ rental, editMode = false }: RentalCardProps) => {
-  const { name, description, images, cats, user, slug } = rental;
+const RentalCard = ({
+  rental,
+  editMode = false,
+  onSuccess,
+}: RentalCardProps) => {
+  let { name, description, cats, slug } = rental;
+  const { user, images } = rental;
+
+  const updateRentalData = (updatedRental: RentalDto) => {
+    name = updatedRental.name;
+    description = updatedRental.description;
+    cats = updatedRental.cats;
+    slug = updatedRental.slug;
+  };
 
   const content = (
     <>
@@ -54,6 +71,38 @@ const RentalCard = ({ rental, editMode = false }: RentalCardProps) => {
         <h2 className="card-title">{name}</h2>
         {description && (
           <p className="card-description mt-auto">{description}</p>
+        )}
+
+        {editMode && (
+          <div className="card-actions flex flex-wrap gap-10">
+            <OffCanvas
+              buttonContent="Modifier"
+              buttonClassName="btn btn-underline-primary"
+            >
+              <EditRental
+                rental={rental}
+                onSuccess={(updatedRental) => {
+                  updateRentalData(updatedRental);
+                  if (onSuccess) {
+                    onSuccess(updatedRental);
+                  }
+                }}
+              />
+            </OffCanvas>
+            <OffCanvas
+              buttonContent="Modifier les images"
+              buttonClassName="btn btn-underline-primary"
+            >
+              <EditRentalImages
+                initData={rental}
+                onSuccess={() => {
+                  if (onSuccess) {
+                    onSuccess(rental);
+                  }
+                }}
+              />
+            </OffCanvas>
+          </div>
         )}
       </div>
     </>

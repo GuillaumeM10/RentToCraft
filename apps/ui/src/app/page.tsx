@@ -4,6 +4,7 @@ import Accordion from "./components/Sections/Accordion";
 import Landing from "./components/Sections/Landing";
 import Numbers from "./components/Sections/Numbers";
 import Split from "./components/Sections/Split";
+import SwiperRentals from "./components/Sections/SwiperRentals";
 import Wellcome from "./components/Sections/Wellcome";
 
 export default function HomePage() {
@@ -72,6 +73,10 @@ export default function HomePage() {
           dark
           odd
         />
+      </div>
+
+      <div className="layout-maxed home-template overflow-hidden">
+        <SwiperRentals />
       </div>
     </Fragment>
   );

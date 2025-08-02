@@ -51,7 +51,7 @@ const RentalCategories = () => {
                 <td className="tac">
                   <OffCanvas
                     buttonContent="Modifier"
-                    buttonClassName="btn btn-outline-primary"
+                    buttonClassName="btn btn-underline-primary"
                   >
                     <EditRentalCat
                       categorie={category}

@@ -15,8 +15,13 @@ type RentalServiceType = {
     rentalData: Partial<CreateRentalDto>,
     images?: File[],
   ) => Promise<RentalDto>;
+  update: (
+    rentalData: Partial<CreateRentalDto>,
+    rentalId: number,
+  ) => Promise<RentalDto>;
+  remove: (rentalId: number) => Promise<void>;
   removeFile: (fileId: string) => Promise<void>;
-  uploadFile: (rentalId: string, files: File[]) => Promise<RentalDto>;
+  uploadFile: (rentalId: number, files: File[]) => Promise<RentalDto>;
 
   createCategory: (categoryData: RentalCatDto) => Promise<RentalCatDto>;
   updateCategory: (
@@ -50,18 +55,23 @@ const RentalService: RentalServiceType = {
     const response = await api.post(`/rental`, formData);
     return response.data;
   },
+  update: async (rentalData, rentalId) => {
+    const response = await api.put(`/rental/${rentalId}`, rentalData);
+    return response.data;
+  },
+  remove: async (rentalId: number) => {
+    await api.delete(`/rental/${rentalId}`);
+  },
   removeFile: async (fileId: string) => {
     const response = await api.delete(`/rental/file/${fileId}`);
     return response.data;
   },
-  uploadFile: async (rentalId: string, files: File[]) => {
+  uploadFile: async (rentalId: number, files: File[]) => {
+    console.log(rentalId);
+
     const formData = new FormData();
     files.forEach((file) => formData.append("images", file));
-    const response = await api.post(`/rental/file/${rentalId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await api.put(`/rental/file/${rentalId}`, formData);
     return response.data;
   },
 

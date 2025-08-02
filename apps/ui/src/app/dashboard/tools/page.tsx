@@ -28,9 +28,14 @@ const Tools = () => {
 
       <h2 className="text-30 tac my-30">Mes objets</h2>
 
-      <div className="grid grid-cols-3 gap-30">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-30">
         {rentals.map((rental) => (
-          <RentalCard key={rental.id} rental={rental} editMode />
+          <RentalCard
+            key={rental.id}
+            rental={rental}
+            editMode
+            onSuccess={() => getRentals()}
+          />
         ))}
       </div>
     </div>

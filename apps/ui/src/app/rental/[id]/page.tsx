@@ -1,5 +1,6 @@
 "use client";
 import { type FileDto, type RentalDto } from "@rent-to-craft/dtos";
+import Link from "next/link";
 import React, { use, useEffect, useState } from "react";
 
 import AppService from "@/app/services/app.service";
@@ -33,13 +34,24 @@ const RentalPage = ({ params }: RentalPageProps) => {
     void fetchRental();
   }, [id]);
 
+  useEffect(() => {
+    console.log("Rental:", rental);
+  }, [rental]);
+
   return (
     <div className="layout-maxed mt-30">
+      <Link href={`/rental`} className="btn btn-underline-primary w-fit mb-30">
+        Objets
+      </Link>
       {rental && (
         <div>
           <div className="top-profile">
             <img
-              src={AppService.createImageUrl(rental.images[0] as FileDto)}
+              src={
+                rental.images[0]
+                  ? AppService.createImageUrl(rental.images[0] as FileDto)
+                  : "https://images-ext-1.discordapp.net/external/rz9ILA7keWFyHgDlp2bRybCdRx2mWg1R4sYXG7Gntmw/https/picsum.photos/1280/720?format=webp&width=1600&height=900"
+              }
               alt=""
               className="banner"
             />

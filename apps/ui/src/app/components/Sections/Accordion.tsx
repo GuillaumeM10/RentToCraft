@@ -33,7 +33,7 @@ const Accordion = ({ title, description, items }: AccordionProps) => {
   };
 
   return (
-    <div className="accordion md:grid grid-cols-3 gap-40">
+    <div className="accordion lg:grid grid-cols-3 gap-40">
       <div>
         <h2 className="title">{title}</h2>
         {description && <p className="description">{description}</p>}
