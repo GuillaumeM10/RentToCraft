@@ -60,16 +60,16 @@ export class RentalController {
 
   @Put('/file/:rentalId')
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'files' }]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images' }]))
   uploadFile(
     @Param('rentalId', ParseIntPipe) rentalId: number,
     @UploadedFiles()
     files: {
-      files: File[];
+      images: File[];
     },
     @User() user: UserDto,
   ) {
-    return this.rentalService.uploadFile(files.files, user, rentalId);
+    return this.rentalService.uploadFile(files.images, user, rentalId);
   }
 
   @Put(':id')

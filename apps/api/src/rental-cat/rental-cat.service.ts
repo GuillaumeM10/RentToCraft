@@ -1,10 +1,16 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RentalCatDto } from '@rent-to-craft/dtos';
 import { plainToInstance } from 'class-transformer';
 import slugify from 'slugify';
 import { Repository } from 'typeorm';
 
+import initData from './data/initData';
 import { RentalCatEntity } from './entities/rental-cat.entity';
 
 @Injectable()
@@ -83,6 +89,8 @@ export class RentalCatService {
       .where('category.slug = :slug', { slug })
       .leftJoinAndSelect('category.rentals', 'rentals')
       .leftJoinAndSelect('rentals.images', 'images')
+      .leftJoinAndSelect('rentals.user', 'user')
+      .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .getOne();
 
     if (!category) {
@@ -133,5 +141,23 @@ export class RentalCatService {
     return {
       message: `La catégorie #${id} a été supprimée.`,
     };
+  }
+
+  async initData() {
+    const data = initData.data;
+
+    void Promise.all(
+      data.map(async (item) => {
+        const exists = await this.rentalCatRepository.findOne({
+          where: { slug: item.slug },
+        });
+        if (!exists) {
+          const newCategory = this.rentalCatRepository.create(item);
+          await this.rentalCatRepository.save(newCategory);
+        }
+      }),
+    );
+
+    Logger.log(`Catégories d'objets initialisées.`);
   }
 }

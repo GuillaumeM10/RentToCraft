@@ -122,6 +122,7 @@ export class RentalService {
       .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('rental.cats', 'cats')
       .leftJoinAndSelect('rental.comments', 'comments')
+      .orderBy('rental.createdAt', 'DESC')
       .getMany();
 
     if (rentals === null || rentals.length === 0) {
@@ -202,7 +203,9 @@ export class RentalService {
 
       updateRentalDto.cats = await Promise.all(
         cats.map((cat) =>
-          this.rentalCatService.findOne(typeof cat === 'string' ? cat : cat.id),
+          this.rentalCatService.findOne(
+            typeof cat === 'string' || typeof cat === 'number' ? cat : cat.id,
+          ),
         ),
       );
     }
@@ -212,8 +215,8 @@ export class RentalService {
       ...updateRentalDto,
     };
 
-    await this.rentalRepository.save(rentalUpdate);
-    return plainToInstance(RentalDto, rentalUpdate);
+    const updatedRental = await this.rentalRepository.save(rentalUpdate);
+    return plainToInstance(RentalDto, updatedRental);
   }
 
   async deleteFile(fileId: number) {
@@ -264,6 +267,11 @@ export class RentalService {
     return {
       message: `La location #${id} a été supprimée.`,
     };
+  }
+
+  async getOneRentalFiles(rentalId: number) {
+    const rental = await this.findOne(rentalId);
+    return rental.images;
   }
 
   async getAllFilesIds() {

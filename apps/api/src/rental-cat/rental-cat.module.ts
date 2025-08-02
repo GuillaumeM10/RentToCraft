@@ -17,4 +17,10 @@ import { RentalCatService } from './rental-cat.service';
   providers: [RentalCatService],
   exports: [RentalCatService],
 })
-export class RentalCatModule {}
+export class RentalCatModule {
+  constructor(private readonly rentalCatService: RentalCatService) {}
+
+  async onModuleInit() {
+    await this.rentalCatService.initData();
+  }
+}
