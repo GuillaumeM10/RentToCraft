@@ -3,6 +3,10 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import "./main.scss";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import { AuthProvider } from "./contexts/auth.context";
 
 const inter = Inter({ subsets: ["latin"] });

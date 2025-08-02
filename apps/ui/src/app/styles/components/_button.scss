@@ -18,6 +18,7 @@
 .btn,
 .button {
   @extend %btn;
+
   &:focus {
     -webkit-tap-highlight-color: transparent;
   }
@@ -60,44 +61,81 @@
 }
 
 // button color theme
-@each $color, $value in $colors {
-  .btn-#{$color}{
+@each $color,
+$value in $colors {
+  .btn-#{$color} {
     color: color-yiq($value);
     background-color: $value;
+
     &:focus,
     &:active,
-    &:hover{
+    &:hover {
       color: color-yiq($value);
       background-color: darken($value, 14);
     }
   }
 }
 
-@each $color, $value in $colors {
-  .btn-outline-#{$color}{
+@each $color,
+$value in $colors {
+  .btn-outline-#{$color} {
     color: $value;
     background-color: transparent;
     border: 2px solid $value;
     padding: 10px 24px;
 
-    .icon{color: $value;}
-    
+    .icon {
+      color: $value;
+    }
+
     &:focus,
     &:active,
-    &:hover{
+    &:hover {
       color: $white;
       background-color: $value;
 
-      .icon{color: $white;} 
+      .icon {
+        color: $white;
+      }
     }
   }
 }
 
 .btn-outline-white {
+
   &:focus,
   &:active,
   &:hover {
     color: $primary;
-    .icon { color: $primary; }
+
+    .icon {
+      color: $primary;
+    }
+  }
+}
+
+@each $color,
+$value in $colors {
+  .btn-underline-#{$color} {
+    color: $value;
+    background-color: transparent;
+    border-bottom: 2px solid $value;
+    padding: 10px 0;
+    border-radius: 0;
+
+    .icon {
+      color: $value;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      color: lighten($value, 14);
+      border-color: lighten($value, 14);
+
+      .icon {
+        color: $white;
+      }
+    }
   }
 }

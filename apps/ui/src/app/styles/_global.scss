@@ -12,6 +12,10 @@ html:has(#wpadminbar) {
   margin-top: 32px !important;
 }
 
+main {
+  min-height: calc(100dvh - 250px);
+}
+
 .caret {
   display: inline-block;
   margin-left: .255em;

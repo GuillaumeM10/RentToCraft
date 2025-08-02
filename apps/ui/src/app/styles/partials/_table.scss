@@ -1,6 +1,7 @@
 table {
   border-collapse: collapse;
-  border: 1px solid $primary;
+  border: 2px solid $primary;
+  background: $white;
   margin: 0 0 20px 0;
   caption-side: bottom;
 
@@ -12,6 +13,10 @@ table {
   tr {
     border: 0 solid;
     border-color: inherit;
+  }
+
+  thead {
+    border-bottom: solid 2px $primary;
   }
 
   td,
