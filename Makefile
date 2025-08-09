@@ -35,17 +35,9 @@ reset:
 .PHONY: lint
 lint:
 	@echo "linting"
-	@echo "linting api"
-	@pnpm --filter api run lint
-	@echo "linting ui"
-	@pnpm --filter ui run lint
+	@pnpm lint
 
-.PHONY: tests
-tests:
+.PHONY: test
+test:
 	@echo "testing"
-	@pnpm --filter api run test --passWithNoTests
-
-.PHONY: tests-coverage
-tests-coverage:
-	@echo "testing"
-	@pnpm --filter api test:cov
+	@pnpm test

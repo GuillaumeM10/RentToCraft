@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,44 +16,62 @@ import { TokenResetPasswordModule } from './token-reset-password/token-reset-pas
 import { UserModule } from './user/user.module';
 import { ValidTokenModule } from './valid-token/valid-token.module';
 
-const isProduction = process.env.NODE_ENV === 'production';
-console.log('isProductionDB', isProduction);
+
+const config =  () => {
+
+  if(process.env.NODE_ENV === 'production'){
+
+    return {
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      ssl: true,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      autoLoadEntities: true,
+    } as TypeOrmModuleOptions
+  }
+  if(process.env.NODE_ENV === 'test'){
+    return {
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: Number.parseInt(process.env.TEST_POSTGRES_PORT) || 5433,
+      password: process.env.POSTGRES_PASSWORD,
+      username: process.env.POSTGRES_USER,
+      autoLoadEntities: true,
+      database: process.env.TEST_POSTGRES_DB,
+      synchronize: true,
+      logging: false,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      dropSchema: true,
+    }as TypeOrmModuleOptions
+  }
+  if(process.env.NODE_ENV === 'development'){
+    return {
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: Number.parseInt(process.env.POSTGRES_PORT),
+      password: process.env.POSTGRES_PASSWORD,
+      username: process.env.POSTGRES_USER,
+      autoLoadEntities: true,
+      database: process.env.POSTGRES_DB,
+      synchronize: true,
+      logging: false,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    }as TypeOrmModuleOptions
+  }
+}
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '../../.env',
     }),
-    TypeOrmModule.forRoot(
-      isProduction
-        ? {
-            type: 'postgres',
-            host: process.env.POSTGRES_HOST,
-            username: process.env.POSTGRES_USER,
-            password: process.env.POSTGRES_PASSWORD,
-            database: process.env.POSTGRES_DB,
-            ssl: true,
-            entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: true,
-            autoLoadEntities: true,
-            // extra: {
-            //   min: 2,
-            //   max: 5
-            // }
-          }
-        : {
-            type: 'postgres',
-            host: process.env.POSTGRES_HOST,
-            port: Number.parseInt(process.env.POSTGRES_PORT),
-            password: process.env.POSTGRES_PASSWORD,
-            username: process.env.POSTGRES_USER,
-            autoLoadEntities: true,
-            database: process.env.POSTGRES_DB,
-            synchronize: true,
-            logging: false,
-            entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          },
-    ),
+    TypeOrmModule.forRoot({
+      ...config(),
+    }),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
@@ -75,5 +93,8 @@ console.log('isProductionDB', isProduction);
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+  onModuleInit() {
+    console.log('environment :', process.env.NODE_ENV);
   }
 }
