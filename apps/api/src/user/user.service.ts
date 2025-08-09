@@ -1,5 +1,7 @@
 import {
+  forwardRef,
   HttpException,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -25,6 +27,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => FileService))
     private readonly fileService: FileService,
   ) {}
 
@@ -97,7 +100,7 @@ export class UserService {
       .createQueryBuilder('user')
       .where('user.email = :email', { email });
 
-    const user = query.getOne();
+    const user = await query.getOne();
 
     if (user === null) {
       throw new NotFoundException(
