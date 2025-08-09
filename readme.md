@@ -1,3 +1,6 @@
+![Tests](https://github.com/GuillaumeM10/RentToCraft/actions/workflows/test.yml/badge.svg)
+![Lint](https://github.com/GuillaumeM10/RentToCraft/actions/workflows/lint.yml/badge.svg)
+
 # Changelog
 
 ## Week 3
@@ -75,14 +78,75 @@
 - Initialize NestJS application
 - Initial repository setup
 
-# Nest commands
+
+# 📋 Cahier de Recettes — C2.3.1
+
+
+## Tests existants
+
+| Module / Fonctionnalité         | Fichiers de tests existants                                      | Type de test      | Ce qui est vérifié actuellement                                      |
+|---------------------------------|------------------------------------------------------------------|-------------------|---------------------------------------------------------------------|
+| **Authentification**            | `auth.controller.spec.ts`, `auth.service.spec.ts`                | Fonctionnel       | Inscription, connexion, reset password, logout, gestion des tokens  |
+| **Catégories de location**      | `rental-cat.controller.spec.ts`, `rental-cat.service.spec.ts`    | Fonctionnel       | CRUD catégories, recherche par slug                                 |
+| **Locations**                   | `rental.controller.spec.ts`, `rental.service.spec.ts`            | Fonctionnel       | CRUD locations, upload fichiers, recherche, filtrage                |
+| **Commentaires sur location**   | `rental-comment.controller.spec.ts`, `rental-comment.service.spec.ts` | Fonctionnel  | Ajout, suppression, modification, récupération des commentaires     |
+| **Fichiers**                    | `file.controller.spec.ts`, `file.service.spec.ts`                | Fonctionnel       | Upload, suppression, récupération, suppression des orphelins        |
+
+## Scénarios de tests todo
+
+| Module / Fonctionnalité         | Type de test      | Scénario pertinent à ajouter                        | Résultat attendu                        |
+|---------------------------------|-------------------|-----------------------------------------------------|-----------------------------------------|
+| **Authentification**            | Sécurité          | Accès à une ressource sans token                    | 401 Unauthorized                        |
+|                                 | Sécurité          | Accès à une ressource d’un autre utilisateur        | 403 Forbidden                           |
+|                                 | Sécurité          | Tentative de brute force sur le login               | Blocage ou délai                        |
+| **Locations**                   | Structurel        | Création d’une location sans champ obligatoire      | 400 Bad Request                         |
+|                                 | Fonctionnel       | Pagination sur la liste des locations               | Résultat paginé conforme                |
+| **Commentaires**                | Sécurité          | Suppression d’un commentaire par un autre utilisateur | 403 Forbidden                        |
+| **Fichiers**                    | Sécurité          | Upload d’un fichier de type interdit                | 400 ou 415 Unsupported Media Type        |
+|                                 | Sécurité          | Upload d’un fichier trop volumineux                 | 413 Payload Too Large                   |
+| **Général**                     | Sécurité          | Test d’injection SQL/XSS sur les champs texte       | Aucune faille, données non altérées     |
+|                                 | Structurel        | Validation stricte des DTOs (types, formats)        | Erreur si non conforme                  |
+| **Mail / Notifications**        | Fonctionnel       | Envoi de mail à l’inscription ou reset password     | Mail reçu par l’utilisateur             |
+
+### Exemple de scénario rédigé
+
+- **Fonctionnalité** : Authentification
+- **Scénario** : Accès à une route/donnée protégée sans bearer token
+- **Pré-condition** : Aucun utilisateur connecté
+- **Action** : Appeler l’API `/api/rental` avec la méthode POST sans header d’authentification
+- **Résultat attendu** : Réponse 401 Unauthorized
+
+
+
+# Commandes utiles
+
+## Make commands
 
 ```bash
+  # Run all services with docker compose
+  "make up",
+  # Stop all services with docker compose
+  "make down",
+  # Reset all services with docker compose
+  "make reset",
+  # Run api
+  "make api",
+  "pnpm run dev:api"
+  # Run ui
+  "make ui",
+  "pnpm run dev:ui"
+```
+
+## Nest commands
+
+```bash
+  # Create a new resource
   "nest g r <name> --no-spec --flat --type rest",
 ```
 
-# Run ci in local with docker
+## Run ci in local with docker
 
 ```bash
+  # Run ci in local with docker
   "act",
 ```
