@@ -25,4 +25,9 @@ jobs:
       - name: Build Libs
         run: pnpm build:libs
       - name: Run tests
-        run: pnpm run test
+        run: pnpm run test:ci
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jest-junit-report
+          path: ./junit.xml

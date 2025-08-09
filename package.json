@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm --filter api test",
+    "test": "pnpm --filter api test:cov",
+    "test:ci": "pnpm --filter api test:ci",
     "dev:ui": "pnpm build:libs && pnpm --filter ui dev",
     "dev:api": "pnpm --filter api dev",
     "prepare": "husky",
