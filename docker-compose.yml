@@ -11,6 +11,17 @@ services:
     volumes:
       - ./test_init.sql:/docker-entrypoint-initdb.d/test_init.sql
 
+  postgres-test:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${TEST_POSTGRES_DB}
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
   adminer:
     image: adminer
     container_name: adminer
@@ -28,4 +39,4 @@ services:
       - "25:25"
 
 volumes:
-  redis_insight_volume_dev:
+  postgres_test_data:

@@ -17,8 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "types": ["jest"],
     "paths": {
-      "@rent-to-craft/dtos": ["../../libs/dtos/dist/index.d.ts"]
+      "@rent-to-craft/dtos": ["../../libs/dtos/dist/index.d.ts"],
+      "src/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],
