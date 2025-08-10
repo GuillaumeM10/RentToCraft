@@ -1,34 +1,33 @@
-name: Main Pipeline
+name: Test
 
 on:
-  pull_request:
-    branches:
-      - main
-      - develop
   push:
     branches:
-      - "**"
-jobs:
-  lint:
-    runs-on: ubuntu-latest
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
+jobs:
+  test:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "22"
-
+          node-version: '22'
       - name: Install pnpm and typescript
         run: npm install -g pnpm && npm install -g typescript
-
       - name: Install dependencies
         run: pnpm install
-
       - name: Build Libs
         run: pnpm build:libs
-
-      - name: Run lint
-        run: pnpm run lint
+      - name: Run tests
+        run: pnpm run test:ci
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-junit-report
+          path: apps/api/junit.xml

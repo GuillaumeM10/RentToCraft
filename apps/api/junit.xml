@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="12" failures="0" errors="0" time="7.274">
+  <testsuite name="RentalService" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.855" tests="1">
+    <testcase classname="RentalService should be defined" name="RentalService should be defined" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="RentalCatService" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.865" tests="1">
+    <testcase classname="RentalCatService should be defined" name="RentalCatService should be defined" time="0.019">
+    </testcase>
+  </testsuite>
+  <testsuite name="RentalCatController" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.958" tests="2">
+    <testcase classname="RentalCatController should be defined" name="RentalCatController should be defined" time="0.017">
+    </testcase>
+    <testcase classname="RentalCatController should have service" name="RentalCatController should have service" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="FileService" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.976" tests="1">
+    <testcase classname="FileService should be defined" name="FileService should be defined" time="0.014">
+    </testcase>
+  </testsuite>
+  <testsuite name="RentalCommentService" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.962" tests="1">
+    <testcase classname="RentalCommentService should be defined" name="RentalCommentService should be defined" time="0.016">
+    </testcase>
+  </testsuite>
+  <testsuite name="RentalCommentController" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="5.995" tests="1">
+    <testcase classname="RentalCommentController should be defined" name="RentalCommentController should be defined" time="0.016">
+    </testcase>
+  </testsuite>
+  <testsuite name="FileController" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="6.031" tests="1">
+    <testcase classname="FileController should be defined" name="FileController should be defined" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="RentalController" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="6.095" tests="2">
+    <testcase classname="RentalController should be defined" name="RentalController should be defined" time="0.013">
+    </testcase>
+    <testcase classname="RentalController should have service" name="RentalController should have service" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="AuthController" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="6.335" tests="1">
+    <testcase classname="AuthController should be defined" name="AuthController should be defined" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="AuthService" errors="0" failures="0" skipped="0" timestamp="2025-08-09T10:10:08" time="6.406" tests="1">
+    <testcase classname="AuthService should be defined" name="AuthService should be defined" time="0.012">
+    </testcase>
+  </testsuite>
+</testsuites>

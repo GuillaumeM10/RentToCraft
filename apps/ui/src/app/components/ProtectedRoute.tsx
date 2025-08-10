@@ -10,9 +10,10 @@ import { LoadingSpinner } from "./LoadingSpinner";
 interface ProtectedRouteProps {
   readonly children: React.ReactNode;
   readonly onlyAdmin?: boolean;
+  readonly reversed?: boolean;
 }
 
-export function ProtectedRoute({ children, onlyAdmin }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, onlyAdmin, reversed = false }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
 
@@ -23,7 +24,11 @@ export function ProtectedRoute({ children, onlyAdmin }: ProtectedRouteProps) {
     if (onlyAdmin && isAuthenticated && user?.role !== UserRole.administrator) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, isLoading, router, onlyAdmin, user?.role]);
+    if (reversed && isAuthenticated) {
+      router.push("/dashboard");
+    }
+
+  }, [isAuthenticated, isLoading, router, onlyAdmin, user?.role, reversed]);
 
   if (isLoading) {
     return (
@@ -33,8 +38,12 @@ export function ProtectedRoute({ children, onlyAdmin }: ProtectedRouteProps) {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !reversed) {
     return null;
+  }
+
+  if (reversed && isAuthenticated) {
+    return <>{children}</>;
   }
 
   return <>{children}</>;
