@@ -1,35 +1,8 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
 import Signin from "@/app/components/Forms/Auth/Signin";
 
 import Signup from "../components/Forms/Auth/Signup";
-import { LoadingSpinner } from "../components/LoadingSpinner";
-import { useAuth } from "../contexts/auth.context";
 
 export default function AuthPage() {
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    } else {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated, router]);
-
-  if (isLoading) {
-    return (
-      <div className="layout-maxed auth-container py-40">
-        <div className="loading-page">
-          <LoadingSpinner size="large" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="layout-maxed auth-container py-40">
