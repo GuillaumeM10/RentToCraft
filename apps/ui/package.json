@@ -12,6 +12,7 @@
     "lint:fix": "next lint --fix --no-ignore"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.3.0",
     "axios": "^1.10.0",
     "browser-image-compression": "^2.0.2",
     "dotenv": "^17.2.0",

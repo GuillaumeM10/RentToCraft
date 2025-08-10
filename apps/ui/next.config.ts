@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { config } from "dotenv";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const withPWA = require("next-pwa")({
   dest: "public",
@@ -40,4 +41,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+
+export default withSentryConfig(withPWA(nextConfig), {
+  org: "g-c0",
+  project: "rent-to-craft-ui",
+  silent: !process.env.CI,
+  disableLogger: true,
+});
+

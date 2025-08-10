@@ -12,7 +12,7 @@ const SwiperRentals = () => {
   const [rentals, setRentals] = useState<RentalDto[]>([]);
 
   const getRentals = async () => {
-    const response = await RentalService.getAllByUser();
+    const response = await RentalService.getAll();
     setRentals(response);
   };
 

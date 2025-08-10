@@ -27,6 +27,7 @@ export function ProtectedRoute({ children, onlyAdmin, reversed = false }: Protec
     if (reversed && isAuthenticated) {
       router.push("/dashboard");
     }
+
   }, [isAuthenticated, isLoading, router, onlyAdmin, user?.role, reversed]);
 
   if (isLoading) {
@@ -37,7 +38,7 @@ export function ProtectedRoute({ children, onlyAdmin, reversed = false }: Protec
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !reversed) {
     return null;
   }
 
