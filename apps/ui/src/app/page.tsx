@@ -16,6 +16,7 @@ export default function HomePage() {
           title="RentToCraft"
           description="Louez et partagez des outils facilement avec RentToCraft"
           button={{ text: "En savoir plus", href: "#" }}
+          centered
         />
 
         <Wellcome />

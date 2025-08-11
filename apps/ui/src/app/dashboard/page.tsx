@@ -6,16 +6,13 @@ import UpdateUser from "@/app/components/Forms/User/UpdateUser";
 import UpdateUserFiles from "@/app/components/Forms/User/UpdateUserFiles";
 import OffCanvas from "@/app/components/OffCanvas";
 import { useAuth } from "@/app/contexts/auth.context";
-import AppService from "@/app/services/app.service";
 import UserService from "@/app/services/user.service";
+
+import Profile from "../components/Profile";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [userProfile, setUserProfile] = useState<UserDto | null>(null);
-  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
-    null,
-  );
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
 
   const getUserProfile = async () => {
     if (!user?.id) return;
@@ -25,38 +22,12 @@ const Dashboard = () => {
 
     if (!fetchedUserProfile) {
       console.error("User profile not found");
-      return;
-    }
-
-    if (
-      fetchedUserProfile.profilePicture &&
-      "id" in fetchedUserProfile.profilePicture
-    ) {
-      const imageUrl = AppService.createImageUrl(
-        fetchedUserProfile.profilePicture,
-      );
-      setProfilePictureUrl(imageUrl);
-    }
-
-    if (fetchedUserProfile.banner && "id" in fetchedUserProfile.banner) {
-      const bannerImageUrl = AppService.createImageUrl(
-        fetchedUserProfile.banner,
-      );
-      setBannerUrl(bannerImageUrl);
     }
   };
 
   useEffect(() => {
     void getUserProfile();
   }, [user]);
-
-  useEffect(() => {
-    return () => {
-      if (profilePictureUrl?.startsWith("blob:")) {
-        URL.revokeObjectURL(profilePictureUrl);
-      }
-    };
-  }, [profilePictureUrl]);
 
   return (
     <div>
@@ -95,56 +66,8 @@ const Dashboard = () => {
         </>
       )}
 
-      <div className="top-profile flex flex-col align-items-center">
-        <img
-          src={bannerUrl ?? "/images/default-banner.jpg"}
-          alt="Banner"
-          width={600}
-          height={200}
-          className="banner"
-        />
-        <img
-          src={profilePictureUrl ?? "/images/default-pp.png"}
-          alt="Profile"
-          width={100}
-          height={100}
-          className="pp"
-        />
-      </div>
-
       <div className="user">
-        {userProfile && (
-          <>
-            <h2>
-              Bonjour,
-              {(userProfile.firstName ?? userProfile.lastName)
-                ? `${userProfile.firstName} ${userProfile.lastName}`
-                : "utilisateur"}
-            </h2>
-            <p className="email">Email: {userProfile.email}</p>
-            <p className="description">
-              {userProfile.description ?? "Aucune description fournie."}
-            </p>
-            <p className="role">Role: {userProfile.role}</p>
-            <p className="address">
-              Adresse: {userProfile.address ?? "Aucune adresse fournie."}
-            </p>
-            <p className="city">
-              Ville: {userProfile.city?.name ?? "Aucune ville fournie."}
-            </p>
-            <p className="phone">
-              Téléphone:{" "}
-              {userProfile.phone ?? "Aucun numéro de téléphone fourni."}
-            </p>
-            <p className="contact-email">
-              Email de contact:{" "}
-              {userProfile.contactEmail ?? "Aucun email de contact fourni."}
-            </p>
-            <p className="is-profile-public">
-              Votre profile est: {userProfile.isPublic ? "public" : "privé"}
-            </p>
-          </>
-        )}
+        {userProfile && <Profile user={userProfile} fromDashboard />}
       </div>
     </div>
   );

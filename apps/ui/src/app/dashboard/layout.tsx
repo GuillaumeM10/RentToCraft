@@ -4,6 +4,7 @@ import { UserRole } from "@rent-to-craft/dtos";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import Breadcrumb from "../components/Breadcrumb";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { useAuth } from "../contexts/auth.context";
 
@@ -33,7 +34,7 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute>
-      <div className="layout-maxed py-70 dashboard-template">
+      <div className="layout-maxed py-70 dashboard-template overflow-hidden">
         <nav className="flex gap-20 mb-70">
           <Link
             href="/dashboard"
@@ -62,6 +63,7 @@ export default function DashboardLayout({
 
           {adminLinks}
         </nav>
+        <Breadcrumb />
         <div className="min-h-screen">{children}</div>
       </div>
     </ProtectedRoute>
