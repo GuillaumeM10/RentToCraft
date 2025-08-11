@@ -1,4 +1,5 @@
 interface LandingProps {
+  readonly centered?: boolean;
   readonly description?: string;
   readonly image?: string;
   readonly title?: string;
@@ -8,14 +9,22 @@ interface LandingProps {
   };
 }
 
-const Landing = ({ image, title, description, button }: LandingProps) => {
+const Landing = ({
+  image,
+  title,
+  description,
+  button,
+  centered,
+}: LandingProps) => {
   return (
     <div className="landing layout-hero">
       <div className="background-container">
         <img src={image} alt="" className="background block" />
       </div>
 
-      <div className="flex flex-col justify-end">
+      <div
+        className={`flex flex-col ${centered ? "justify-center items-center tac" : "justify-end"}`}
+      >
         <h1 className="text-white">{title}</h1>
         <p className="description">{description}</p>
         {button && (
