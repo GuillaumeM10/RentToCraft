@@ -4,6 +4,7 @@ import { type RentalCatDto, type RentalDto } from "@rent-to-craft/dtos";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import Breadcrumb from "../components/Breadcrumb";
 import RentalCard from "../components/Cards/RentalCard";
 import RentalService from "../services/rental.service";
 
@@ -28,16 +29,20 @@ const RentalListPage = () => {
 
   return (
     <div className="layout-maxed mt-30">
-      <h1 className="text-3xl tac">Objets disponibles</h1>
+      <h1 className="text-3xl tac mt-32 mb-24">Objets disponibles</h1>
+
+      <div className="mx-auto">
+        <Breadcrumb />
+      </div>
 
       <div className="cats flex flex-wrap gap-10 mt-20 mb-30">
-        <Link className="btn btn-outline-primary" href="/rental">
+        <Link className="btn btn-outline-primary btn-small" href="/rental">
           Toutes les catégories
         </Link>
         {cats.map((cat) => (
           <Link
             key={cat.id}
-            className="btn btn-primary"
+            className="btn btn-primary btn-small"
             href={`/rental/categorie/${cat.slug}`}
           >
             {cat.name}

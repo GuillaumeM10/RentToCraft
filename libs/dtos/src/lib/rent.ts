@@ -43,7 +43,6 @@ export class RentalCommentDto {
   id: number | null;
   content: string;
 
-  rental: RentalDto;
+  rental: Partial<RentalDto>;
   author: UserDto;
-  replyTo: RentalCommentDto | null;
 }

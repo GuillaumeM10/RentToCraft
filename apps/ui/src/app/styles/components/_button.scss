@@ -10,7 +10,7 @@
   transition: 0.25s;
   transition-property: box-shadow, background-color, color, border;
   text-decoration: none;
-  border: none;
+  border: solid 2px transparent;
   box-shadow: none;
   border-radius: 200px;
 }
@@ -28,8 +28,8 @@
 .btn,
 .button {
   &-small {
-    padding: $spacer-tiny-plus $spacer-small;
-    font-size: .8em;
+    padding: $spacer-tiny-plus $spacer-small !important;
+    font-size: .8em !important;
   }
 
   &-big {
@@ -131,11 +131,7 @@ $value in $colors {
     &:active,
     &:hover {
       color: lighten($value, 14);
-      border-color: lighten($value, 14);
-
-      .icon {
-        color: $white;
-      }
+      border-bottom: 2px solid lighten($value, 14);
     }
   }
 }

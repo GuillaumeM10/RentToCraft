@@ -22,7 +22,7 @@ export class RentalCommentService {
     private readonly rentalService: RentalService,
   ) {}
 
-  async create(createCommentDto: RentalCommentDto, user: UserDto) {
+  async create(createCommentDto: Partial<RentalCommentDto>, user: UserDto) {
     if (!createCommentDto.content || createCommentDto.content.trim() === '') {
       throw new HttpException(
         'Le contenu du commentaire est obligatoire.',
@@ -35,17 +35,6 @@ export class RentalCommentService {
       throw new NotFoundException(
         `Location #${createCommentDto.rental.id} introuvable.`,
       );
-    }
-
-    if (createCommentDto.replyTo) {
-      const parentComment = await this.commentRepository.findOne({
-        where: { id: createCommentDto.replyTo.id },
-      });
-      if (!parentComment) {
-        throw new NotFoundException(
-          `Commentaire #${createCommentDto.replyTo.id} introuvable.`,
-        );
-      }
     }
 
     const newComment = this.commentRepository.create({
@@ -61,11 +50,12 @@ export class RentalCommentService {
   }
 
   async findByRental(rentalId: number) {
+    console.log('rentalId', rentalId);
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.rental = :rentalId', { rentalId })
       .leftJoinAndSelect('comment.author', 'author')
-      .leftJoinAndSelect('comment.replyTo', 'replyTo')
+      .leftJoinAndSelect('author.profilePicture', 'profilePicture')
       .orderBy('comment.createdAt', 'DESC')
       .getMany();
 
@@ -80,7 +70,6 @@ export class RentalCommentService {
       .where('comment.id = :id', { id })
       .leftJoinAndSelect('comment.author', 'author')
       .leftJoinAndSelect('comment.rental', 'rental')
-      .leftJoinAndSelect('comment.replyTo', 'replyTo')
       .getOne();
 
     if (!comment) {
@@ -107,6 +96,7 @@ export class RentalCommentService {
   }
 
   async remove(id: number, user: UserDto) {
+    console.log('id', id);
     const comment = await this.findOne(id);
 
     if (comment.author.id !== user.id && user.role !== 'administrator') {

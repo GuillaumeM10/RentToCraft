@@ -22,7 +22,7 @@ export class RentalCommentController {
   @Post()
   @UseGuards(AuthGuard)
   create(
-    @Body() createRentalCommentDto: RentalCommentDto,
+    @Body() createRentalCommentDto: Partial<RentalCommentDto>,
     @User() user: UserDto,
   ) {
     return this.rentalCommentService.create(createRentalCommentDto, user);

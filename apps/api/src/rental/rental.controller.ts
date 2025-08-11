@@ -45,7 +45,12 @@ export class RentalController {
   @Get('me')
   @UseGuards(AuthGuard)
   findAllByUser(@User() user: UserDto) {
-    return this.rentalService.findAllByUser(user);
+    return this.rentalService.findAllByUser(user.id);
+  }
+
+  @Get('user/:userId')
+  findAllByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.rentalService.findAllByUser(userId);
   }
 
   @Get('slug/:slug')

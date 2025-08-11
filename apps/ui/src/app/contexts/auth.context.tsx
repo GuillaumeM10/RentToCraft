@@ -28,7 +28,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const slug = pathname.slice(1).replaceAll("/", "-") || "home";
-  const isTransparentOnTop = pathname === "/" || pathname === "/tools";
+  const isTransparentOnTop = pathname === "/" || pathname.match("/rental/");
 
   const isAuthenticated = !!user;
 

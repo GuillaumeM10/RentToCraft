@@ -1,0 +1,31 @@
+.single-rental-template {
+  .images {
+    img {
+      object-fit: contain;
+      max-height: 400px;
+    }
+  }
+
+  table {
+    max-width: 700px;
+    margin: 70px auto;
+  }
+
+  @media screen and (max-width: $small) {
+    table {
+      max-width: 100%;
+    }
+
+  }
+
+  @media screen and (max-width: $medium) {
+    .pp {
+      margin-top: 0;
+    }
+
+    .bread-share {
+      flex-direction: column;
+      margin-bottom: 32px;
+    }
+  }
+}

@@ -113,10 +113,10 @@ export class RentalService {
     return rentals.map((rental) => plainToInstance(RentalDto, rental));
   }
 
-  async findAllByUser(user: UserDto) {
+  async findAllByUser(userId: number) {
     const rentals = await this.rentalRepository
       .createQueryBuilder('rental')
-      .where('rental.user.id = :userId', { userId: user.id })
+      .where('rental.user.id = :userId', { userId: userId })
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
       .leftJoinAndSelect('user.profilePicture', 'profilePicture')
@@ -127,7 +127,7 @@ export class RentalService {
 
     if (rentals === null || rentals.length === 0) {
       throw new NotFoundException(
-        `Aucune location trouvée pour l'utilisateur #${user.id}.`,
+        `Aucune location trouvée pour l'utilisateur #${userId}.`,
       );
     }
 
