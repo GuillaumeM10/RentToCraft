@@ -8,12 +8,21 @@ import RentalService from "@/app/services/rental.service";
 
 import RentalCard from "../Cards/RentalCard";
 
-const SwiperRentals = () => {
+type SwiperRentalsProps = {
+  readonly userId?: number;
+};
+
+const SwiperRentals = ({ userId }: SwiperRentalsProps) => {
   const [rentals, setRentals] = useState<RentalDto[]>([]);
 
   const getRentals = async () => {
-    const response = await RentalService.getAll();
-    setRentals(response);
+    if (userId) {
+      const response = await RentalService.getAllByUser(userId);
+      setRentals(response);
+    } else {
+      const response = await RentalService.getAll();
+      setRentals(response);
+    }
   };
 
   useEffect(() => {
@@ -30,7 +39,9 @@ const SwiperRentals = () => {
 
   return (
     <div className="swiper-rentals">
-      <h2 className="text-30  my-30">Les objets disponibles</h2>
+      <h2 className="text-30  my-30">
+        {userId ? "Mes objets disponibles" : "Les objets disponibles"}
+      </h2>
 
       <Swiper
         modules={[Navigation, Pagination]}
