@@ -6,6 +6,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CartModule } from './cart/cart.module';
+import { CartItemModule } from './cart-item/cart-item.module';
 import { CityModule } from './city/city.module';
 import { FileModule } from './file/file.module';
 import { MailModule } from './mail/mail.module';
@@ -17,11 +19,8 @@ import { TokenResetPasswordModule } from './token-reset-password/token-reset-pas
 import { UserModule } from './user/user.module';
 import { ValidTokenModule } from './valid-token/valid-token.module';
 
-
-const config =  () => {
-
-  if(process.env.NODE_ENV === 'production'){
-
+const config = () => {
+  if (process.env.NODE_ENV === 'production') {
     return {
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -32,9 +31,9 @@ const config =  () => {
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
-    } as TypeOrmModuleOptions
+    } as TypeOrmModuleOptions;
   }
-  if(process.env.NODE_ENV === 'test'){
+  if (process.env.NODE_ENV === 'test') {
     return {
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -47,9 +46,9 @@ const config =  () => {
       logging: false,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       dropSchema: true,
-    }as TypeOrmModuleOptions
+    } as TypeOrmModuleOptions;
   }
-  if(process.env.NODE_ENV === 'development'){
+  if (process.env.NODE_ENV === 'development') {
     return {
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -61,9 +60,9 @@ const config =  () => {
       synchronize: true,
       logging: false,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    }as TypeOrmModuleOptions
+    } as TypeOrmModuleOptions;
   }
-}
+};
 
 @Module({
   imports: [
@@ -88,6 +87,8 @@ const config =  () => {
     RentalCatModule,
     RentalCommentModule,
     CityModule,
+    CartModule,
+    CartItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

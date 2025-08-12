@@ -1,10 +1,11 @@
 "use client";
 
-import { Facebook, Linkedin, X } from "lucide-react";
+import { Facebook, Linkedin, ShoppingBasket, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "../contexts/auth.context";
+import Cart from "./Cart";
 import SiteLogo from "./Icons/SiteLogo";
 import OffCanvas from "./OffCanvas";
 
@@ -56,6 +57,14 @@ export function Navigation() {
         <Link href="/" className="">
           <SiteLogo className="site-logo" />
         </Link>
+
+        <OffCanvas
+          buttonContent={<ShoppingBasket />}
+          buttonClassName="ml-auto mr-20 btn btn-outline"
+          autoCloseOnClick={true}
+        >
+          <Cart />
+        </OffCanvas>
 
         <OffCanvas
           buttonContent={burgerBars}

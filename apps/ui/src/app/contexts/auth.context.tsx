@@ -16,6 +16,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { type AuthContextType } from "../interfaces/authContext.interface";
 import AuthService from "../services/auth.service";
+import { CartProvider } from "./cart.context";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -115,9 +116,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider value={value}>
-      <Header isTransparentOnTop={!!isTransparentOnTop} />
-      <main className={`page-${slug}`}>{children}</main>
-      <Footer />
+      <CartProvider>
+        <Header isTransparentOnTop={!!isTransparentOnTop} />
+        <main className={`page-${slug}`}>{children}</main>
+        <Footer />
+      </CartProvider>
     </AuthContext.Provider>
   );
 }

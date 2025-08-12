@@ -1,5 +1,7 @@
 "use client";
 import { type RentalDto } from "@rent-to-craft/dtos";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -7,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import RentalService from "@/app/services/rental.service";
 
 import RentalCard from "../Cards/RentalCard";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 type SwiperRentalsProps = {
   readonly userId?: number;
@@ -32,16 +35,22 @@ const SwiperRentals = ({ userId }: SwiperRentalsProps) => {
   if (rentals.length === 0) {
     return (
       <div className="text-center my-20">
-        Aucun objet disponible pour le moment.
+        <LoadingSpinner />
       </div>
     );
   }
 
   return (
     <div className="swiper-rentals">
-      <h2 className="text-30  my-30">
-        {userId ? "Mes objets disponibles" : "Les objets disponibles"}
-      </h2>
+      <div className="top flex flex-wrap justify-between items-center gap-8 my-30">
+        <h2 className="text-30  ">
+          {userId ? "Mes objets disponibles" : "Les objets disponibles"}
+        </h2>
+
+        <Link className="btn btn-primary" href="/rental">
+          Voir tous <ArrowRightIcon />
+        </Link>
+      </div>
 
       <Swiper
         modules={[Navigation, Pagination]}

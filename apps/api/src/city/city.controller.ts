@@ -6,8 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CityDto } from '@rent-to-craft/dtos';
+import { AuthGuard } from 'src/auth/guard/jwt-passport.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Roles } from 'src/decorator/roles.decorator';
 
 import { CityService } from './city.service';
 
@@ -16,6 +20,8 @@ export class CityController {
   constructor(private readonly cityService: CityService) {}
 
   @Post()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('administrator')
   create(@Body() createCityDto: CityDto) {
     return this.cityService.create(createCityDto);
   }
@@ -36,10 +42,14 @@ export class CityController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('administrator')
   update(@Param('id') id: string, @Body() updateCityDto: CityDto) {
     return this.cityService.update(+id, updateCityDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('administrator')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.cityService.remove(+id);

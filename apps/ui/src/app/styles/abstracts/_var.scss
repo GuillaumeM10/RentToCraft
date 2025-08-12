@@ -3,7 +3,7 @@
 // Hypothèse : smartphone portrait/paysage < 576px < gros smartphone paysage + tablette portrait < 992px < tablette paysage < 1330px < laptop et plus
 $breakpoints: (sm: 576px, // Mobile
   md: 992px, // tablette payssage et portrait 768 !
-  lg: 1200px, // petit écran de bureau
+  lg: 1024px, // petit écran de bureau
   xl: 1400px, // trés grand écran de bureau
 ) !default;
 

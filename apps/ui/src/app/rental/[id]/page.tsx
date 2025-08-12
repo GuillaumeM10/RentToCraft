@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import Breadcrumb from "@/app/components/Breadcrumb";
 import RentalComment from "@/app/components/Cards/RentalComment";
+import AddToCart from "@/app/components/Forms/Cart/AddToCart";
 import CreateRentalCommnent from "@/app/components/Forms/Rental/CreateRentalCommnent";
 import Img from "@/app/components/Img";
 import MapLeaflet from "@/app/components/MapLeaflet";
@@ -233,6 +234,8 @@ const RentalPage = ({ params }: RentalPageProps) => {
                   </tr>
                 </tbody>
               </table>
+
+              <AddToCart rental={rental} />
 
               <div className="mt-20">
                 <h3 className="text-lg font-semibold mb-10">Localisation</h3>

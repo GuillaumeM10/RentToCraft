@@ -11,7 +11,7 @@ export class CartDto {
 export class CartItemDto {
   id: number;
 
-  cart: CartDto;
-  rental: RentalDto;
+  cart: Partial<CartDto>;
+  rental: Partial<RentalDto>;
   quantity: number = 1;
 }

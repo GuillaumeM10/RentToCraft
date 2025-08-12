@@ -1,3 +1,4 @@
+import { CartItemEntity } from 'src/cart-item/entities/cart-item.entity';
 import { FileEntity } from 'src/file/entities/file.entity';
 import { Timestamp } from 'src/generic/timestamp.entity';
 import { RentalCatEntity } from 'src/rental-cat/entities/rental-cat.entity';
@@ -75,6 +76,12 @@ export class RentalEntity extends Timestamp {
   @JoinColumn()
   comments: RentalCommentEntity[] | null;
 
-  // cartItems cartItem
+  @OneToMany(() => CartItemEntity, (cartItem) => cartItem.rental, {
+    cascade: true,
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  cartItems: CartItemEntity[];
+
   // orderItem orderItem
 }
