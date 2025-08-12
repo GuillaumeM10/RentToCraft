@@ -11,19 +11,15 @@ export class RentalCommentEntity extends Timestamp {
   @Column()
   content: string;
 
-  // rental: RentalDto; many to one
   @ManyToOne(() => RentalEntity, (rental) => rental.comments, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   rental: RentalEntity;
 
-  // author: UserDto;
   @ManyToOne(() => UserEntity, (user) => user.rentalComments, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   author: UserEntity;
-
-  // replyTo: RentalCommentDto | null;
 }
