@@ -11,7 +11,7 @@ import AppService from "./app.service";
 type RentalServiceType = {
   getOne: (rentalId: number | string) => Promise<RentalDto | null>;
   getAll: () => Promise<RentalDto[]>;
-  getAllByUser: (userId: number | undefined) => Promise<RentalDto[]>;
+  getAllByUser: (userId?: number) => Promise<RentalDto[]>;
   create: (
     rentalData: Partial<CreateRentalDto>,
     images?: File[],
@@ -48,7 +48,7 @@ const RentalService: RentalServiceType = {
     const response = await api.get(`/rental`);
     return response.data;
   },
-  getAllByUser: async (userId: number | undefined) => {
+  getAllByUser: async (userId?: number) => {
     if (userId) {
       const response = await api.get(`/rental/user/${userId}`);
       return response.data;
