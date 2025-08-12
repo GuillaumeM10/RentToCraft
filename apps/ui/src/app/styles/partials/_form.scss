@@ -93,17 +93,6 @@ form {
     cursor: pointer;
   }
 
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  input[type=number] {
-    appearance: textfield;
-    -moz-appearance: textfield;
-  }
-
   input[type=submit],
   button {
     width: 100%;

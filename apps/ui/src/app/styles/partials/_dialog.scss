@@ -9,11 +9,6 @@
   flex-direction: column;
   padding: 48px;
 
-  a {
-    display: block;
-    margin: 15px 0;
-  }
-
   .heading {
     margin-bottom: 64px;
 
@@ -70,7 +65,8 @@
   }
 
 
-  a {
+  a:not(.btn) {
+    margin: 15px 0;
     font-size: 22px;
     white-space: nowrap;
     display: flex;

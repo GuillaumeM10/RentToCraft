@@ -7,7 +7,7 @@
     border-right: 1px solid $primary;
   }
 
-  @media screen and (max-width: $medium) {
+  @media screen and (max-width: $large) {
     .signin-container {
       border-right: none;
       border-bottom: 1px solid $primary;

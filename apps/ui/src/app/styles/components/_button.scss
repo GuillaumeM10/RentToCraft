@@ -133,5 +133,9 @@ $value in $colors {
       color: lighten($value, 14);
       border-bottom: 2px solid lighten($value, 14);
     }
+
+    &.btn-small {
+      padding: 8px 0 !important;
+    }
   }
 }

@@ -13,7 +13,11 @@ interface ProtectedRouteProps {
   readonly reversed?: boolean;
 }
 
-export function ProtectedRoute({ children, onlyAdmin, reversed = false }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  onlyAdmin,
+  reversed = false,
+}: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
 
@@ -27,12 +31,11 @@ export function ProtectedRoute({ children, onlyAdmin, reversed = false }: Protec
     if (reversed && isAuthenticated) {
       router.push("/dashboard");
     }
-
   }, [isAuthenticated, isLoading, router, onlyAdmin, user?.role, reversed]);
 
   if (isLoading) {
     return (
-      <div className="loading-page">
+      <div className="loading-page layout-maxed justify-items-center h-96 align-items-center">
         <LoadingSpinner size="large" />
       </div>
     );
