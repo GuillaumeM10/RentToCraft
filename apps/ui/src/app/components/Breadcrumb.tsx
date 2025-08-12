@@ -38,6 +38,7 @@ const Breadcrumb = () => {
         user: "Utilisateur",
         profile: "Profil",
         settings: "Paramètres",
+        city: "Ville",
       };
 
       label =

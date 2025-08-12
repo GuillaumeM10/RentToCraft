@@ -46,7 +46,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="RentToCraft" />
         <link rel="apple-touch-icon" href="/logo.png" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
           <AuthProvider>{children}</AuthProvider>
         </ErrorBoundary>

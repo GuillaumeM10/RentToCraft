@@ -3,6 +3,7 @@ import { type UserDto } from "@rent-to-craft/dtos";
 import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
 
+import MapLeaflet from "@/app/components/MapLeaflet";
 import Profile from "@/app/components/Profile";
 import UserService from "@/app/services/user.service";
 
@@ -37,8 +38,17 @@ const ProfilePage = ({ params }: ProfilePageProps) => {
   }
 
   return (
-    <div className="layout-maxed">
+    <div className="layout-maxed overflow-hidden">
       <Profile user={user} />
+
+      {user.city && (
+        <MapLeaflet
+          latitude={user.city?.latitude}
+          longitude={user.city?.longitude}
+          height={300}
+          zoom={13}
+        />
+      )}
     </div>
   );
 };

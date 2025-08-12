@@ -1,4 +1,5 @@
 import { UserRole } from '@rent-to-craft/dtos';
+import { CityEntity } from 'src/city/entities/city.entity';
 import { FileEntity } from 'src/file/entities/file.entity';
 import { RentalEntity } from 'src/rental/entities/rental.entity';
 import { RentalCommentEntity } from 'src/rental-comment/entities/rental-comment.entity';
@@ -87,8 +88,13 @@ export class UserEntity extends Timestamp {
   })
   rentalComments: RentalCommentEntity[];
 
+  @OneToOne(() => CityEntity, (city) => city.users, {
+    nullable: true,
+  })
+  @JoinColumn()
+  city: CityEntity;
+
   // posts Post
-  // city City
   // orders Order
   // postComments PostComment
 }

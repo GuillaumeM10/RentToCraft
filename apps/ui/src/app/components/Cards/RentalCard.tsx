@@ -43,7 +43,11 @@ const RentalCard = ({
           alt={name}
           className="image"
         />
-        {user?.city && <span className="card-location">{user.city.name}</span>}
+        {user?.city && (
+          <span className="card-location absolute top-4 left-4 btn btn-white btn-small">
+            {user.city.name}
+          </span>
+        )}
         <span className="quantity">{rental.quantity}</span>
       </div>
       <div className="card-content">

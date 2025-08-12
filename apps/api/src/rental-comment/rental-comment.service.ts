@@ -50,7 +50,6 @@ export class RentalCommentService {
   }
 
   async findByRental(rentalId: number) {
-    console.log('rentalId', rentalId);
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.rental = :rentalId', { rentalId })
@@ -96,7 +95,6 @@ export class RentalCommentService {
   }
 
   async remove(id: number, user: UserDto) {
-    console.log('id', id);
     const comment = await this.findOne(id);
 
     if (comment.author.id !== user.id && user.role !== 'administrator') {

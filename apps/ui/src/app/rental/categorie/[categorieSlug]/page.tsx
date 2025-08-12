@@ -54,7 +54,21 @@ const RentalCategoryPage = ({ params }: RentalCategoryPageProps) => {
       (rental): rental is RentalDto => rental !== null,
     );
 
-    setRentals(validRentals);
+    setRentals(removeDuplicates(validRentals));
+  };
+
+  const removeDuplicates = (rentalsToCheck: RentalDto[]): RentalDto[] => {
+    return Array.from(
+      rentalsToCheck.reduce<Map<number | string, RentalDto>>(
+        (map, rentalToCheck) => {
+          const key =
+            (rentalToCheck.id as number | undefined) ?? rentalToCheck.slug;
+          if (!map.has(key)) map.set(key, rentalToCheck);
+          return map;
+        },
+        new Map(),
+      ),
+    ).map(([, rental]) => rental);
   };
 
   useEffect(() => {
@@ -71,13 +85,13 @@ const RentalCategoryPage = ({ params }: RentalCategoryPageProps) => {
       )}
 
       <div className="cats flex flex-wrap gap-10 mt-20 mb-30">
-        <Link className="btn btn-primary" href="/rental">
+        <Link className="btn btn-primary btn-small" href="/rental">
           Toutes les catégories
         </Link>
         {cats.map((cat) => (
           <Link
             key={cat.id}
-            className={`btn  ${cat.slug === categorieSlug ? "btn-outline-primary" : "btn-primary"}`}
+            className={`btn btn-small ${cat.slug === categorieSlug ? "btn-outline-primary " : "btn-primary"}`}
             href={`/rental/categorie/${cat.slug}`}
           >
             {cat.name}

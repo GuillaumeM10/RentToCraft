@@ -3,10 +3,10 @@ name: Test
 on:
   push:
     branches:
-      - '**'
+      - "**"
   pull_request:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   test:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: "22"
       - name: Install pnpm and typescript
         run: npm install -g pnpm && npm install -g typescript
       - name: Install dependencies

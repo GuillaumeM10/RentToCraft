@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface LandingProps {
   readonly centered?: boolean;
   readonly description?: string;
@@ -25,12 +27,12 @@ const Landing = ({
       <div
         className={`flex flex-col ${centered ? "justify-center items-center tac" : "justify-end"}`}
       >
-        <h1 className="text-white">{title}</h1>
+        <h1 className="text-white text-4xl">{title}</h1>
         <p className="description">{description}</p>
         {button && (
-          <a href={button?.href} className="btn btn-outline-white">
+          <Link href={button?.href} className="btn btn-outline-white">
             {button?.text}
-          </a>
+          </Link>
         )}
       </div>
     </div>

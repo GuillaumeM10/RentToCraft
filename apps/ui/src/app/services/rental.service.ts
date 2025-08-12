@@ -79,8 +79,6 @@ const RentalService: RentalServiceType = {
     return response.data;
   },
   uploadFile: async (rentalId: number, files: File[]) => {
-    console.log(rentalId);
-
     const formData = new FormData();
     files.forEach((file) => formData.append("images", file));
     const response = await api.put(`/rental/file/${rentalId}`, formData);

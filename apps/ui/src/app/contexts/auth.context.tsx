@@ -28,7 +28,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const slug = pathname.slice(1).replaceAll("/", "-") || "home";
-  const isTransparentOnTop = pathname === "/" || pathname.match("/rental/");
+  let isTransparentOnTop: boolean = pathname === "/";
+
+  if (/^\/rental\/(categorie|city)\//.test(pathname)) {
+    isTransparentOnTop = false;
+  } else if (pathname.match("/rental/")) {
+    isTransparentOnTop = true;
+  }
 
   const isAuthenticated = !!user;
 

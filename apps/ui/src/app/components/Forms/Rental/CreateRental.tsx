@@ -29,7 +29,6 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
           .filter((cat) => cats.includes(cat.id!))
           .map((cat) => cat.id!)
       : null;
-    console.log(catsId);
 
     const rentalData: Partial<CreateRentalDto> = {
       name,

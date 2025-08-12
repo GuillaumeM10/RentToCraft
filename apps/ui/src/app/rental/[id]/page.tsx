@@ -16,6 +16,8 @@ import CreateRentalCommnent from "@/app/components/Forms/Rental/CreateRentalComm
 import Img from "@/app/components/Img";
 import MapLeaflet from "@/app/components/MapLeaflet";
 import Landing from "@/app/components/Sections/Landing";
+import SwiperRentals from "@/app/components/Sections/SwiperRentals";
+import { useAuth } from "@/app/contexts/auth.context";
 import AppService from "@/app/services/app.service";
 import RentalService from "@/app/services/rental.service";
 
@@ -26,6 +28,7 @@ type RentalPageProps = {
 };
 const RentalPage = ({ params }: RentalPageProps) => {
   const { id } = use(params);
+  const { isAuthenticated } = useAuth();
   const [comments, setComments] = useState<RentalCommentDto[]>([]);
 
   const [rental, setRental] = useState<RentalDto | null>(null);
@@ -104,163 +107,181 @@ const RentalPage = ({ params }: RentalPageProps) => {
   };
 
   return (
-    <div className="layout-maxed mt-30 single-rental-template">
-      <Landing
-        image={
-          rental?.images[0]
-            ? AppService.createImageUrl(rental?.images[0] as FileDto)
-            : "https://images-ext-1.discordapp.net/external/rz9ILA7keWFyHgDlp2bRybCdRx2mWg1R4sYXG7Gntmw/https/picsum.photos/1280/720?format=webp&width=1600&height=900"
-        }
-        title={rental?.name}
-        description={rental?.description ?? undefined}
-        centered
-      />
+    <>
+      <div className="layout-maxed mt-30 single-rental-template">
+        <Landing
+          image={
+            rental?.images[0]
+              ? AppService.createImageUrl(rental?.images[0] as FileDto)
+              : "https://images-ext-1.discordapp.net/external/rz9ILA7keWFyHgDlp2bRybCdRx2mWg1R4sYXG7Gntmw/https/picsum.photos/1280/720?format=webp&width=1600&height=900"
+          }
+          title={rental?.name}
+          description={rental?.description ?? undefined}
+          centered
+        />
 
-      <div className="flex justify-between gap-16 bread-share">
-        <Breadcrumb />
-        <div className="share-buttons flex justify-center lg:justify-end gap-4">
-          <button className="" onClick={() => handleShare("facebook")}>
-            <Facebook className="w-8 h-8" />
-          </button>
-          <button className="" onClick={() => handleShare("twitter")}>
-            <Twitter className="w-8 h-8" />
-          </button>
-          <button className="" onClick={() => handleShare()}>
-            <Clipboard className="w-8 h-8" />
-          </button>
+        <div className="flex justify-between gap-16 bread-share">
+          <Breadcrumb />
+          <div className="share-buttons flex justify-center lg:justify-end gap-4">
+            <button className="" onClick={() => handleShare("facebook")}>
+              <Facebook className="w-8 h-8" />
+            </button>
+            <button className="" onClick={() => handleShare("twitter")}>
+              <Twitter className="w-8 h-8" />
+            </button>
+            <button className="" onClick={() => handleShare()}>
+              <Clipboard className="w-8 h-8" />
+            </button>
+          </div>
+        </div>
+
+        {rental && (
+          <div>
+            <div className="top-profile">
+              <img
+                src={
+                  rental?.user?.profilePicture
+                    ? AppService.createImageUrl(
+                        rental.user.profilePicture as FileDto,
+                      )
+                    : "/images/default-pp.png"
+                }
+                alt="Profile"
+                className="pp"
+              />
+              {rental.user.isPublic ? (
+                <Link href={`/profile/${rental.user.id}`}>
+                  <p className="name mt-10">{rental.user.firstName}</p>
+                </Link>
+              ) : (
+                <p className="name mt-10">{rental.user.firstName}</p>
+              )}
+            </div>
+
+            <h1 className="text-2xl font-bold tac mb-30 mt-10">
+              {rental.name}
+            </h1>
+
+            <div className="cats flex flex-wrap justify-center gap-10 mt-20 mb-30">
+              {rental.cats?.map((cat) => (
+                <Link
+                  key={cat.id}
+                  className="btn btn-primary btn-small"
+                  href={`/rental/categorie/${cat.slug}`}
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+
+            {rental.images.length > 1 && (
+              <div className="images my-40 py-40 border-b-2 border-t-2 border-gray-300">
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  loop={true}
+                  autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                  }}
+                  navigation={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  modules={[Autoplay, Navigation, Pagination]}
+                  className="mySwiper"
+                >
+                  {rental.images.map((image) => (
+                    <SwiperSlide key={image.name}>
+                      <Img
+                        image={image as FileDto}
+                        className="w-full h-full contain"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            )}
+
+            <div className="content">
+              <p>Description</p>
+              <p className="description mb-20 text-lg">{rental.description}</p>
+
+              <table>
+                <thead className="hidden">
+                  <tr>
+                    <th>Propriété</th>
+                    <th>Valeur</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Quantité disponibles</td>
+                    <td>{rental.quantity}</td>
+                  </tr>
+                  <tr>
+                    <td>Prix</td>
+                    <td>12 €</td>
+                  </tr>
+                  <tr>
+                    <td>Localisation</td>
+                    <td>
+                      <Link href={`/rental/city/${rental.user.city?.id}`}>
+                        {rental.user.city?.name}
+                      </Link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="mt-20">
+                <h3 className="text-lg font-semibold mb-10">Localisation</h3>
+                <MapLeaflet
+                  latitude={rental.user.city?.latitude ?? 48.8566}
+                  longitude={rental.user.city?.longitude ?? 2.3522}
+                  height={300}
+                  zoom={12}
+                  className="rounded-lg shadow-md"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="layout-maxed mt-30 single-rental-template overflow-hidden">
+        <div className="my-40">
+          <SwiperRentals />
         </div>
       </div>
+      {isAuthenticated && rental && (
+        <div className="layout-maxed mt-30 single-rental-template ">
+          <>
+            <h2 className="text-3xl comment-title w-100 pb-24 mb-24 mt-40 border-b-2 border-gray-300">
+              Commentaires <span className="text-sm">({comments.length})</span>
+            </h2>
 
-      {rental && (
-        <div>
-          <div className="top-profile">
-            <img
-              src={
-                rental?.user?.profilePicture
-                  ? AppService.createImageUrl(
-                      rental.user.profilePicture as FileDto,
-                    )
-                  : "/images/default-pp.png"
-              }
-              alt="Profile"
-              className="pp"
+            <CreateRentalCommnent
+              rental={rental}
+              onSuccess={() => {
+                void fetchComments();
+              }}
             />
-            {rental.user.isPublic ? (
-              <Link href={`/profile/${rental.user.id}`}>
-                <p className="name mt-10">{rental.user.firstName}</p>
-              </Link>
-            ) : (
-              <p className="name mt-10">{rental.user.firstName}</p>
-            )}
-          </div>
 
-          <h1 className="text-2xl font-bold tac mb-30 mt-10">{rental.name}</h1>
-
-          <div className="cats flex flex-wrap justify-center gap-10 mt-20 mb-30">
-            {rental.cats?.map((cat) => (
-              <Link
-                key={cat.id}
-                className="btn btn-primary btn-small"
-                href={`/rental/categorie/${cat.slug}`}
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </div>
-
-          {rental.images.length > 1 && (
-            <div className="images my-40 py-40 border-b-2 border-t-2 border-gray-300">
-              <Swiper
-                spaceBetween={10}
-                slidesPerView={1}
-                loop={true}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false,
-                }}
-                navigation={true}
-                pagination={{
-                  clickable: true,
-                }}
-                modules={[Autoplay, Navigation, Pagination]}
-                className="mySwiper"
-              >
-                {rental.images.map((image) => (
-                  <SwiperSlide key={image.name}>
-                    <Img
-                      image={image as FileDto}
-                      className="w-full h-full contain"
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+            <div className="comments flex flex-col gap-40 mt-36">
+              {comments.map((comment) => (
+                <RentalComment
+                  key={comment.id}
+                  comment={comment}
+                  onRemove={() => {
+                    void fetchComments();
+                  }}
+                />
+              ))}
             </div>
-          )}
-
-          <div className="content">
-            <p>Description</p>
-            <p className="description mb-20 text-lg">{rental.description}</p>
-
-            <table>
-              <thead className="hidden">
-                <tr>
-                  <th>Propriété</th>
-                  <th>Valeur</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Quantité disponibles</td>
-                  <td>{rental.quantity}</td>
-                </tr>
-                <tr>
-                  <td>Prix</td>
-                  <td>12 €</td>
-                </tr>
-                <tr>
-                  <td>Localisation</td>
-                  <td>Paris</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div className="mt-20">
-              <h3 className="text-lg font-semibold mb-10">Localisation</h3>
-              <MapLeaflet
-                latitude={rental.user.city?.latitude ?? 48.8566}
-                longitude={rental.user.city?.longitude ?? 2.3522}
-                height={300}
-                zoom={12}
-                className="rounded-lg shadow-md"
-              />
-            </div>
-          </div>
-
-          <h2 className="text-3xl comment-title w-100 pb-24 mb-24 mt-40 border-b-2 border-gray-300">
-            Commentaires <span className="text-sm">({comments.length})</span>
-          </h2>
-
-          <CreateRentalCommnent
-            rental={rental}
-            onSuccess={() => {
-              void fetchComments();
-            }}
-          />
-
-          <div className="comments flex flex-col gap-40 mt-36">
-            {comments.map((comment) => (
-              <RentalComment
-                key={comment.id}
-                comment={comment}
-                onRemove={() => {
-                  void fetchComments();
-                }}
-              />
-            ))}
-          </div>
+          </>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

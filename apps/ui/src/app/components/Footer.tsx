@@ -21,7 +21,9 @@ const Footer = () => {
         </Link>
       </nav>
       <div className="footer-content">
-        <p>© {new Date().getFullYear()} RentToCraft. Tous droits réservés.</p>
+        <p>
+          © {new Date().getUTCFullYear()} RentToCraft. Tous droits réservés.
+        </p>
       </div>
     </footer>
   );

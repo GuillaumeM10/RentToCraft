@@ -15,7 +15,7 @@ export default function HomePage() {
           image="/images/home-landing.jpg"
           title="RentToCraft"
           description="Louez et partagez des outils facilement avec RentToCraft"
-          button={{ text: "En savoir plus", href: "#" }}
+          button={{ text: "En savoir plus", href: "/rental" }}
           centered
         />
 

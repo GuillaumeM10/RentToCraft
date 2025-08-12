@@ -86,6 +86,7 @@ export class UserService {
       .where('user.id = :id', { id })
       .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('user.banner', 'banner')
+      .leftJoinAndSelect('user.city', 'city')
       .getOne();
     if (getUser === null) {
       throw new NotFoundException(

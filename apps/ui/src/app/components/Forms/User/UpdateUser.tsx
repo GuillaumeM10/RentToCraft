@@ -1,10 +1,11 @@
 "use client";
 
-import { type UserDto } from "@rent-to-craft/dtos";
+import { type CityDto, type UserDto } from "@rent-to-craft/dtos";
 import { useState } from "react";
 
 import UserService from "@/app/services/user.service";
 
+import CityAutocomplete from "../../CityAutoComplete";
 import { LoadingSpinner } from "../../LoadingSpinner";
 
 interface UpdateUserProps {
@@ -18,7 +19,7 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
   const [firstName, setFirstName] = useState(initData?.firstName ?? "");
   const [lastName, setLastName] = useState(initData?.lastName ?? "");
   const [description, setDescription] = useState(initData?.description ?? "");
-  // const [city, setCity] = useState<CityDto | null>(initData?.city ?? null);
+  const [city, setCity] = useState<CityDto | null>(initData?.city ?? null);
   const [isPublic, setIsPublic] = useState(initData?.isPublic ?? false);
   const [address, setAddress] = useState(initData?.address ?? "");
   const [phone, setPhone] = useState(initData?.phone ?? "");
@@ -42,7 +43,7 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
     if (phone) updateUser.phone = phone;
     if (contactEmail) updateUser.contactEmail = contactEmail;
     if (description) updateUser.description = description;
-    // if (city) updateUser.city = city;
+    if (city) updateUser.city = city;
 
     try {
       await UserService.update(+userId, {
@@ -143,6 +144,16 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
       </div>
 
       <div className="form-group ">
+        <label className="form-label" htmlFor="city">
+          Ville
+        </label>
+        <CityAutocomplete
+          onChange={(changedCity) => setCity(changedCity)}
+          defaultValue={initData?.city ?? city}
+        />
+      </div>
+
+      <div className="form-group ">
         <label className="form-label" htmlFor="phone">
           Téléphone
         </label>
@@ -162,7 +173,7 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
         <input
           id="isPublic"
           type="checkbox"
-          checked={initData?.isPublic ?? isPublic}
+          defaultChecked={initData?.isPublic}
           onChange={(thisError) => setIsPublic(thisError.target.checked)}
           className="form-checkbox "
         />
