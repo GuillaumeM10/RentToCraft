@@ -13,7 +13,6 @@ export class RentalDto {
   images: FileDto[] | File[];
   cats: RentalCatDto[] | null;
   user: UserDto;
-  orderItems: OrderItemDto[] | null;
   comments: RentalCommentDto[] | null;
 }
 
@@ -26,7 +25,6 @@ export class CreateRentalDto {
   images: FileDto[] | File[];
   cats: number[] | null;
   user: UserDto;
-  orderItems: OrderItemDto[] | null;
   comments: RentalCommentDto[] | null;
 }
 
