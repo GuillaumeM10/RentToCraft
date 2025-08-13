@@ -29,13 +29,21 @@ export default function DashboardLayout({
       >
         Catégories de locations
       </Link>
+      <Link
+        href="/dashboard/administration/users"
+        className={`dashboard-link ${
+          isActive("/dashboard/administration/users") ? "active" : ""
+        }`}
+      >
+        Utilisateurs
+      </Link>
     </>
   );
 
   return (
     <ProtectedRoute>
       <div className="layout-maxed py-70 dashboard-template overflow-hidden">
-        <nav className="flex gap-20 mb-70">
+        <nav className="gap-20 overflow-custom">
           <Link
             href="/dashboard"
             className={`dashboard-link ${

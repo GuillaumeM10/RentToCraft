@@ -28,63 +28,65 @@ const Cart = memo(({ className }: CartProps) => {
 
       {cart?.cartItems?.length && cart.cartItems.length > 0 ? (
         <>
-          <table
-            style={{ maxWidth: "800px", overflowX: "auto" }}
-            className="mx-auto"
-          >
-            <thead>
-              <tr>
-                <th></th>
-                <th>Produit</th>
-                <th>Quantité</th>
-                <th>Propriétaire</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart?.cartItems?.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <Img image={item.rental.images?.[0] as FileDto} />
-                  </td>
-                  <td>
-                    <Link href={`/rental/${item.rental.slug}`}>
-                      {item.rental.name}
-                    </Link>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      min={0}
-                      max={item.rental.quantity}
-                      onChange={async (event) =>
-                        handleUpdateItem({
-                          ...item,
-                          quantity: Number(event.target.value),
-                        })
-                      }
-                      className="w-100"
-                    />
-                  </td>
-                  <td className="">
-                    {item.rental.user?.firstName}{" "}
-                    <span className="uppercase whitespace-nowrap">
-                      {item.rental.user?.lastName}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-underline-red"
-                      onClick={() => handleRemoveItem(item)}
-                    >
-                      Supprimer
-                    </button>
-                  </td>
+          <div>
+            <table
+              style={{ maxWidth: "800px", overflowX: "auto" }}
+              className="mx-auto"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Produit</th>
+                  <th>Quantité</th>
+                  <th>Propriétaire</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {cart?.cartItems?.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <Img image={item.rental.images?.[0] as FileDto} />
+                    </td>
+                    <td>
+                      <Link href={`/rental/${item.rental.slug}`}>
+                        {item.rental.name}
+                      </Link>
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        min={0}
+                        max={item.rental.quantity}
+                        onChange={async (event) =>
+                          handleUpdateItem({
+                            ...item,
+                            quantity: Number(event.target.value),
+                          })
+                        }
+                        className="w-100"
+                      />
+                    </td>
+                    <td className="">
+                      {item.rental.user?.firstName}{" "}
+                      <span className="uppercase whitespace-nowrap">
+                        {item.rental.user?.lastName}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-underline-red"
+                        onClick={() => handleRemoveItem(item)}
+                      >
+                        Supprimer
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="flex justify-end items-center">
             <Link
               className="btn btn-underline-primary btn-small"

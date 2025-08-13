@@ -309,3 +309,31 @@ main {
     margin-top: -50px;
   }
 }
+
+.overflow-custom {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px 0;
+
+  >* {
+    flex-shrink: 0;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: lighten($primary, 10%);
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+}

@@ -153,7 +153,7 @@ const Profile = ({ user, fromDashboard }: ProfileProps) => {
         </p>
       )}
 
-      <div className="mt-[100px]">
+      <div className="mt-[100px] mb-24">
         <SwiperRentals userId={user.id ?? undefined} />
       </div>
     </div>

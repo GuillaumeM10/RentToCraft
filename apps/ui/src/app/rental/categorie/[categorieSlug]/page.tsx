@@ -84,7 +84,7 @@ const RentalCategoryPage = ({ params }: RentalCategoryPageProps) => {
         <p className="text-center mt-10 mb-20">{category.description}</p>
       )}
 
-      <div className="cats flex flex-wrap gap-10 mt-20 mb-30">
+      <div className="cats gap-10 mt-20 mb-30 overflow-custom">
         <Link className="btn btn-primary btn-small" href="/rental">
           Toutes les catégories
         </Link>
