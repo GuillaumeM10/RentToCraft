@@ -138,6 +138,10 @@ export class UserService {
       ...updateUserDto,
     };
 
+    if (user.role !== 'administrator') {
+      userUpdate.role = getUser.role;
+    }
+
     if (userUpdate.password) {
       userUpdate.password = bcrypt.hashSync(userUpdate.password, salt);
     }

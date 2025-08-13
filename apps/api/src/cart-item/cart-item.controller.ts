@@ -47,15 +47,15 @@ export class CartItemController {
     return this.cartItemService.update(+id, updateCartItemDto);
   }
 
-  @Delete(':id')
-  @UseGuards(AuthGuard)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.cartItemService.remove(+id);
-  }
-
   @Delete('all')
   @UseGuards(AuthGuard)
   removeAll(@User() user: UserDto) {
     return this.cartItemService.removeAll(user);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.cartItemService.remove(+id);
   }
 }

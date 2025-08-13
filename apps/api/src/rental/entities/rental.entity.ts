@@ -1,6 +1,7 @@
 import { CartItemEntity } from 'src/cart-item/entities/cart-item.entity';
 import { FileEntity } from 'src/file/entities/file.entity';
 import { Timestamp } from 'src/generic/timestamp.entity';
+import { OrderItemEntity } from 'src/order-item/entities/order-item.entity';
 import { RentalCatEntity } from 'src/rental-cat/entities/rental-cat.entity';
 import { RentalCommentEntity } from 'src/rental-comment/entities/rental-comment.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -83,5 +84,6 @@ export class RentalEntity extends Timestamp {
   })
   cartItems: CartItemEntity[];
 
-  // orderItem orderItem
+  @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.rental)
+  orderItems: OrderItemEntity[];
 }
