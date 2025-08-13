@@ -37,7 +37,6 @@ const OrderService: OrderServiceType = {
     if (order.user) {
       order.user.profilePicture = null;
     }
-    console.log(order);
 
     const response = await api.post(`/order`, order);
     return response.data;

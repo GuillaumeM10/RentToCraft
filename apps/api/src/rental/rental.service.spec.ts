@@ -56,7 +56,6 @@ describe('RentalService', () => {
     images: [],
     cats: [],
     slug: 'test-rental-1234567890',
-    orderItems: null,
     comments: null,
   };
 
@@ -180,6 +179,60 @@ describe('RentalService', () => {
       expect(result).toEqual(plainToInstance(RentalDto, mockRental));
     });
 
+    it('should create a rental with array of category objects', async () => {
+      const createRentalWithCatObjects = {
+        ...createRentalDto,
+        cats: [{ id: 1 }, { id: 2 }],
+      };
+      jest.spyOn(fileService, 'create').mockResolvedValue(mockFile);
+      jest.spyOn(rentalCatService, 'findOne').mockResolvedValue(mockCategory);
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(mockRental);
+
+      const result = await service.create(
+        createRentalWithCatObjects as unknown as RentalDto,
+        mockFiles,
+        mockUser,
+      );
+
+      expect(rentalCatService.findOne).toHaveBeenCalledTimes(2);
+      expect(rentalRepository.save).toHaveBeenCalled();
+      expect(result).toEqual(plainToInstance(RentalDto, mockRental));
+    });
+
+    it('should create a rental with empty images array', async () => {
+      const filesWithEmptyImages = { images: [] };
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(mockRental);
+
+      const result = await service.create(
+        createRentalDto as RentalDto,
+        filesWithEmptyImages,
+        mockUser,
+      );
+
+      expect(rentalRepository.save).toHaveBeenCalled();
+      expect(result).toEqual(plainToInstance(RentalDto, mockRental));
+    });
+
+    it('should use existing user if provided in DTO', async () => {
+      const createRentalWithUser = {
+        ...createRentalDto,
+        user: { ...mockUser, id: 999 },
+      };
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(mockRental);
+
+      await service.create(
+        createRentalWithUser as RentalDto,
+        mockFiles,
+        mockUser,
+      );
+
+      expect(rentalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          user: { ...mockUser, id: 999 },
+        }),
+      );
+    });
+
     it('should throw HttpException when no images provided', async () => {
       const filesWithoutImages = { images: undefined };
 
@@ -208,6 +261,16 @@ describe('RentalService', () => {
           slug: expect.stringMatching(/test-rental-\d+/),
         }),
       );
+    });
+
+    it('should handle file upload errors', async () => {
+      jest
+        .spyOn(fileService, 'create')
+        .mockRejectedValue(new Error('Upload failed'));
+
+      await expect(
+        service.create(createRentalDto as RentalDto, mockFiles, mockUser),
+      ).rejects.toThrow('Upload failed');
     });
   });
 
@@ -485,6 +548,48 @@ describe('RentalService', () => {
       expect(result).toEqual(plainToInstance(RentalDto, updatedRental));
     });
 
+    it('should update rental with categories successfully', async () => {
+      const updateWithCats = {
+        ...updateRentalDto,
+        cats: ['1', '2'],
+      };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
+      jest.spyOn(rentalCatService, 'findOne').mockResolvedValue(mockCategory);
+      const updatedRental = { ...mockRental, ...updateWithCats };
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(updatedRental);
+
+      const result = await service.update(
+        1,
+        updateWithCats as unknown as RentalDto,
+        mockUser,
+      );
+
+      expect(rentalCatService.findOne).toHaveBeenCalledTimes(2);
+      expect(rentalRepository.save).toHaveBeenCalled();
+      expect(result).toEqual(plainToInstance(RentalDto, updatedRental));
+    });
+
+    it('should update rental with array of category objects', async () => {
+      const updateWithCatObjects = {
+        ...updateRentalDto,
+        cats: [{ id: 1 }, { id: 2 }],
+      };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
+      jest.spyOn(rentalCatService, 'findOne').mockResolvedValue(mockCategory);
+      const updatedRental = { ...mockRental, ...updateWithCatObjects };
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(updatedRental);
+
+      const result = await service.update(
+        1,
+        updateWithCatObjects as unknown as RentalDto,
+        mockUser,
+      );
+
+      expect(rentalCatService.findOne).toHaveBeenCalledTimes(2);
+      expect(rentalRepository.save).toHaveBeenCalled();
+      expect(result).toEqual(plainToInstance(RentalDto, updatedRental));
+    });
+
     it('should throw NotFoundException when rental not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
@@ -533,6 +638,22 @@ describe('RentalService', () => {
         }),
       );
     });
+
+    it('should not update slug when name does not change', async () => {
+      const updateWithSameName = { name: mockRental.name };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
+      jest
+        .spyOn(rentalRepository, 'save')
+        .mockResolvedValue({ ...mockRental, ...updateWithSameName });
+
+      await service.update(1, updateWithSameName as RentalDto, mockUser);
+
+      expect(rentalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          slug: mockRental.slug,
+        }),
+      );
+    });
   });
 
   describe('deleteFile', () => {
@@ -566,6 +687,51 @@ describe('RentalService', () => {
       expect(result).toEqual(plainToInstance(MessageDto, mockRental));
     });
 
+    it('should upload files to rental with existing images', async () => {
+      const rentalWithImages = { ...mockRental, images: [mockFile] };
+      jest.spyOn(service, 'findOne').mockResolvedValue(rentalWithImages);
+      jest.spyOn(fileService, 'create').mockResolvedValue(mockFile);
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(rentalWithImages);
+
+      const result = await service.uploadFile(mockFiles, mockUser, 1);
+
+      expect(rentalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          images: [mockFile, mockFile],
+        }),
+      );
+      expect(result).toEqual(plainToInstance(MessageDto, rentalWithImages));
+    });
+
+    it('should upload files to rental without existing images', async () => {
+      const rentalWithoutImages = { ...mockRental, images: null };
+      jest.spyOn(service, 'findOne').mockResolvedValue(rentalWithoutImages);
+      jest.spyOn(fileService, 'create').mockResolvedValue(mockFile);
+      jest
+        .spyOn(rentalRepository, 'save')
+        .mockResolvedValue(rentalWithoutImages);
+
+      const result = await service.uploadFile(mockFiles, mockUser, 1);
+
+      expect(rentalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          images: [mockFile],
+        }),
+      );
+      expect(result).toEqual(plainToInstance(MessageDto, rentalWithoutImages));
+    });
+
+    it('should allow administrator to upload files to any rental', async () => {
+      const adminUser = { ...mockUser, role: UserRole.administrator };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
+      jest.spyOn(fileService, 'create').mockResolvedValue(mockFile);
+      jest.spyOn(rentalRepository, 'save').mockResolvedValue(mockRental);
+
+      const result = await service.uploadFile(mockFiles, adminUser, 1);
+
+      expect(result).toBeDefined();
+    });
+
     it('should throw NotFoundException when rental not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
@@ -581,6 +747,17 @@ describe('RentalService', () => {
       await expect(
         service.uploadFile(mockFiles, unauthorizedUser, 1),
       ).rejects.toThrow(HttpException);
+    });
+
+    it('should handle file upload errors', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
+      jest
+        .spyOn(fileService, 'create')
+        .mockRejectedValue(new Error('Upload failed'));
+
+      await expect(service.uploadFile(mockFiles, mockUser, 1)).rejects.toThrow(
+        'Upload failed',
+      );
     });
   });
 

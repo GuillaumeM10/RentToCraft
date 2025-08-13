@@ -38,6 +38,9 @@ describe('ValidTokenController', () => {
 
     controller = module.get<ValidTokenController>(ValidTokenController);
     service = module.get(ValidTokenService);
+
+    // Reset all mocks
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -70,6 +73,18 @@ describe('ValidTokenController', () => {
       await expect(controller.create(createDto)).rejects.toThrow('Error while creating validToken');
       expect(service.create).toHaveBeenCalledWith(createDto);
     });
+
+    it('should handle database errors', async () => {
+      const createDto: CreateValidTokenDto = {
+        token: 'new-jwt-token',
+        user: mockUser,
+      };
+
+      service.create.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.create(createDto)).rejects.toThrow('Database connection failed');
+      expect(service.create).toHaveBeenCalledWith(createDto);
+    });
   });
 
   describe('findAllByUser', () => {
@@ -83,11 +98,27 @@ describe('ValidTokenController', () => {
       expect(result).toEqual(mockTokens);
     });
 
+    it('should return empty array when no tokens found', async () => {
+      service.findAllByUser.mockResolvedValue([]);
+
+      const result = await controller.findAllByUser(1);
+
+      expect(service.findAllByUser).toHaveBeenCalledWith(1);
+      expect(result).toEqual([]);
+    });
+
     it('should handle service errors', async () => {
       service.findAllByUser.mockRejectedValue(new Error('Error while fetching validToken'));
 
       await expect(controller.findAllByUser(null)).rejects.toThrow('Error while fetching validToken');
       expect(service.findAllByUser).toHaveBeenCalledWith(null);
+    });
+
+    it('should handle database errors', async () => {
+      service.findAllByUser.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.findAllByUser(1)).rejects.toThrow('Database connection failed');
+      expect(service.findAllByUser).toHaveBeenCalledWith(1);
     });
   });
 
@@ -110,11 +141,27 @@ describe('ValidTokenController', () => {
       expect(result).toBeNull();
     });
 
+    it('should handle empty token string', async () => {
+      service.findOne.mockResolvedValue(null);
+
+      const result = await controller.findOne('');
+
+      expect(service.findOne).toHaveBeenCalledWith('');
+      expect(result).toBeNull();
+    });
+
     it('should handle service errors', async () => {
       service.findOne.mockRejectedValue(new Error('Error while fetching validToken'));
 
       await expect(controller.findOne('invalid-token')).rejects.toThrow('Error while fetching validToken');
       expect(service.findOne).toHaveBeenCalledWith('invalid-token');
+    });
+
+    it('should handle database errors', async () => {
+      service.findOne.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.findOne('test-token')).rejects.toThrow('Database connection failed');
+      expect(service.findOne).toHaveBeenCalledWith('test-token');
     });
   });
 
@@ -144,6 +191,22 @@ describe('ValidTokenController', () => {
       await controller.remove('test-token', customUser);
 
       expect(service.remove).toHaveBeenCalledWith('test-token', 999);
+    });
+
+    it('should handle empty token string', async () => {
+      const mockResponse = { message: 'Token supprimé' };
+      service.remove.mockResolvedValue(mockResponse);
+
+      await controller.remove('', mockUser);
+
+      expect(service.remove).toHaveBeenCalledWith('', mockUser.id);
+    });
+
+    it('should handle database errors during removal', async () => {
+      service.remove.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.remove('test-token', mockUser)).rejects.toThrow('Database connection failed');
+      expect(service.remove).toHaveBeenCalledWith('test-token', mockUser.id);
     });
   });
 });

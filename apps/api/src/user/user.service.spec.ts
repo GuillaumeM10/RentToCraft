@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { type SignupAuthDto } from '@rent-to-craft/dtos';
+import { type SignupAuthDto, UserRole } from '@rent-to-craft/dtos';
 import * as bcrypt from 'bcryptjs';
 import { type Repository } from 'typeorm';
 
@@ -95,11 +95,50 @@ describe('UserService', () => {
       );
     });
 
+    it('should throw HttpException if password is null', async () => {
+      const invalidDto = { ...createUserDto, password: null };
+
+      await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Toutes les informations ne sont pas renseignées.',
+      );
+    });
+
+    it('should throw HttpException if password is empty string', async () => {
+      const invalidDto = { ...createUserDto, password: '' };
+
+      await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Toutes les informations ne sont pas renseignées.',
+      );
+    });
+
     it('should throw HttpException if email is missing', async () => {
       const invalidDto = { ...createUserDto, email: '' };
 
       await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
       await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+    });
+
+    it('should throw HttpException if email is null', async () => {
+      const invalidDto = { ...createUserDto, email: null };
+
+      await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
+      await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+    });
+
+    it('should throw HttpException if email is undefined', async () => {
+      const invalidDto = { ...createUserDto, email: undefined };
+
+      await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
+      await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+    });
+
+    it('should handle repository save errors', async () => {
+      (bcrypt.hashSync as jest.Mock).mockReturnValue('hashedPassword');
+      userRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.create(createUserDto)).rejects.toThrow('Database error');
     });
   });
 
@@ -226,11 +265,55 @@ describe('UserService', () => {
       expect(bcrypt.hashSync).toHaveBeenCalledWith('newPassword', 10);
     });
 
+    it('should allow administrator to update any user', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      const result = await service.update(updateDto, adminUser, 999);
+
+      expect(service.findOne).toHaveBeenCalledWith(999);
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+
+    it('should allow administrator to change user role', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
+      const updateWithRole = { ...updateDto, role: UserRole.seller };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      await service.update(updateWithRole, adminUser, 1);
+
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ role: UserRole.seller }),
+      );
+    });
+
+    it('should preserve user role when non-admin updates', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      await service.update(updateDto, mockUserDto, 1);
+
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ role: mockUserDto.role }),
+      );
+    });
+
     it('should throw UnauthorizedException when user tries to update another user', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
 
       await expect(service.update(updateDto, mockUserDto, 2)).rejects.toThrow(
         UnauthorizedException,
+      );
+    });
+
+    it('should throw NotFoundException when user not found', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
+      await expect(service.update(updateDto, mockUserDto, 999)).rejects.toThrow(
+        NotFoundException,
       );
     });
 
@@ -244,6 +327,25 @@ describe('UserService', () => {
       expect(userRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({ isPublic: true }),
       );
+    });
+
+    it('should convert string isPublic false to boolean', async () => {
+      const updateWithIsPublic = { ...updateDto, isPublic: 'false' as unknown as boolean };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      await service.update(updateWithIsPublic, mockUserDto, 1);
+
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ isPublic: false }),
+      );
+    });
+
+    it('should handle repository save errors', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      userRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.update(updateDto, mockUserDto, 1)).rejects.toThrow('Database error');
     });
   });
 
@@ -259,12 +361,47 @@ describe('UserService', () => {
       expect(result).toBeDefined();
     });
 
-    it('should throw NotFoundException when file type not found', async () => {
+    it('should delete banner successfully', async () => {
+      const userWithBanner = { ...mockUserDto, banner: { id: 1, file: 'test', name: 'test' } };
+      jest.spyOn(service, 'findOne').mockResolvedValue(userWithBanner);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      const result = await service.deleteFile('banner', mockUserDto);
+
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+
+    it('should throw NotFoundException when profile picture not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
 
       await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow(
         NotFoundException,
       );
+    });
+
+    it('should throw NotFoundException when banner not found', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+
+      await expect(service.deleteFile('banner', mockUserDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw NotFoundException when user not found', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
+      await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should handle repository save errors', async () => {
+      const userWithPicture = { ...mockUserDto, profilePicture: { id: 1, file: 'test', name: 'test' } };
+      jest.spyOn(service, 'findOne').mockResolvedValue(userWithPicture);
+      userRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow('Database error');
     });
   });
 
@@ -284,12 +421,53 @@ describe('UserService', () => {
       expect(result).toBeDefined();
     });
 
+    it('should upload banner successfully', async () => {
+      const mockUploadedFile = { id: 1, filename: 'test.jpg', file: 'test', name: 'test' };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      fileService.create.mockResolvedValue(mockUploadedFile);
+      userRepository.save.mockResolvedValue(mockUser);
+
+      const result = await service.uploadFile('banner', mockFile, mockUserDto);
+
+      expect(fileService.create).toHaveBeenCalledWith(mockFile);
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(result).toBeDefined();
+    });
+
     it('should throw NotFoundException for invalid file type', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
 
       await expect(
         service.uploadFile('invalid' as 'banner' | 'profilePicture', mockFile, mockUserDto),
       ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException when user not found', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
+      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should handle file service errors', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      fileService.create.mockRejectedValue(new Error('File upload failed'));
+
+      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
+        'File upload failed',
+      );
+    });
+
+    it('should handle repository save errors', async () => {
+      const mockUploadedFile = { id: 1, filename: 'test.jpg', file: 'test', name: 'test' };
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+      fileService.create.mockResolvedValue(mockUploadedFile);
+      userRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 
@@ -333,6 +511,24 @@ describe('UserService', () => {
       expect(userRepository.save).toHaveBeenCalled();
       expect(result).toBeDefined();
     });
+
+    it('should throw NotFoundException when user not found by email', async () => {
+      jest.spyOn(service, 'findOneByEmail').mockResolvedValue(null);
+
+      await expect(service.updatePassword('newPassword', mockUserDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should handle repository save errors', async () => {
+      (bcrypt.hashSync as jest.Mock).mockReturnValue('newHashedPassword');
+      jest.spyOn(service, 'findOneByEmail').mockResolvedValue(mockUserDto);
+      userRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.updatePassword('newPassword', mockUserDto)).rejects.toThrow(
+        'Database error',
+      );
+    });
   });
 
   describe('softDelete', () => {
@@ -356,6 +552,22 @@ describe('UserService', () => {
       await expect(service.softDelete(1, mockUserDto)).rejects.toThrow(
         'Impossible de supprimer votre compte.',
       );
+    });
+
+    it('should throw NotFoundException when user not found', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
+      await expect(service.softDelete(999, mockUserDto)).rejects.toThrow(
+        'Cannot read properties of null (reading \'id\')',
+      );
+    });
+
+    it('should handle repository softDelete errors', async () => {
+      const userToDelete = { ...mockUserDto, id: 2 };
+      jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
+      userRepository.softDelete.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow('Database error');
     });
   });
 

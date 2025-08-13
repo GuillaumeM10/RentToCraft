@@ -1,7 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { type CreateTokenResetPasswordDto, type ValidtokenDto } from '@rent-to-craft/dtos';
+import {
+  type CreateTokenResetPasswordDto,
+  type ValidtokenDto,
+} from '@rent-to-craft/dtos';
 import { type Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -105,7 +108,32 @@ describe('TokenResetPasswordService', () => {
       userService.findOneByEmail.mockResolvedValue(null);
 
       await expect(service.create(createDto)).rejects.toThrow(HttpException);
-      await expect(service.create(createDto)).rejects.toThrow("Cet utilisateur n'existe pas.");
+      await expect(service.create(createDto)).rejects.toThrow(
+        "Cet utilisateur n'existe pas.",
+      );
+    });
+
+    it('should handle repository save errors', async () => {
+      const mockUuid = 'new-token-uuid';
+      (uuidv4 as jest.Mock).mockReturnValue(mockUuid);
+
+      userService.findOneByEmail.mockResolvedValue(mockUser);
+      jest.spyOn(service, 'findOneByEmail').mockResolvedValue(null);
+      tokenRepository.create.mockReturnValue(mockToken);
+      tokenRepository.save.mockRejectedValue(new Error('Database error'));
+
+      await expect(service.create(createDto)).rejects.toThrow('Database error');
+    });
+
+    it('should handle findOneByEmail errors during create', async () => {
+      userService.findOneByEmail.mockResolvedValue(mockUser);
+      jest
+        .spyOn(service, 'findOneByEmail')
+        .mockRejectedValue(new Error('Find token error'));
+
+      await expect(service.create(createDto)).rejects.toThrow(
+        'Find token error',
+      );
     });
   });
 
@@ -122,17 +150,44 @@ describe('TokenResetPasswordService', () => {
 
       const result = await service.findOneByEmail('test@example.com');
 
-      expect(userService.findOneByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('resetPasswordToken.user', 'user');
-      expect(queryBuilder.where).toHaveBeenCalledWith('user.email = :email', { email: 'test@example.com' });
+      expect(userService.findOneByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'resetPasswordToken.user',
+        'user',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledWith('user.email = :email', {
+        email: 'test@example.com',
+      });
       expect(result).toBeDefined();
     });
 
     it('should throw HttpException when user does not exist', async () => {
       userService.findOneByEmail.mockResolvedValue(null);
 
-      await expect(service.findOneByEmail('notfound@example.com')).rejects.toThrow(HttpException);
-      await expect(service.findOneByEmail('notfound@example.com')).rejects.toThrow("Cet utilisateur n'existe pas.");
+      await expect(
+        service.findOneByEmail('notfound@example.com'),
+      ).rejects.toThrow(HttpException);
+      await expect(
+        service.findOneByEmail('notfound@example.com'),
+      ).rejects.toThrow("Cet utilisateur n'existe pas.");
+    });
+
+    it('should handle query builder errors', async () => {
+      const error = new Error('Query builder error');
+      const queryBuilder = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockRejectedValue(error),
+      };
+
+      userService.findOneByEmail.mockResolvedValue(mockUser);
+      tokenRepository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+      await expect(service.findOneByEmail('test@example.com')).rejects.toThrow(
+        'Query builder error',
+      );
     });
   });
 
@@ -148,8 +203,14 @@ describe('TokenResetPasswordService', () => {
 
       const result = await service.findOne('test-token-uuid');
 
-      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('resetPasswordToken.user', 'user');
-      expect(queryBuilder.where).toHaveBeenCalledWith('resetPasswordToken.token = :token', { token: 'test-token-uuid' });
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'resetPasswordToken.user',
+        'user',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledWith(
+        'resetPasswordToken.token = :token',
+        { token: 'test-token-uuid' },
+      );
       expect(result).toBeDefined();
     });
 
@@ -166,6 +227,21 @@ describe('TokenResetPasswordService', () => {
 
       expect(result).toBeNull();
     });
+
+    it('should handle query builder errors', async () => {
+      const error = new Error('Query builder error');
+      const queryBuilder = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockRejectedValue(error),
+      };
+
+      tokenRepository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+      await expect(service.findOne('test-token-uuid')).rejects.toThrow(
+        'Query builder error',
+      );
+    });
   });
 
   describe('remove', () => {
@@ -175,9 +251,11 @@ describe('TokenResetPasswordService', () => {
       const result = await service.remove(1);
 
       expect(tokenRepository.delete).toHaveBeenCalledWith(1);
-      expect(result).toEqual(expect.objectContaining({
-        message: 'Token supprimé',
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          message: 'Token supprimé',
+        }),
+      );
     });
 
     it('should throw HttpException when deletion fails', async () => {
@@ -186,7 +264,9 @@ describe('TokenResetPasswordService', () => {
       jest.spyOn(console, 'log').mockImplementation(() => {});
 
       await expect(service.remove(1)).rejects.toThrow(HttpException);
-      await expect(service.remove(1)).rejects.toThrow('Erreur lors de la suppresion du token');
+      await expect(service.remove(1)).rejects.toThrow(
+        'Erreur lors de la suppresion du token',
+      );
 
       expect(console.log).toHaveBeenCalledWith(error);
     });
@@ -199,9 +279,12 @@ describe('TokenResetPasswordService', () => {
       const result = await service.clearUserTokens(1);
 
       expect(tokenRepository.delete).toHaveBeenCalledWith({ user: { id: 1 } });
-      expect(result).toEqual(expect.objectContaining({
-        message: "L'utilisateur 1 n'a plus de token pour les mot de passe oublié",
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          message:
+            "L'utilisateur 1 n'a plus de token pour les mot de passe oublié",
+        }),
+      );
     });
 
     it('should work even when no tokens exist for user', async () => {
@@ -209,8 +292,19 @@ describe('TokenResetPasswordService', () => {
 
       const result = await service.clearUserTokens(999);
 
-      expect(tokenRepository.delete).toHaveBeenCalledWith({ user: { id: 999 } });
+      expect(tokenRepository.delete).toHaveBeenCalledWith({
+        user: { id: 999 },
+      });
       expect(result).toBeDefined();
+    });
+
+    it('should handle repository delete errors', async () => {
+      const error = new Error('Database error');
+      tokenRepository.delete.mockRejectedValue(error);
+
+      await expect(service.clearUserTokens(1)).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 });
