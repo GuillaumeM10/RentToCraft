@@ -337,3 +337,8 @@ main {
     }
   }
 }
+
+.Toastify,
+.Toastify__toast-container {
+  z-index: 99999999999;
+}
