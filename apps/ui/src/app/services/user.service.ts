@@ -10,6 +10,8 @@ type UserServiceType = {
     file: File,
   ) => Promise<boolean | string>;
   getOne: (userId: number) => Promise<UserDto | null>;
+  getAll: () => Promise<UserDto[]>;
+  delete: (userId: number) => Promise<boolean | string>;
 };
 const UserService: UserServiceType = {
   update: async (userId, user) => {
@@ -85,6 +87,26 @@ const UserService: UserServiceType = {
     } catch (error) {
       console.error("Erreur de récupération de l'utilisateur:", error);
       return null;
+    }
+  },
+
+  getAll: async () => {
+    try {
+      const response = await api.get<UserDto[]>("/user");
+      return response.data;
+    } catch (error) {
+      console.error("Erreur de récupération des utilisateurs:", error);
+      return [];
+    }
+  },
+
+  delete: async (userId) => {
+    try {
+      const response = await api.delete(`/user/${userId}`);
+      return response.status === 200;
+    } catch (error) {
+      console.error("Erreur de suppression de l'utilisateur:", error);
+      return false;
     }
   },
 };
