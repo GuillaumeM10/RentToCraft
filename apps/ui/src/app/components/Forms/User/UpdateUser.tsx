@@ -1,6 +1,6 @@
 "use client";
 
-import { type CityDto, type UserDto } from "@rent-to-craft/dtos";
+import { type CityDto, type UserDto, UserRole } from "@rent-to-craft/dtos";
 import { useState } from "react";
 
 import UserService from "@/app/services/user.service";
@@ -11,10 +11,16 @@ import { LoadingSpinner } from "../../LoadingSpinner";
 interface UpdateUserProps {
   readonly userId: number;
   readonly initData?: Partial<UserDto> | null;
+  readonly isAdmin?: boolean;
   readonly onSuccess?: () => void;
 }
 
-const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
+const UpdateUser = ({
+  userId,
+  onSuccess,
+  initData,
+  isAdmin,
+}: UpdateUserProps) => {
   const [email, setEmail] = useState(initData?.email ?? "");
   const [firstName, setFirstName] = useState(initData?.firstName ?? "");
   const [lastName, setLastName] = useState(initData?.lastName ?? "");
@@ -26,6 +32,8 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
   const [contactEmail, setContactEmail] = useState(
     initData?.contactEmail ?? "",
   );
+  const [role, setRole] = useState<UserRole | null>(initData?.role ?? null);
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,6 +52,7 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
     if (contactEmail) updateUser.contactEmail = contactEmail;
     if (description) updateUser.description = description;
     if (city) updateUser.city = city;
+    if (role) updateUser.role = role;
 
     try {
       await UserService.update(+userId, {
@@ -61,6 +70,10 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
       }
     }
   };
+
+  if (!initData) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -179,6 +192,25 @@ const UpdateUser = ({ userId, onSuccess, initData }: UpdateUserProps) => {
         />
         <span className="ml-10">Rendre mon profil public</span>
       </div>
+
+      {isAdmin && role && (
+        <div className="form-group">
+          <label className="form-label" htmlFor="role">
+            Rôle
+          </label>
+          <select
+            id="role"
+            value={role}
+            onChange={(element) => setRole(element.target.value as UserRole)}
+          >
+            {Object.values(UserRole).map((roleType) => (
+              <option key={roleType} value={roleType}>
+                {roleType}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {error && <div className="error-message">{error}</div>}
 

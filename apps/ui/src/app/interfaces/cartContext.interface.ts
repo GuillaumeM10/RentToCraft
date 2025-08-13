@@ -7,5 +7,6 @@ export interface CartContextType {
   getCart: () => Promise<void>;
   isLoading: boolean;
   removeItem: (item: CartItemDto) => Promise<void>;
+  setCart: (cart: CartDto | null) => void;
   updateItem: (item: Partial<CartItemDto>) => Promise<void>;
 }

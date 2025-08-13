@@ -30,6 +30,14 @@ export default function DashboardLayout({
         Catégories de locations
       </Link>
       <Link
+        href="/dashboard/administration/rentals/orders"
+        className={`dashboard-link ${
+          isActive("/dashboard/administration/rentals/orders") ? "active" : ""
+        }`}
+      >
+        Commandes
+      </Link>
+      <Link
         href="/dashboard/administration/users"
         className={`dashboard-link ${
           isActive("/dashboard/administration/users") ? "active" : ""
@@ -43,7 +51,7 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
       <div className="layout-maxed py-70 dashboard-template overflow-hidden">
-        <nav className="gap-20 overflow-custom">
+        <nav className="overflow-custom" style={{ gap: "0" }}>
           <Link
             href="/dashboard"
             className={`dashboard-link ${

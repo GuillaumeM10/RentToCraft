@@ -65,6 +65,7 @@ const AdminUsersPage = () => {
                             await getAll();
                           }}
                           initData={user}
+                          isAdmin
                         />
                       </OffCanvas>
                       <button

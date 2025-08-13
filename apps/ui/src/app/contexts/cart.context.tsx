@@ -88,8 +88,18 @@ export function CartProvider({ children }: CartProviderProps) {
       clearCart,
       getCart,
       updateItem,
+      setCart,
     }),
-    [isLoading, cart, addItem, removeItem, clearCart, getCart, updateItem],
+    [
+      isLoading,
+      cart,
+      addItem,
+      removeItem,
+      clearCart,
+      getCart,
+      updateItem,
+      setCart,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

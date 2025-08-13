@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { memo } from "react";
 
 import { useCart } from "../contexts/cart.context";
+import OrderService from "../services/order.service";
 import Img from "./Img";
 import { LoadingSpinner } from "./LoadingSpinner";
 
@@ -12,10 +13,29 @@ interface CartProps {
 }
 
 const Cart = memo(({ className }: CartProps) => {
-  const { cart, isLoading, removeItem, updateItem } = useCart();
+  const { cart, isLoading, removeItem, updateItem, clearCart, setCart } =
+    useCart();
 
   const handleRemoveItem = async (item: CartItemDto) => {
     await removeItem(item);
+  };
+
+  const handleClearCart = async () => {
+    await clearCart();
+  };
+
+  const handleCreateOrder = async () => {
+    if (!cart) return;
+    try {
+      await OrderService.createOrder({
+        orderItems: cart.cartItems?.map((item) => ({
+          ...item,
+        })),
+      });
+      setCart(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleUpdateItem = async (item: CartItemDto) => {
@@ -87,7 +107,13 @@ const Cart = memo(({ className }: CartProps) => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-end items-center">
+          <div className="flex justify-between items-center">
+            <button className="btn btn-danger" onClick={handleClearCart}>
+              Vider le panier
+            </button>
+            <button className="btn btn-primary" onClick={handleCreateOrder}>
+              Commander
+            </button>
             <Link
               className="btn btn-underline-primary btn-small"
               style={{
