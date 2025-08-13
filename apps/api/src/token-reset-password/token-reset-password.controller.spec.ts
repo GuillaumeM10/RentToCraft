@@ -1,5 +1,9 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { type CreateTokenResetPasswordDto, type MessageDto, type ValidtokenDto } from '@rent-to-craft/dtos';
+import {
+  type CreateTokenResetPasswordDto,
+  type MessageDto,
+  type ValidtokenDto,
+} from '@rent-to-craft/dtos';
 
 import { createMockUser } from '../test-helpers/user-mock.helper';
 import { TokenResetPasswordController } from './token-reset-password.controller';
@@ -29,8 +33,13 @@ describe('TokenResetPasswordController', () => {
       ],
     }).compile();
 
-    controller = module.get<TokenResetPasswordController>(TokenResetPasswordController);
+    controller = module.get<TokenResetPasswordController>(
+      TokenResetPasswordController,
+    );
     service = module.get(TokenResetPasswordService);
+
+    // Reset all mocks
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -56,9 +65,26 @@ describe('TokenResetPasswordController', () => {
         email: 'notfound@example.com',
       };
 
-      service.create.mockRejectedValue(new Error("Cet utilisateur n'existe pas."));
+      service.create.mockRejectedValue(
+        new Error("Cet utilisateur n'existe pas."),
+      );
 
-      await expect(controller.create(createDto)).rejects.toThrow("Cet utilisateur n'existe pas.");
+      await expect(controller.create(createDto)).rejects.toThrow(
+        "Cet utilisateur n'existe pas.",
+      );
+      expect(service.create).toHaveBeenCalledWith(createDto);
+    });
+
+    it('should handle database errors', async () => {
+      const createDto: CreateTokenResetPasswordDto = {
+        email: 'test@example.com',
+      };
+
+      service.create.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.create(createDto)).rejects.toThrow(
+        'Database connection failed',
+      );
       expect(service.create).toHaveBeenCalledWith(createDto);
     });
   });
@@ -78,9 +104,13 @@ describe('TokenResetPasswordController', () => {
     });
 
     it('should handle service errors during removal', async () => {
-      service.remove.mockRejectedValue(new Error('Erreur lors de la suppresion du token'));
+      service.remove.mockRejectedValue(
+        new Error('Erreur lors de la suppresion du token'),
+      );
 
-      await expect(controller.remove('1')).rejects.toThrow('Erreur lors de la suppresion du token');
+      await expect(controller.remove('1')).rejects.toThrow(
+        'Erreur lors de la suppresion du token',
+      );
       expect(service.remove).toHaveBeenCalledWith(1);
     });
 
@@ -94,6 +124,39 @@ describe('TokenResetPasswordController', () => {
       await controller.remove('123');
 
       expect(service.remove).toHaveBeenCalledWith(123);
+    });
+
+    it('should handle zero id', async () => {
+      const mockResponse: MessageDto = {
+        message: 'Token supprimé',
+      };
+
+      service.remove.mockResolvedValue(mockResponse);
+
+      await controller.remove('0');
+
+      expect(service.remove).toHaveBeenCalledWith(0);
+    });
+
+    it('should handle negative id', async () => {
+      const mockResponse: MessageDto = {
+        message: 'Token supprimé',
+      };
+
+      service.remove.mockResolvedValue(mockResponse);
+
+      await controller.remove('-1');
+
+      expect(service.remove).toHaveBeenCalledWith(-1);
+    });
+
+    it('should handle database errors during removal', async () => {
+      service.remove.mockRejectedValue(new Error('Database connection failed'));
+
+      await expect(controller.remove('1')).rejects.toThrow(
+        'Database connection failed',
+      );
+      expect(service.remove).toHaveBeenCalledWith(1);
     });
   });
 });

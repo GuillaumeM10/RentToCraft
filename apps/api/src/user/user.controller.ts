@@ -15,6 +15,8 @@ import {
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UserDto, UserUpdateDto } from '@rent-to-craft/dtos';
 import { File } from 'multer';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Roles } from 'src/decorator/roles.decorator';
 
 import { AuthGuard } from '../auth/guard/jwt-passport.guard';
 import { User } from '../decorator/user.decorator';
@@ -30,6 +32,8 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('administrator')
   findAll(@Query() queries) {
     return this.userService.findAll(queries);
   }

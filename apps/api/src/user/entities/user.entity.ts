@@ -1,6 +1,7 @@
 import { UserRole } from '@rent-to-craft/dtos';
 import { CityEntity } from 'src/city/entities/city.entity';
 import { FileEntity } from 'src/file/entities/file.entity';
+import { OrderEntity } from 'src/order/entities/order.entity';
 import { RentalEntity } from 'src/rental/entities/rental.entity';
 import { RentalCommentEntity } from 'src/rental-comment/entities/rental-comment.entity';
 import {
@@ -94,7 +95,13 @@ export class UserEntity extends Timestamp {
   @JoinColumn()
   city: CityEntity;
 
+  @OneToMany(() => OrderEntity, (order) => order.user, {
+    cascade: ['insert', 'update', 'remove'],
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  orders: OrderEntity[];
+
   // posts Post
-  // orders Order
   // postComments PostComment
 }

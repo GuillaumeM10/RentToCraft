@@ -12,6 +12,8 @@ import { CityModule } from './city/city.module';
 import { FileModule } from './file/file.module';
 import { MailModule } from './mail/mail.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { OrderModule } from './order/order.module';
+import { OrderItemModule } from './order-item/order-item.module';
 import { RentalModule } from './rental/rental.module';
 import { RentalCatModule } from './rental-cat/rental-cat.module';
 import { RentalCommentModule } from './rental-comment/rental-comment.module';
@@ -89,6 +91,8 @@ const config = () => {
     CityModule,
     CartModule,
     CartItemModule,
+    OrderModule,
+    OrderItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

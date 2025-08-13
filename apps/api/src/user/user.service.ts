@@ -70,8 +70,11 @@ export class UserService {
     }
 
     const users = await query
-      .orderBy('user.id', 'DESC')
       .leftJoinAndSelect('user.profilePicture', 'profilePicture')
+      .leftJoinAndSelect('user.city', 'city')
+      .leftJoinAndSelect('user.rentals', 'rentals')
+      .leftJoinAndSelect('user.rentalComments', 'rentalComments')
+      .orderBy('user.id', 'DESC')
       .getMany();
 
     if (users === null || users.length === 0) {
@@ -113,8 +116,8 @@ export class UserService {
   }
 
   async update(updateUserDto: UserUpdateDto, user: UserDto, id: number) {
-    const getUser = await this.findOne(user.id);
-    if (!getUser || getUser.id !== user.id) {
+    const getUser = await this.findOne(id);
+    if (!getUser?.id) {
       throw new NotFoundException(
         `Impossible de trouver l'utilisateur #${user.id}.`,
       );
@@ -134,6 +137,10 @@ export class UserService {
       ...getUser,
       ...updateUserDto,
     };
+
+    if (user.role !== 'administrator') {
+      userUpdate.role = getUser.role;
+    }
 
     if (userUpdate.password) {
       userUpdate.password = bcrypt.hashSync(userUpdate.password, salt);

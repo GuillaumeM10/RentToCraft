@@ -255,4 +255,10 @@ table {
   border-collapse: collapse;
   vertical-align: top;
   margin-bottom: $spacer-medium;
+  min-width: 700px;
+
+}
+
+div:has(>table) {
+  overflow-x: auto;
 }

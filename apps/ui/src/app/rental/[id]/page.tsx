@@ -208,32 +208,34 @@ const RentalPage = ({ params }: RentalPageProps) => {
               <p>Description</p>
               <p className="description mb-20 text-lg">{rental.description}</p>
 
-              <table>
-                <thead className="hidden">
-                  <tr>
-                    <th>Propriété</th>
-                    <th>Valeur</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Quantité disponibles</td>
-                    <td>{rental.quantity}</td>
-                  </tr>
-                  <tr>
-                    <td>Prix</td>
-                    <td>12 €</td>
-                  </tr>
-                  <tr>
-                    <td>Localisation</td>
-                    <td>
-                      <Link href={`/rental/city/${rental.user.city?.id}`}>
-                        {rental.user.city?.name}
-                      </Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div>
+                <table>
+                  <thead className="hidden">
+                    <tr>
+                      <th>Propriété</th>
+                      <th>Valeur</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Quantité disponibles</td>
+                      <td>{rental.quantity}</td>
+                    </tr>
+                    <tr>
+                      <td>Prix</td>
+                      <td>12 €</td>
+                    </tr>
+                    <tr>
+                      <td>Localisation</td>
+                      <td>
+                        <Link href={`/rental/city/${rental.user.city?.id}`}>
+                          {rental.user.city?.name}
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
               <AddToCart rental={rental} />
 
@@ -256,34 +258,38 @@ const RentalPage = ({ params }: RentalPageProps) => {
           <SwiperRentals />
         </div>
       </div>
-      {isAuthenticated && rental && (
-        <div className="layout-maxed mt-30 single-rental-template ">
-          <>
-            <h2 className="text-3xl comment-title w-100 pb-24 mb-24 mt-40 border-b-2 border-gray-300">
-              Commentaires <span className="text-sm">({comments.length})</span>
-            </h2>
+      <div className="layout-maxed mt-30 single-rental-template ">
+        <h2 className="text-3xl comment-title w-100 pb-24 mb-24 mt-40 border-b-2 border-gray-300">
+          Commentaires <span className="text-sm">({comments.length})</span>
+        </h2>
 
-            <CreateRentalCommnent
-              rental={rental}
-              onSuccess={() => {
-                void fetchComments();
-              }}
-            />
+        {isAuthenticated && rental && (
+          <CreateRentalCommnent
+            rental={rental}
+            onSuccess={() => {
+              void fetchComments();
+            }}
+          />
+        )}
 
-            <div className="comments flex flex-col gap-40 mt-36">
-              {comments.map((comment) => (
-                <RentalComment
-                  key={comment.id}
-                  comment={comment}
-                  onRemove={() => {
-                    void fetchComments();
-                  }}
-                />
-              ))}
-            </div>
-          </>
-        </div>
-      )}
+        {rental && comments.length > 0 ? (
+          <div className="comments flex flex-col gap-40 mt-36">
+            {comments.map((comment) => (
+              <RentalComment
+                key={comment.id}
+                comment={comment}
+                onRemove={() => {
+                  void fetchComments();
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">
+            Aucun commentaire pour le moment.
+          </p>
+        )}
+      </div>
     </>
   );
 };

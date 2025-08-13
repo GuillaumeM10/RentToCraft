@@ -35,7 +35,7 @@ const RentalListPage = () => {
         <Breadcrumb />
       </div>
 
-      <div className="cats flex flex-wrap gap-10 mt-20 mb-30">
+      <div className="cats gap-10 mt-20 mb-30 overflow-custom">
         <Link className="btn btn-outline-primary btn-small" href="/rental">
           Toutes les catégories
         </Link>

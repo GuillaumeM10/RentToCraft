@@ -3,11 +3,13 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import "./main.scss";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import ErrorBoundary from "./components/ErrorBoundary";
+import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./contexts/auth.context";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -48,7 +50,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <ScrollToTop />
+          </AuthProvider>
         </ErrorBoundary>
       </body>
     </html>
