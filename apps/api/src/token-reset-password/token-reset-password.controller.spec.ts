@@ -80,10 +80,12 @@ describe('TokenResetPasswordController', () => {
         email: 'test@example.com',
       };
 
-      service.create.mockRejectedValue(new Error('Database connection failed'));
+      service.create.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
       await expect(controller.create(createDto)).rejects.toThrow(
-        'Database connection failed',
+        'Échec de connexion à la base de données',
       );
       expect(service.create).toHaveBeenCalledWith(createDto);
     });
@@ -151,10 +153,12 @@ describe('TokenResetPasswordController', () => {
     });
 
     it('should handle database errors during removal', async () => {
-      service.remove.mockRejectedValue(new Error('Database connection failed'));
+      service.remove.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
       await expect(controller.remove('1')).rejects.toThrow(
-        'Database connection failed',
+        'Échec de connexion à la base de données',
       );
       expect(service.remove).toHaveBeenCalledWith(1);
     });

@@ -188,7 +188,7 @@ export class RentalService {
     }
 
     if (getRental.user.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Non autorisé', 401);
     }
 
     if (updateRentalDto.name && updateRentalDto.name !== getRental.name) {
@@ -238,7 +238,7 @@ export class RentalService {
     }
 
     if (getRental.user.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Non autorisé', 401);
     }
 
     const uploadedFiles = await Promise.all(
@@ -262,7 +262,7 @@ export class RentalService {
     }
 
     if (getRental.user.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Non autorisé', 401);
     }
 
     await this.rentalRepository.softDelete(id);

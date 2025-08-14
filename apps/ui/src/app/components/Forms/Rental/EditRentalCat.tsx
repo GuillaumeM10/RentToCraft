@@ -27,7 +27,7 @@ const EditRentalCat = ({ onSuccess, categorie }: EditRentalCatProps) => {
         onSuccess(updatedCategory);
       }
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error("Erreur lors de la mise à jour de la catégorie:", error);
     }
   };
 

@@ -161,6 +161,24 @@ template {
   /* 2 */
 }
 
+[type="date"] {
+  padding: 10px;
+  margin: 0 0 10px 0;
+  font-size: 100%;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+  background-color: white;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+}
+
 /*
  * Correct the cursor style of increment and decrement buttons in Safari.
  */

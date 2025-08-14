@@ -33,7 +33,11 @@ const Signin = () => {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      role="form"
+      aria-label="Formulaire de connexion"
+    >
       <div className="form-group ">
         <label className="form-label" htmlFor="email">
           Email
@@ -45,6 +49,11 @@ const Signin = () => {
           onChange={(thisError) => setEmail(thisError.target.value)}
           className="form-input "
           required
+          aria-required="true"
+          aria-invalid={!email && email.length > 0 ? "true" : "false"}
+          aria-describedby={
+            !email && email.length > 0 ? "signin-email-error" : undefined
+          }
           autoComplete="email"
         />
       </div>
@@ -60,15 +69,33 @@ const Signin = () => {
           onChange={(thisError) => setPassword(thisError.target.value)}
           className="form-input"
           required
+          aria-required="true"
+          aria-invalid={!password && password.length > 0 ? "true" : "false"}
+          aria-describedby={
+            !password && password.length > 0
+              ? "signin-password-error"
+              : undefined
+          }
           autoComplete="current-password"
         />
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message" id="signin-error">
+          {error}
+        </div>
+      )}
 
-      {(!email && email.length > 0) || (!password && password.length > 0) ? (
-        <div className="error-message">Veuillez remplir tous les champs</div>
-      ) : null}
+      {!email && email.length > 0 && (
+        <div className="error-message" id="signin-email-error">
+          Veuillez remplir le champ email
+        </div>
+      )}
+      {!password && password.length > 0 && (
+        <div className="error-message" id="signin-password-error">
+          Veuillez remplir le champ mot de passe
+        </div>
+      )}
 
       <button
         type="submit"

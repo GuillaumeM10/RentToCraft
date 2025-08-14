@@ -1,6 +1,7 @@
 import { type UserDto } from "@rent-to-craft/dtos";
 
 import api from "./api.service";
+import AppService from "./app.service";
 
 type UserServiceType = {
   update: (userId: number, user: Partial<UserDto>) => Promise<boolean | string>;
@@ -11,7 +12,7 @@ type UserServiceType = {
   ) => Promise<boolean | string>;
   getOne: (userId: number) => Promise<UserDto | null>;
   getAll: () => Promise<UserDto[]>;
-  delete: (userId: number) => Promise<boolean | string>;
+  delete: (userId: number, currentUser?: boolean) => Promise<boolean | string>;
 };
 const UserService: UserServiceType = {
   update: async (userId, user) => {
@@ -100,9 +101,12 @@ const UserService: UserServiceType = {
     }
   },
 
-  delete: async (userId) => {
+  delete: async (userId, currentUser = false) => {
     try {
       const response = await api.delete(`/user/${userId}`);
+      if (currentUser) {
+        AppService.deleteCookie("auth-token");
+      }
       return response.status === 200;
     } catch (error) {
       console.error("Erreur de suppression de l'utilisateur:", error);

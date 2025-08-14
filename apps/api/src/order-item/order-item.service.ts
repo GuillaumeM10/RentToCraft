@@ -31,7 +31,7 @@ export class OrderItemService {
       .getMany();
 
     if (!orderItems) {
-      throw new NotFoundException('Order items not found');
+      throw new NotFoundException('Éléments de commande introuvables');
     }
 
     return orderItems;
@@ -48,7 +48,7 @@ export class OrderItemService {
       .getOne();
 
     if (!orderItem) {
-      throw new NotFoundException('Order item not found');
+      throw new NotFoundException('Élément de commande introuvable');
     }
 
     return orderItem;

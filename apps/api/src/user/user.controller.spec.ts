@@ -2,7 +2,10 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 
-import { createMockUser, createMockUserUpdateDto } from '../test-helpers/user-mock.helper';
+import {
+  createMockUser,
+  createMockUserUpdateDto,
+} from '../test-helpers/user-mock.helper';
 import { ValidTokenService } from '../valid-token/valid-token.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -68,10 +71,12 @@ describe('UserController', () => {
     });
 
     it('should handle create errors', async () => {
-      const error = new Error('Create failed');
+      const error = new Error('Échec de la création');
       userService.create.mockRejectedValue(error);
 
-      await expect(controller.create(mockUserDto)).rejects.toThrow('Create failed');
+      await expect(controller.create(mockUserDto)).rejects.toThrow(
+        'Échec de la création',
+      );
     });
   });
 
@@ -98,10 +103,14 @@ describe('UserController', () => {
     });
 
     it('should handle findAll errors', async () => {
-      const error = new Error('Find all failed');
+      const error = new Error(
+        'Échec de la récupération de tous les utilisateurs',
+      );
       userService.findAll.mockRejectedValue(error);
 
-      await expect(controller.findAll({})).rejects.toThrow('Find all failed');
+      await expect(controller.findAll({})).rejects.toThrow(
+        'Échec de la récupération de tous les utilisateurs',
+      );
     });
   });
 
@@ -116,10 +125,12 @@ describe('UserController', () => {
     });
 
     it('should handle findOne errors', async () => {
-      const error = new Error('Find one failed');
+      const error = new Error("Échec de la récupération de l'utilisateur");
       userService.findOne.mockRejectedValue(error);
 
-      await expect(controller.findOne(1)).rejects.toThrow('Find one failed');
+      await expect(controller.findOne(1)).rejects.toThrow(
+        "Échec de la récupération de l'utilisateur",
+      );
     });
   });
 
@@ -131,16 +142,22 @@ describe('UserController', () => {
 
       const result = await controller.update(updateDto, mockUserDto, 1);
 
-      expect(userService.update).toHaveBeenCalledWith(updateDto, mockUserDto, 1);
+      expect(userService.update).toHaveBeenCalledWith(
+        updateDto,
+        mockUserDto,
+        1,
+      );
       expect(result).toEqual(updatedUser);
     });
 
     it('should handle update errors', async () => {
       const updateDto = createMockUserUpdateDto({ firstName: 'Updated' });
-      const error = new Error('Update failed');
+      const error = new Error('Échec de la mise à jour');
       userService.update.mockRejectedValue(error);
 
-      await expect(controller.update(updateDto, mockUserDto, 1)).rejects.toThrow('Update failed');
+      await expect(
+        controller.update(updateDto, mockUserDto, 1),
+      ).rejects.toThrow('Échec de la mise à jour');
     });
   });
 
@@ -151,7 +168,11 @@ describe('UserController', () => {
       const mockResponse = { message: 'File uploaded successfully' };
       userService.uploadFile.mockResolvedValue(mockResponse);
 
-      const result = await controller.uploadFile(files, mockUserDto, 'profilePicture');
+      const result = await controller.uploadFile(
+        files,
+        mockUserDto,
+        'profilePicture',
+      );
 
       expect(userService.uploadFile).toHaveBeenCalledWith(
         'profilePicture',
@@ -169,19 +190,23 @@ describe('UserController', () => {
 
       const result = await controller.uploadFile(files, mockUserDto, 'banner');
 
-      expect(userService.uploadFile).toHaveBeenCalledWith('banner', mockFile, mockUserDto);
+      expect(userService.uploadFile).toHaveBeenCalledWith(
+        'banner',
+        mockFile,
+        mockUserDto,
+      );
       expect(result).toEqual(mockResponse);
     });
 
     it('should handle uploadFile errors', async () => {
       const mockFile = { filename: 'test.jpg' } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
       const files = { file: [mockFile] };
-      const error = new Error('Upload failed');
+      const error = new Error("Échec de l'upload");
       userService.uploadFile.mockRejectedValue(error);
 
-      await expect(controller.uploadFile(files, mockUserDto, 'profilePicture')).rejects.toThrow(
-        'Upload failed',
-      );
+      await expect(
+        controller.uploadFile(files, mockUserDto, 'profilePicture'),
+      ).rejects.toThrow("Échec de l'upload");
     });
   });
 
@@ -192,7 +217,10 @@ describe('UserController', () => {
 
       const result = await controller.deleteFile('profilePicture', mockUserDto);
 
-      expect(userService.deleteFile).toHaveBeenCalledWith('profilePicture', mockUserDto);
+      expect(userService.deleteFile).toHaveBeenCalledWith(
+        'profilePicture',
+        mockUserDto,
+      );
       expect(result).toEqual(updatedUser);
     });
 
@@ -202,17 +230,20 @@ describe('UserController', () => {
 
       const result = await controller.deleteFile('banner', mockUserDto);
 
-      expect(userService.deleteFile).toHaveBeenCalledWith('banner', mockUserDto);
+      expect(userService.deleteFile).toHaveBeenCalledWith(
+        'banner',
+        mockUserDto,
+      );
       expect(result).toEqual(updatedUser);
     });
 
     it('should handle deleteFile errors', async () => {
-      const error = new Error('Delete failed');
+      const error = new Error('Échec de la suppression');
       userService.deleteFile.mockRejectedValue(error);
 
-      await expect(controller.deleteFile('profilePicture', mockUserDto)).rejects.toThrow(
-        'Delete failed',
-      );
+      await expect(
+        controller.deleteFile('profilePicture', mockUserDto),
+      ).rejects.toThrow('Échec de la suppression');
     });
   });
 
@@ -228,10 +259,12 @@ describe('UserController', () => {
     });
 
     it('should handle softDelete errors', async () => {
-      const error = new Error('Soft delete failed');
+      const error = new Error('Échec de la suppression douce');
       userService.softDelete.mockRejectedValue(error);
 
-      await expect(controller.softDelete(2, mockUserDto)).rejects.toThrow('Soft delete failed');
+      await expect(controller.softDelete(2, mockUserDto)).rejects.toThrow(
+        'Échec de la suppression douce',
+      );
     });
   });
 });

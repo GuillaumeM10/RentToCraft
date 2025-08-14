@@ -62,7 +62,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         await checkAuthStatus();
         return true;
       }
-      throw new Error(typeof result === "string" ? result : "Login failed");
+      throw new Error(
+        typeof result === "string" ? result : "Échec de la connexion",
+      );
     },
     [checkAuthStatus],
   );
@@ -72,7 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await AuthService.logout();
       setUser(null);
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("Erreur de déconnexion:", error);
       setUser(null);
     } finally {
       window.location.href = "/auth";
@@ -87,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return signinResult;
       }
       throw new Error(
-        typeof result === "string" ? result : "Registration failed",
+        typeof result === "string" ? result : "Échec de l'inscription",
       );
     },
     [signin],
@@ -128,7 +130,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth doit être utilisé dans un AuthProvider");
   }
   return context;
 }

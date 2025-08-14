@@ -122,16 +122,12 @@ describe('AuthService', () => {
       lastName: 'Doe',
     };
 
-    it('should create a user and send confirmation email', async () => {
+    it('should create a user successfully', async () => {
       jest.spyOn(userService, 'create').mockResolvedValue(mockUser);
-      jest
-        .spyOn(mailService, 'sendUserConfirmation')
-        .mockResolvedValue(undefined);
 
       const result = await service.signup(signupDto);
 
       expect(userService.create).toHaveBeenCalledWith(signupDto);
-      expect(mailService.sendUserConfirmation).toHaveBeenCalledWith(mockUser);
       expect(result).toEqual(
         expect.objectContaining({
           id: mockUser.id,

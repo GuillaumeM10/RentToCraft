@@ -40,7 +40,7 @@ export class AuthService {
       user.email !== undefined &&
       user.email
     ) {
-      await this.mailService.sendUserConfirmation(user);
+      // await this.mailService.sendUserConfirmation(user);
 
       return plainToInstance(UserDto, user);
     } else {

@@ -23,12 +23,16 @@ const OrderService: OrderServiceType = {
     return response.data;
   },
   createOrder: async (order: CreateOrderDto) => {
+    let total = 0;
     if (order.orderItems) {
       order.orderItems.forEach((item) => {
         if (item.rental) {
           item.rental.images = undefined;
           if (item.rental.user) {
             item.rental.user.profilePicture = null;
+          }
+          if (item.rental.price && item.quantity) {
+            total += item.rental.price * item.quantity;
           }
         }
       });
@@ -37,6 +41,8 @@ const OrderService: OrderServiceType = {
     if (order.user) {
       order.user.profilePicture = null;
     }
+
+    order.total = total;
 
     const response = await api.post(`/order`, order);
     return response.data;

@@ -47,12 +47,12 @@ const RentalPage = ({ params }: RentalPageProps) => {
         const response = await RentalService.getOne(id);
 
         if (!response) {
-          throw new Error("Rental not found");
+          throw new Error("Location non trouvée");
         }
 
         setRental(response);
       } catch (error) {
-        console.error("Error fetching rental:", error);
+        console.error("Erreur lors de la récupération de la location:", error);
       }
     };
 
@@ -223,7 +223,19 @@ const RentalPage = ({ params }: RentalPageProps) => {
                     </tr>
                     <tr>
                       <td>Prix</td>
-                      <td>12 €</td>
+                      <td>{rental.price ?? 0} €</td>
+                    </tr>
+                    <tr>
+                      <td>Disponibilité</td>
+                      <td>
+                        {rental.startAvailable
+                          ? new Date(rental.startAvailable).toLocaleDateString()
+                          : "Indéfini"}
+                        {" - "}
+                        {rental.endAvailable
+                          ? new Date(rental.endAvailable).toLocaleDateString()
+                          : "Indéfini"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Localisation</td>

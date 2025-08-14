@@ -50,7 +50,9 @@ describe('MailService', () => {
     });
 
     it('should throw ConflictException when email sending fails', async () => {
-      jest.spyOn(mailerService, 'sendMail').mockRejectedValue(new Error('Mail error'));
+      jest
+        .spyOn(mailerService, 'sendMail')
+        .mockRejectedValue(new Error("Erreur d'envoi d'email"));
       jest.spyOn(console, 'log').mockImplementation(() => {});
 
       await expect(service.sendUserConfirmation(mockUser)).rejects.toThrow(
@@ -91,13 +93,17 @@ describe('MailService', () => {
     });
 
     it('should throw ConflictException when reset password email sending fails', async () => {
-      jest.spyOn(mailerService, 'sendMail').mockRejectedValue(new Error('Mail error'));
+      jest
+        .spyOn(mailerService, 'sendMail')
+        .mockRejectedValue(new Error("Erreur d'envoi d'email"));
       jest.spyOn(console, 'log').mockImplementation(() => {});
 
-      await expect(service.create(mockCreateTokenDto, mockToken)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(service.create(mockCreateTokenDto, mockToken)).rejects.toThrow(
+      await expect(
+        service.create(mockCreateTokenDto, mockToken),
+      ).rejects.toThrow(ConflictException);
+      await expect(
+        service.create(mockCreateTokenDto, mockToken),
+      ).rejects.toThrow(
         `Le mail n'a pas pu être envoyé à ${mockCreateTokenDto.email}`,
       );
 
@@ -111,7 +117,8 @@ describe('MailService', () => {
 
       await service.create(mockCreateTokenDto, customToken);
 
-      const sendMailCall = (mailerService.sendMail as jest.Mock).mock.calls[0][0];
+      const sendMailCall = (mailerService.sendMail as jest.Mock).mock
+        .calls[0][0];
       expect(sendMailCall.context.url).toBe(expectedUrl);
     });
   });

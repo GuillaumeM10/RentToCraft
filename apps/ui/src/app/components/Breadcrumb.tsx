@@ -67,6 +67,7 @@ const Breadcrumb = () => {
     <nav
       className="flex items-center gap-2 text-sm text-gray-600 my-40"
       aria-label="Breadcrumb"
+      role="navigation"
     >
       {breadcrumbs.map((breadcrumb, index) => (
         <React.Fragment key={breadcrumb.href}>
