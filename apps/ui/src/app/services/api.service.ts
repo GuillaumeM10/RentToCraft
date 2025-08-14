@@ -82,7 +82,7 @@ api.interceptors.response.use(
           break;
         }
         case 404: {
-          messageVariable = "Ressource non trouvée";
+          // messageVariable = "Ressource non trouvée";
           break;
         }
         case 422: {
