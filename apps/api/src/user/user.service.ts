@@ -235,8 +235,16 @@ export class UserService {
   async softDelete(id: number, user: UserDto) {
     const getUser = await this.findOne(id);
 
-    if (getUser.id === user.id) {
-      throw new NotFoundException(`Impossible de supprimer votre compte.`);
+    if (!getUser) {
+      throw new NotFoundException(
+        `Impossible de trouver l'utilisateur #${id}.`,
+      );
+    }
+
+    if (getUser.id !== user.id && user.role !== 'administrator') {
+      throw new UnauthorizedException(
+        `Vous ne pouvez pas supprimer un autre utilisateur.`,
+      );
     }
 
     const userToRemove = await this.userRepository.softDelete(id);

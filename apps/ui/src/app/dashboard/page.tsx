@@ -9,10 +9,12 @@ import { useAuth } from "@/app/contexts/auth.context";
 import UserService from "@/app/services/user.service";
 
 import Profile from "../components/Profile";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [userProfile, setUserProfile] = useState<UserDto | null>(null);
+  const router = useRouter();
 
   const getUserProfile = async () => {
     if (!user?.id) return;
@@ -22,6 +24,15 @@ const Dashboard = () => {
 
     if (!fetchedUserProfile) {
       console.error("Profil utilisateur non trouvé");
+    }
+  };
+
+  const deleteAccount = async () => {
+    if (!user?.id) return;
+
+    if (confirm("Voulez-vous vraiment supprimer votre compte ?")) {
+      await UserService.delete(user.id, true);
+      router.push("/");
     }
   };
 
@@ -68,6 +79,12 @@ const Dashboard = () => {
 
       <div className="user">
         {userProfile && <Profile user={userProfile} fromDashboard />}
+      </div>
+
+      <div className="delete-account">
+        <button className="btn btn-red" onClick={deleteAccount}>
+          Supprimer mon compte
+        </button>
       </div>
     </div>
   );
