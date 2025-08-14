@@ -61,50 +61,68 @@ describe('ValidTokenService', () => {
     it('should throw error when user is missing', async () => {
       const invalidDto = { ...createDto, user: null };
 
-      await expect(service.create(invalidDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when user is undefined', async () => {
       const invalidDto = { ...createDto, user: undefined };
 
-      await expect(service.create(invalidDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when token is missing', async () => {
       const invalidDto = { ...createDto, token: null };
 
-      await expect(service.create(invalidDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when token is undefined', async () => {
       const invalidDto = { ...createDto, token: undefined };
 
-      await expect(service.create(invalidDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when token is empty string', async () => {
       const invalidDto = { ...createDto, token: '' };
 
-      await expect(service.create(invalidDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when token already exists', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockValidToken);
 
-      await expect(service.create(createDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(createDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when database operation fails', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
-      repository.save.mockRejectedValue(new Error('Database error'));
+      repository.save.mockRejectedValue(new Error('Erreur de base de données'));
 
-      await expect(service.create(createDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(createDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
 
     it('should throw error when findOne throws error', async () => {
-      jest.spyOn(service, 'findOne').mockRejectedValue(new Error('FindOne error'));
+      jest
+        .spyOn(service, 'findOne')
+        .mockRejectedValue(new Error('Erreur lors de la recherche'));
 
-      await expect(service.create(createDto)).rejects.toThrow('Error while creating validToken');
+      await expect(service.create(createDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
     });
   });
 
@@ -118,7 +136,10 @@ describe('ValidTokenService', () => {
 
       const result = await service.findAllByUser(1);
 
-      expect(queryBuilder.where).toHaveBeenCalledWith('validToken.user = :userId', { userId: 1 });
+      expect(queryBuilder.where).toHaveBeenCalledWith(
+        'validToken.user = :userId',
+        { userId: 1 },
+      );
       expect(result).toEqual([mockValidToken]);
     });
 
@@ -135,25 +156,35 @@ describe('ValidTokenService', () => {
     });
 
     it('should throw error when userId is missing', async () => {
-      await expect(service.findAllByUser(null)).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findAllByUser(null)).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
     });
 
     it('should throw error when userId is undefined', async () => {
-      await expect(service.findAllByUser(undefined)).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findAllByUser(undefined)).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
     });
 
     it('should throw error when userId is zero', async () => {
-      await expect(service.findAllByUser(0)).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findAllByUser(0)).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
     });
 
     it('should throw error when database operation fails', async () => {
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockRejectedValue(new Error('Database error')),
+        getMany: jest
+          .fn()
+          .mockRejectedValue(new Error('Erreur de base de données')),
       };
       repository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      await expect(service.findAllByUser(1)).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findAllByUser(1)).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
     });
   });
 
@@ -167,7 +198,10 @@ describe('ValidTokenService', () => {
 
       const result = await service.findOne('test-jwt-token');
 
-      expect(queryBuilder.where).toHaveBeenCalledWith('validToken.token = :token', { token: 'test-jwt-token' });
+      expect(queryBuilder.where).toHaveBeenCalledWith(
+        'validToken.token = :token',
+        { token: 'test-jwt-token' },
+      );
       expect(result).toEqual(mockValidToken);
     });
 
@@ -184,18 +218,24 @@ describe('ValidTokenService', () => {
     });
 
     it('should throw error when token is missing', async () => {
-      await expect(service.findOne(null)).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findOne(null)).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
     });
 
     it('should throw error when database operation fails', async () => {
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
-        getOne: jest.fn().mockRejectedValue(new Error('Database error')),
+        getOne: jest
+          .fn()
+          .mockRejectedValue(new Error('Erreur de base de données')),
       };
       repository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       jest.spyOn(console, 'log').mockImplementation(() => {});
 
-      await expect(service.findOne('test-token')).rejects.toThrow('Error while fetching validToken');
+      await expect(service.findOne('test-token')).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
       expect(console.log).toHaveBeenCalled();
     });
   });
@@ -215,8 +255,12 @@ describe('ValidTokenService', () => {
 
       expect(queryBuilder.delete).toHaveBeenCalled();
       expect(queryBuilder.from).toHaveBeenCalledWith(ValidTokenEntity);
-      expect(queryBuilder.where).toHaveBeenCalledWith('token = :token', { token: 'test-token' });
-      expect(queryBuilder.andWhere).toHaveBeenCalledWith('user = :userId', { userId: 1 });
+      expect(queryBuilder.where).toHaveBeenCalledWith('token = :token', {
+        token: 'test-token',
+      });
+      expect(queryBuilder.andWhere).toHaveBeenCalledWith('user = :userId', {
+        userId: 1,
+      });
       expect(result).toEqual({ message: 'Token supprimé' });
     });
 
@@ -236,27 +280,39 @@ describe('ValidTokenService', () => {
     });
 
     it('should throw error when token is missing', async () => {
-      await expect(service.remove(null, 1)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove(null, 1)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when token is undefined', async () => {
-      await expect(service.remove(undefined, 1)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove(undefined, 1)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when token is empty string', async () => {
-      await expect(service.remove('', 1)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove('', 1)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when userId is missing', async () => {
-      await expect(service.remove('test-token', null)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove('test-token', null)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when userId is undefined', async () => {
-      await expect(service.remove('test-token', undefined)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove('test-token', undefined)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when userId is zero', async () => {
-      await expect(service.remove('test-token', 0)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove('test-token', 0)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
 
     it('should throw error when database operation fails', async () => {
@@ -265,11 +321,15 @@ describe('ValidTokenService', () => {
         from: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
-        execute: jest.fn().mockRejectedValue(new Error('Database error')),
+        execute: jest
+          .fn()
+          .mockRejectedValue(new Error('Erreur de base de données')),
       };
       repository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      await expect(service.remove('test-token', 1)).rejects.toThrow('Error while removing validToken');
+      await expect(service.remove('test-token', 1)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
     });
   });
 });

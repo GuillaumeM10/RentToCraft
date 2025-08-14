@@ -68,9 +68,13 @@ describe('ValidTokenController', () => {
         user: mockUser,
       };
 
-      service.create.mockRejectedValue(new Error('Error while creating validToken'));
+      service.create.mockRejectedValue(
+        new Error('Erreur lors de la création du token valide'),
+      );
 
-      await expect(controller.create(createDto)).rejects.toThrow('Error while creating validToken');
+      await expect(controller.create(createDto)).rejects.toThrow(
+        'Erreur lors de la création du token valide',
+      );
       expect(service.create).toHaveBeenCalledWith(createDto);
     });
 
@@ -80,9 +84,13 @@ describe('ValidTokenController', () => {
         user: mockUser,
       };
 
-      service.create.mockRejectedValue(new Error('Database connection failed'));
+      service.create.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
-      await expect(controller.create(createDto)).rejects.toThrow('Database connection failed');
+      await expect(controller.create(createDto)).rejects.toThrow(
+        'Échec de connexion à la base de données',
+      );
       expect(service.create).toHaveBeenCalledWith(createDto);
     });
   });
@@ -108,16 +116,24 @@ describe('ValidTokenController', () => {
     });
 
     it('should handle service errors', async () => {
-      service.findAllByUser.mockRejectedValue(new Error('Error while fetching validToken'));
+      service.findAllByUser.mockRejectedValue(
+        new Error('Erreur lors de la récupération des tokens valides'),
+      );
 
-      await expect(controller.findAllByUser(null)).rejects.toThrow('Error while fetching validToken');
+      await expect(controller.findAllByUser(null)).rejects.toThrow(
+        'Erreur lors de la récupération des tokens valides',
+      );
       expect(service.findAllByUser).toHaveBeenCalledWith(null);
     });
 
     it('should handle database errors', async () => {
-      service.findAllByUser.mockRejectedValue(new Error('Database connection failed'));
+      service.findAllByUser.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
-      await expect(controller.findAllByUser(1)).rejects.toThrow('Database connection failed');
+      await expect(controller.findAllByUser(1)).rejects.toThrow(
+        'Échec de connexion à la base de données',
+      );
       expect(service.findAllByUser).toHaveBeenCalledWith(1);
     });
   });
@@ -151,16 +167,24 @@ describe('ValidTokenController', () => {
     });
 
     it('should handle service errors', async () => {
-      service.findOne.mockRejectedValue(new Error('Error while fetching validToken'));
+      service.findOne.mockRejectedValue(
+        new Error('Erreur lors de la récupération du token valide'),
+      );
 
-      await expect(controller.findOne('invalid-token')).rejects.toThrow('Error while fetching validToken');
+      await expect(controller.findOne('invalid-token')).rejects.toThrow(
+        'Erreur lors de la récupération du token valide',
+      );
       expect(service.findOne).toHaveBeenCalledWith('invalid-token');
     });
 
     it('should handle database errors', async () => {
-      service.findOne.mockRejectedValue(new Error('Database connection failed'));
+      service.findOne.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
-      await expect(controller.findOne('test-token')).rejects.toThrow('Database connection failed');
+      await expect(controller.findOne('test-token')).rejects.toThrow(
+        'Échec de connexion à la base de données',
+      );
       expect(service.findOne).toHaveBeenCalledWith('test-token');
     });
   });
@@ -172,14 +196,21 @@ describe('ValidTokenController', () => {
 
       const result = await controller.remove('test-jwt-token', mockUser);
 
-      expect(service.remove).toHaveBeenCalledWith('test-jwt-token', mockUser.id);
+      expect(service.remove).toHaveBeenCalledWith(
+        'test-jwt-token',
+        mockUser.id,
+      );
       expect(result).toEqual(mockResponse);
     });
 
     it('should handle service errors during removal', async () => {
-      service.remove.mockRejectedValue(new Error('Error while removing validToken'));
+      service.remove.mockRejectedValue(
+        new Error('Erreur lors de la suppression du token valide'),
+      );
 
-      await expect(controller.remove('test-token', mockUser)).rejects.toThrow('Error while removing validToken');
+      await expect(controller.remove('test-token', mockUser)).rejects.toThrow(
+        'Erreur lors de la suppression du token valide',
+      );
       expect(service.remove).toHaveBeenCalledWith('test-token', mockUser.id);
     });
 
@@ -203,9 +234,13 @@ describe('ValidTokenController', () => {
     });
 
     it('should handle database errors during removal', async () => {
-      service.remove.mockRejectedValue(new Error('Database connection failed'));
+      service.remove.mockRejectedValue(
+        new Error('Échec de connexion à la base de données'),
+      );
 
-      await expect(controller.remove('test-token', mockUser)).rejects.toThrow('Database connection failed');
+      await expect(controller.remove('test-token', mockUser)).rejects.toThrow(
+        'Échec de connexion à la base de données',
+      );
       expect(service.remove).toHaveBeenCalledWith('test-token', mockUser.id);
     });
   });

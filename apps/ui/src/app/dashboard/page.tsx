@@ -1,5 +1,6 @@
 "use client";
 import { type UserDto } from "@rent-to-craft/dtos";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import UpdateUser from "@/app/components/Forms/User/UpdateUser";
@@ -13,6 +14,7 @@ import Profile from "../components/Profile";
 const Dashboard = () => {
   const { user } = useAuth();
   const [userProfile, setUserProfile] = useState<UserDto | null>(null);
+  const router = useRouter();
 
   const getUserProfile = async () => {
     if (!user?.id) return;
@@ -21,7 +23,16 @@ const Dashboard = () => {
     setUserProfile(fetchedUserProfile);
 
     if (!fetchedUserProfile) {
-      console.error("User profile not found");
+      console.error("Profil utilisateur non trouvé");
+    }
+  };
+
+  const deleteAccount = async () => {
+    if (!user?.id) return;
+
+    if (confirm("Voulez-vous vraiment supprimer votre compte ?")) {
+      await UserService.delete(user.id, true);
+      router.push("/");
     }
   };
 
@@ -68,6 +79,12 @@ const Dashboard = () => {
 
       <div className="user">
         {userProfile && <Profile user={userProfile} fromDashboard />}
+      </div>
+
+      <div className="delete-account">
+        <button className="btn btn-red" onClick={deleteAccount}>
+          Supprimer mon compte
+        </button>
       </div>
     </div>
   );

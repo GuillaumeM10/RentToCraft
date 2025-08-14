@@ -74,7 +74,7 @@ export class FileService {
   async remove(id: number) {
     const file = await this.fileRepository.findOne({ where: { id } });
     await this.fileRepository.remove(file);
-    return { message: `File with ID ${id} deleted successfully` };
+    return { message: `Fichier avec l'ID ${id} supprimé avec succès` };
   }
 
   async optimizeFile(file: File) {

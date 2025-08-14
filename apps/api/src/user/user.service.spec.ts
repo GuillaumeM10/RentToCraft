@@ -10,7 +10,11 @@ import * as bcrypt from 'bcryptjs';
 import { type Repository } from 'typeorm';
 
 import { FileService } from '../file/file.service';
-import { createMockUser, createMockUserEntity, createMockUserUpdateDto } from '../test-helpers/user-mock.helper';
+import {
+  createMockUser,
+  createMockUserEntity,
+  createMockUserUpdateDto,
+} from '../test-helpers/user-mock.helper';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -56,7 +60,9 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    userRepository = module.get(getRepositoryToken(UserEntity)) as jest.Mocked<Repository<UserEntity>>;
+    userRepository = module.get(getRepositoryToken(UserEntity)) as jest.Mocked<
+      Repository<UserEntity>
+    >;
     fileService = module.get(FileService) as jest.Mocked<FileService>;
   });
 
@@ -117,28 +123,38 @@ describe('UserService', () => {
       const invalidDto = { ...createUserDto, email: '' };
 
       await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
-      await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Email obligatoire.',
+      );
     });
 
     it('should throw HttpException if email is null', async () => {
       const invalidDto = { ...createUserDto, email: null };
 
       await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
-      await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Email obligatoire.',
+      );
     });
 
     it('should throw HttpException if email is undefined', async () => {
       const invalidDto = { ...createUserDto, email: undefined };
 
       await expect(service.create(invalidDto)).rejects.toThrow(HttpException);
-      await expect(service.create(invalidDto)).rejects.toThrow('Email obligatoire.');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Email obligatoire.',
+      );
     });
 
     it('should handle repository save errors', async () => {
       (bcrypt.hashSync as jest.Mock).mockReturnValue('hashedPassword');
-      userRepository.save.mockRejectedValue(new Error('Database error'));
+      userRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
+      );
 
-      await expect(service.create(createUserDto)).rejects.toThrow('Database error');
+      await expect(service.create(createUserDto)).rejects.toThrow(
+        'Erreur de base de données',
+      );
     });
   });
 
@@ -158,7 +174,10 @@ describe('UserService', () => {
       expect(queryBuilder.skip).toHaveBeenCalledWith(10);
       expect(queryBuilder.take).toHaveBeenCalledWith(10);
       expect(queryBuilder.orderBy).toHaveBeenCalledWith('user.id', 'DESC');
-      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('user.profilePicture', 'profilePicture');
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'user.profilePicture',
+        'profilePicture',
+      );
       expect(result).toBeDefined();
       expect(Array.isArray(result)).toBe(true);
     });
@@ -189,7 +208,9 @@ describe('UserService', () => {
 
       const result = await service.findOne(1);
 
-      expect(queryBuilder.where).toHaveBeenCalledWith('user.id = :id', { id: 1 });
+      expect(queryBuilder.where).toHaveBeenCalledWith('user.id = :id', {
+        id: 1,
+      });
       expect(result).toBeDefined();
     });
 
@@ -231,9 +252,9 @@ describe('UserService', () => {
       };
       userRepository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      await expect(service.findOneByEmail('notfound@example.com')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.findOneByEmail('notfound@example.com'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -318,7 +339,10 @@ describe('UserService', () => {
     });
 
     it('should convert string isPublic to boolean', async () => {
-      const updateWithIsPublic = { ...updateDto, isPublic: 'true' as unknown as boolean };
+      const updateWithIsPublic = {
+        ...updateDto,
+        isPublic: 'true' as unknown as boolean,
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
       userRepository.save.mockResolvedValue(mockUser);
 
@@ -330,7 +354,10 @@ describe('UserService', () => {
     });
 
     it('should convert string isPublic false to boolean', async () => {
-      const updateWithIsPublic = { ...updateDto, isPublic: 'false' as unknown as boolean };
+      const updateWithIsPublic = {
+        ...updateDto,
+        isPublic: 'false' as unknown as boolean,
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
       userRepository.save.mockResolvedValue(mockUser);
 
@@ -343,15 +370,22 @@ describe('UserService', () => {
 
     it('should handle repository save errors', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
-      userRepository.save.mockRejectedValue(new Error('Database error'));
+      userRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
+      );
 
-      await expect(service.update(updateDto, mockUserDto, 1)).rejects.toThrow('Database error');
+      await expect(service.update(updateDto, mockUserDto, 1)).rejects.toThrow(
+        'Erreur de base de données',
+      );
     });
   });
 
   describe('deleteFile', () => {
     it('should delete profile picture successfully', async () => {
-      const userWithPicture = { ...mockUserDto, profilePicture: { id: 1, file: 'test', name: 'test' } };
+      const userWithPicture = {
+        ...mockUserDto,
+        profilePicture: { id: 1, file: 'test', name: 'test' },
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(userWithPicture);
       userRepository.save.mockResolvedValue(mockUser);
 
@@ -362,7 +396,10 @@ describe('UserService', () => {
     });
 
     it('should delete banner successfully', async () => {
-      const userWithBanner = { ...mockUserDto, banner: { id: 1, file: 'test', name: 'test' } };
+      const userWithBanner = {
+        ...mockUserDto,
+        banner: { id: 1, file: 'test', name: 'test' },
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(userWithBanner);
       userRepository.save.mockResolvedValue(mockUser);
 
@@ -375,9 +412,9 @@ describe('UserService', () => {
     it('should throw NotFoundException when profile picture not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
 
-      await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.deleteFile('profilePicture', mockUserDto),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException when banner not found', async () => {
@@ -391,17 +428,24 @@ describe('UserService', () => {
     it('should throw NotFoundException when user not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
-      await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.deleteFile('profilePicture', mockUserDto),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should handle repository save errors', async () => {
-      const userWithPicture = { ...mockUserDto, profilePicture: { id: 1, file: 'test', name: 'test' } };
+      const userWithPicture = {
+        ...mockUserDto,
+        profilePicture: { id: 1, file: 'test', name: 'test' },
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(userWithPicture);
-      userRepository.save.mockRejectedValue(new Error('Database error'));
+      userRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
+      );
 
-      await expect(service.deleteFile('profilePicture', mockUserDto)).rejects.toThrow('Database error');
+      await expect(
+        service.deleteFile('profilePicture', mockUserDto),
+      ).rejects.toThrow('Erreur de base de données');
     });
   });
 
@@ -409,12 +453,21 @@ describe('UserService', () => {
     const mockFile = { filename: 'test.jpg' } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     it('should upload profile picture successfully', async () => {
-      const mockUploadedFile = { id: 1, filename: 'test.jpg', file: 'test', name: 'test' };
+      const mockUploadedFile = {
+        id: 1,
+        filename: 'test.jpg',
+        file: 'test',
+        name: 'test',
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
       fileService.create.mockResolvedValue(mockUploadedFile);
       userRepository.save.mockResolvedValue(mockUser);
 
-      const result = await service.uploadFile('profilePicture', mockFile, mockUserDto);
+      const result = await service.uploadFile(
+        'profilePicture',
+        mockFile,
+        mockUserDto,
+      );
 
       expect(fileService.create).toHaveBeenCalledWith(mockFile);
       expect(userRepository.save).toHaveBeenCalled();
@@ -422,7 +475,12 @@ describe('UserService', () => {
     });
 
     it('should upload banner successfully', async () => {
-      const mockUploadedFile = { id: 1, filename: 'test.jpg', file: 'test', name: 'test' };
+      const mockUploadedFile = {
+        id: 1,
+        filename: 'test.jpg',
+        file: 'test',
+        name: 'test',
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
       fileService.create.mockResolvedValue(mockUploadedFile);
       userRepository.save.mockResolvedValue(mockUser);
@@ -438,36 +496,49 @@ describe('UserService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
 
       await expect(
-        service.uploadFile('invalid' as 'banner' | 'profilePicture', mockFile, mockUserDto),
+        service.uploadFile(
+          'invalid' as 'banner' | 'profilePicture',
+          mockFile,
+          mockUserDto,
+        ),
       ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException when user not found', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
-      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.uploadFile('profilePicture', mockFile, mockUserDto),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should handle file service errors', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
-      fileService.create.mockRejectedValue(new Error('File upload failed'));
-
-      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
-        'File upload failed',
+      fileService.create.mockRejectedValue(
+        new Error("Échec de l'upload de fichier"),
       );
+
+      await expect(
+        service.uploadFile('profilePicture', mockFile, mockUserDto),
+      ).rejects.toThrow("Échec de l'upload de fichier");
     });
 
     it('should handle repository save errors', async () => {
-      const mockUploadedFile = { id: 1, filename: 'test.jpg', file: 'test', name: 'test' };
+      const mockUploadedFile = {
+        id: 1,
+        filename: 'test.jpg',
+        file: 'test',
+        name: 'test',
+      };
       jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
       fileService.create.mockResolvedValue(mockUploadedFile);
-      userRepository.save.mockRejectedValue(new Error('Database error'));
-
-      await expect(service.uploadFile('profilePicture', mockFile, mockUserDto)).rejects.toThrow(
-        'Database error',
+      userRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
       );
+
+      await expect(
+        service.uploadFile('profilePicture', mockFile, mockUserDto),
+      ).rejects.toThrow('Erreur de base de données');
     });
   });
 
@@ -476,7 +547,9 @@ describe('UserService', () => {
       const queryBuilder = {
         select: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
-        getOne: jest.fn().mockResolvedValue({ id: 1, password: 'hashedPassword' }), // eslint-disable-line sonarjs/no-hardcoded-credentials
+        getOne: jest
+          .fn()
+          .mockResolvedValue({ id: 1, password: 'hashedPassword' }), // eslint-disable-line sonarjs/no-hardcoded-credentials
       };
       userRepository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -493,9 +566,9 @@ describe('UserService', () => {
       };
       userRepository.createQueryBuilder.mockReturnValue(queryBuilder as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      await expect(service.getUserPassword('notfound@example.com')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.getUserPassword('notfound@example.com'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -515,42 +588,50 @@ describe('UserService', () => {
     it('should throw NotFoundException when user not found by email', async () => {
       jest.spyOn(service, 'findOneByEmail').mockResolvedValue(null);
 
-      await expect(service.updatePassword('newPassword', mockUserDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updatePassword('newPassword', mockUserDto),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should handle repository save errors', async () => {
       (bcrypt.hashSync as jest.Mock).mockReturnValue('newHashedPassword');
       jest.spyOn(service, 'findOneByEmail').mockResolvedValue(mockUserDto);
-      userRepository.save.mockRejectedValue(new Error('Database error'));
-
-      await expect(service.updatePassword('newPassword', mockUserDto)).rejects.toThrow(
-        'Database error',
+      userRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
       );
+
+      await expect(
+        service.updatePassword('newPassword', mockUserDto),
+      ).rejects.toThrow('Erreur de base de données');
     });
   });
 
   describe('softDelete', () => {
-    it('should soft delete user successfully', async () => {
+    it('should soft delete user successfully when user is administrator', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
       const userToDelete = { ...mockUserDto, id: 2 };
       jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
-      userRepository.softDelete.mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
+      userRepository.softDelete.mockResolvedValue({
+        affected: 1,
+        raw: [],
+        generatedMaps: [],
+      });
 
-      const result = await service.softDelete(2, mockUserDto);
+      const result = await service.softDelete(2, adminUser);
 
       expect(userRepository.softDelete).toHaveBeenCalledWith(2);
       expect(result).toBeDefined();
     });
 
-    it('should throw NotFoundException when user tries to delete themselves', async () => {
-      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+    it('should throw UnauthorizedException when user tries to delete another user', async () => {
+      const userToDelete = { ...mockUserDto, id: 2 };
+      jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
 
-      await expect(service.softDelete(1, mockUserDto)).rejects.toThrow(
-        NotFoundException,
+      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow(
+        UnauthorizedException,
       );
-      await expect(service.softDelete(1, mockUserDto)).rejects.toThrow(
-        'Impossible de supprimer votre compte.',
+      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow(
+        'Vous ne pouvez pas supprimer un autre utilisateur.',
       );
     });
 
@@ -558,16 +639,24 @@ describe('UserService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
       await expect(service.softDelete(999, mockUserDto)).rejects.toThrow(
-        'Cannot read properties of null (reading \'id\')',
+        NotFoundException,
+      );
+      await expect(service.softDelete(999, mockUserDto)).rejects.toThrow(
+        "Impossible de trouver l'utilisateur #999.",
       );
     });
 
     it('should handle repository softDelete errors', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
       const userToDelete = { ...mockUserDto, id: 2 };
       jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
-      userRepository.softDelete.mockRejectedValue(new Error('Database error'));
+      userRepository.softDelete.mockRejectedValue(
+        new Error('Erreur de base de données'),
+      );
 
-      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow('Database error');
+      await expect(service.softDelete(2, adminUser)).rejects.toThrow(
+        'Erreur de base de données',
+      );
     });
   });
 

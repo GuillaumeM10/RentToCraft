@@ -128,7 +128,7 @@ describe('FileService', () => {
       });
       expect(mockRepository.remove).toHaveBeenCalledWith(mockFile);
       expect(result).toEqual({
-        message: `File with ID ${fileId} deleted successfully`,
+        message: `Fichier avec l'ID ${fileId} supprimé avec succès`,
       });
     });
   });

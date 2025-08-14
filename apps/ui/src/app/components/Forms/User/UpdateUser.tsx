@@ -76,7 +76,11 @@ const UpdateUser = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      role="form"
+      aria-label="Formulaire de modification de profil"
+    >
       <div className="form-group ">
         <label className="form-label" htmlFor="email">
           Email
@@ -87,7 +91,15 @@ const UpdateUser = ({
           defaultValue={initData?.email ?? email}
           onChange={(thisError) => setEmail(thisError.target.value)}
           className="form-input "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="email-error"
         />
+        {error && (
+          <div id="email-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="form-group ">
@@ -100,7 +112,15 @@ const UpdateUser = ({
           defaultValue={initData?.contactEmail ?? contactEmail}
           onChange={(thisError) => setContactEmail(thisError.target.value)}
           className="form-input "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="contactEmail-error"
         />
+        {error && (
+          <div id="contactEmail-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="md:grid grid-cols-2 gap-10">
@@ -114,7 +134,15 @@ const UpdateUser = ({
             defaultValue={initData?.firstName ?? firstName}
             onChange={(thisError) => setFirstName(thisError.target.value)}
             className="form-input "
+            aria-required="true"
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby="firstName-error"
           />
+          {error && (
+            <div id="firstName-error" className="error-message">
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="form-group ">
@@ -127,7 +155,15 @@ const UpdateUser = ({
             defaultValue={initData?.lastName ?? lastName}
             onChange={(thisError) => setLastName(thisError.target.value)}
             className="form-input "
+            aria-required="true"
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby="lastName-error"
           />
+          {error && (
+            <div id="lastName-error" className="error-message">
+              {error}
+            </div>
+          )}
         </div>
       </div>
 
@@ -140,7 +176,15 @@ const UpdateUser = ({
           defaultValue={initData?.description ?? description}
           onChange={(thisError) => setDescription(thisError.target.value)}
           className="form-input "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="description-error"
         />
+        {error && (
+          <div id="description-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="form-group ">
@@ -153,7 +197,15 @@ const UpdateUser = ({
           defaultValue={initData?.address ?? address}
           onChange={(thisError) => setAddress(thisError.target.value)}
           className="form-input "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="address-error"
         />
+        {error && (
+          <div id="address-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="form-group ">
@@ -163,7 +215,15 @@ const UpdateUser = ({
         <CityAutocomplete
           onChange={(changedCity) => setCity(changedCity)}
           defaultValue={initData?.city ?? city}
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="city-error"
         />
+        {error && (
+          <div id="city-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="form-group ">
@@ -176,7 +236,15 @@ const UpdateUser = ({
           defaultValue={initData?.phone ?? phone}
           onChange={(thisError) => setPhone(thisError.target.value)}
           className="form-input "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="phone-error"
         />
+        {error && (
+          <div id="phone-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       <div className="form-group ">
@@ -189,8 +257,16 @@ const UpdateUser = ({
           defaultChecked={initData?.isPublic}
           onChange={(thisError) => setIsPublic(thisError.target.checked)}
           className="form-checkbox "
+          aria-required="true"
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby="isPublic-error"
         />
         <span className="ml-10">Rendre mon profil public</span>
+        {error && (
+          <div id="isPublic-error" className="error-message">
+            {error}
+          </div>
+        )}
       </div>
 
       {isAdmin && role && (
@@ -202,6 +278,9 @@ const UpdateUser = ({
             id="role"
             value={role}
             onChange={(element) => setRole(element.target.value as UserRole)}
+            aria-required="true"
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby="role-error"
           >
             {Object.values(UserRole).map((roleType) => (
               <option key={roleType} value={roleType}>
@@ -209,10 +288,13 @@ const UpdateUser = ({
               </option>
             ))}
           </select>
+          {error && (
+            <div id="role-error" className="error-message">
+              {error}
+            </div>
+          )}
         </div>
       )}
-
-      {error && <div className="error-message">{error}</div>}
 
       <button type="submit" className="btn btn--primary w-full mb-lg">
         {isLoading ? <LoadingSpinner size="small" light /> : "Envoyer"}

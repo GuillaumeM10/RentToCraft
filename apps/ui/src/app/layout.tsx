@@ -7,6 +7,8 @@ import "./main.scss";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
@@ -49,9 +51,15 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
+        <a href="#main-content" className="skip-link">
+          Aller au contenu principal
+        </a>
         <ErrorBoundary>
           <AuthProvider>
-            {children}
+            <ToastContainer />
+            <main id="main-content" role="main">
+              {children}
+            </main>
             <ScrollToTop />
           </AuthProvider>
         </ErrorBoundary>

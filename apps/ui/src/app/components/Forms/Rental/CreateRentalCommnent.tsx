@@ -31,7 +31,11 @@ const CreateRentalCommnent = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      role="form"
+      aria-label="Formulaire de commentaire"
+    >
       <div className="form-group">
         <label className="form-label" htmlFor="content">
           Commentaire
@@ -42,10 +46,18 @@ const CreateRentalCommnent = ({
           onChange={(element) => setContent(element.target.value)}
           className="form-input"
           required
+          aria-required="true"
+          aria-invalid={content ? "false" : "true"}
+          aria-describedby={content ? undefined : "comment-content-error"}
           placeholder="Votre commentaire..."
           rows={3}
           maxLength={255}
         />
+        {!content && (
+          <div className="error-message" id="comment-content-error">
+            Le commentaire est requis
+          </div>
+        )}
       </div>
       <p className="text-sm text-gray-500">{content.length} / 255 caractères</p>
       <button type="submit" className="btn btn-primary">

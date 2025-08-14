@@ -17,29 +17,29 @@ export class ValidTokenService {
       const validToken = createValidTokenDto;
 
       if (!validToken.user) {
-        throw new Error('userId is required');
+        throw new Error("L'identifiant utilisateur est requis");
       }
       if (!validToken.token) {
-        throw new Error('token is required');
+        throw new Error('Le token est requis');
       }
 
       const allreadyValidToken = await this.findOne(validToken.token);
 
       if (allreadyValidToken) {
-        throw new Error('token already exist');
+        throw new Error('Ce token existe déjà');
       }
 
       const newValidToken = await this.validTokenRepository.save(validToken);
       return newValidToken;
     } catch {
-      throw new Error('Error while creating validToken');
+      throw new Error('Erreur lors de la création du token valide');
     }
   }
 
   async findAllByUser(userId: number) {
     try {
       if (!userId) {
-        throw new Error('userId is required');
+        throw new Error("L'identifiant utilisateur est requis");
       }
       const validTokens = await this.validTokenRepository
         .createQueryBuilder('validToken')
@@ -48,14 +48,14 @@ export class ValidTokenService {
 
       return validTokens;
     } catch {
-      throw new Error('Error while fetching validToken');
+      throw new Error('Erreur lors de la récupération du token valide');
     }
   }
 
   async findOne(token: string) {
     try {
       if (!token) {
-        throw new Error('token is required');
+        throw new Error('Le token est requis');
       }
       const validToken = await this.validTokenRepository
         .createQueryBuilder('validToken')
@@ -64,17 +64,17 @@ export class ValidTokenService {
       return validToken;
     } catch (error) {
       console.log(error);
-      throw new Error('Error while fetching validToken');
+      throw new Error('Erreur lors de la récupération du token valide');
     }
   }
 
   async remove(token: string, userId: number) {
     try {
       if (!token) {
-        throw new Error('token is required');
+        throw new Error('Le token est requis');
       }
       if (!userId) {
-        throw new Error('userId is required');
+        throw new Error("L'identifiant utilisateur est requis");
       }
 
       await this.validTokenRepository
@@ -89,7 +89,7 @@ export class ValidTokenService {
         message: 'Token supprimé',
       };
     } catch {
-      throw new Error('Error while removing validToken');
+      throw new Error('Erreur lors de la suppression du token valide');
     }
   }
 }

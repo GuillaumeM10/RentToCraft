@@ -9,6 +9,9 @@ export class RentalDto {
   slug: string;
   description: string | null;
   quantity: number = 1;
+  price?: number;
+  startAvailable?: Date;
+  endAvailable?: Date;
 
   images: FileDto[] | File[];
   cats: RentalCatDto[] | null;
@@ -21,6 +24,9 @@ export class CreateRentalDto {
   slug: string;
   description: string | null;
   quantity: number = 1;
+  price?: number;
+  startAvailable?: Date;
+  endAvailable?: Date;
 
   images: FileDto[] | File[];
   cats: number[] | null;

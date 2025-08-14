@@ -38,6 +38,7 @@ const AdminOrdersPage = () => {
                 <th>Date</th>
                 <th>Statut</th>
                 <th>Utilisateur</th>
+                <th>Total</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -51,6 +52,7 @@ const AdminOrdersPage = () => {
                   </td>
                   <td>{order.status}</td>
                   <td>{order.user.id ?? "Utilisateur supprimé"}</td>
+                  <td>{order.total ?? 0} €</td>
                   <td>
                     <Link
                       href={`/dashboard/administration/rentals/orders/${order.id}`}
