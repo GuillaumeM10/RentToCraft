@@ -36,6 +36,7 @@ const Header = ({ isTransparentOnTop }: HeaderProps) => {
       ref={headerRef}
       className={getHeaderClasses()}
       style={{ position: "sticky", top: "-1px", zIndex: 50 }}
+      role="banner"
     >
       <Navigation />
     </header>

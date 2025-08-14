@@ -51,10 +51,15 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
+        <a href="#main-content" className="skip-link">
+          Aller au contenu principal
+        </a>
         <ErrorBoundary>
           <AuthProvider>
             <ToastContainer />
-            {children}
+            <main id="main-content" role="main">
+              {children}
+            </main>
             <ScrollToTop />
           </AuthProvider>
         </ErrorBoundary>

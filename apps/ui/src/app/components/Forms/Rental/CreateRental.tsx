@@ -52,7 +52,11 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      role="form"
+      aria-label="Formulaire de création d'objet"
+    >
       <div className="form-group">
         <label className="form-label" htmlFor="name">
           Nom
@@ -64,7 +68,15 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
           onChange={(element) => setName(element.target.value)}
           className="form-input"
           required
+          aria-required="true"
+          aria-invalid={name ? "false" : "true"}
+          aria-describedby={name ? undefined : "createrental-name-error"}
         />
+        {!name && (
+          <div className="error-message" id="createrental-name-error">
+            Le nom est requis
+          </div>
+        )}
       </div>
       <div className="form-group">
         <label className="form-label" htmlFor="description">
@@ -75,7 +87,18 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
           value={description}
           onChange={(element) => setDescription(element.target.value)}
           className="form-input"
+          required
+          aria-required="true"
+          aria-invalid={description ? "false" : "true"}
+          aria-describedby={
+            description ? undefined : "createrental-description-error"
+          }
         />
+        {!description && (
+          <div className="error-message" id="createrental-description-error">
+            La description est requise
+          </div>
+        )}
       </div>
       <div className="form-group">
         <label className="form-label" htmlFor="quantity">
@@ -88,7 +111,18 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
           onChange={(element) => setQuantity(Number(element.target.value))}
           className="form-input"
           min={1}
+          required
+          aria-required="true"
+          aria-invalid={quantity < 1 ? "true" : "false"}
+          aria-describedby={
+            quantity < 1 ? "createrental-quantity-error" : undefined
+          }
         />
+        {quantity < 1 && (
+          <div className="error-message" id="createrental-quantity-error">
+            La quantité doit être supérieure ou égale à 1
+          </div>
+        )}
       </div>
       <div className="form-group">
         <label className="form-label" htmlFor="images">

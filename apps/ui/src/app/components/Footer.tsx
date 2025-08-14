@@ -2,8 +2,14 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="footer layout-maxed bg-primary text-white tac py-24 mt-70">
-      <nav className="flex flex-wrap justify-center gap-16 my-24">
+    <footer
+      className="footer layout-maxed bg-primary text-white tac py-24 mt-70"
+      role="contentinfo"
+    >
+      <nav
+        className="flex flex-wrap justify-center gap-16 my-24"
+        aria-label="Liens de pied de page"
+      >
         <Link href="/" className="btn btn-underline-white">
           Accueil
         </Link>

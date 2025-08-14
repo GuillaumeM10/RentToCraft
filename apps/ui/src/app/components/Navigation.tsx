@@ -52,14 +52,18 @@ export function Navigation() {
   );
 
   return (
-    <nav className="layout-maxed">
+    <nav
+      className="layout-maxed"
+      role="navigation"
+      aria-label="Navigation principale"
+    >
       <div className="nav-container flex justify-between align-items-center">
-        <Link href="/" className="">
+        <Link href="/" className="" aria-label="Accueil">
           <SiteLogo className="site-logo" />
         </Link>
 
         <OffCanvas
-          buttonContent={<ShoppingBasket />}
+          buttonContent={<ShoppingBasket aria-label="Voir le panier" />}
           buttonClassName="ml-auto mr-20 btn btn-outline"
           autoCloseOnClick={true}
         >
@@ -70,8 +74,13 @@ export function Navigation() {
           buttonContent={burgerBars}
           buttonClassName="burger-open link"
           autoCloseOnClick={true}
+          aria-label="Ouvrir le menu"
         >
-          <nav className="offcanvas-nav">
+          <nav
+            className="offcanvas-nav"
+            role="navigation"
+            aria-label="Menu mobile"
+          >
             <Link href="/rental" className="">
               Objets
             </Link>
