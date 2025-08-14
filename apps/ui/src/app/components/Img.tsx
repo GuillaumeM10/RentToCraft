@@ -4,7 +4,7 @@ import React from "react";
 import AppService from "../services/app.service";
 
 type ImgProps = {
-  readonly image: FileDto | null;
+  readonly image: FileDto | string | null;
   readonly alt?: string;
   readonly className?: string;
   readonly width?: number;
@@ -12,9 +12,15 @@ type ImgProps = {
 };
 
 const Img = ({ image, alt, className, width, height }: ImgProps) => {
-  const source = image?.file
-    ? AppService.createImageUrl(image)
-    : "/images/default-pp.png";
+  let source;
+
+  if (typeof image === "string") {
+    source = image;
+  } else if (typeof image === "object") {
+    source = image?.file
+      ? AppService.createImageUrl(image)
+      : "/images/default-pp.png";
+  }
   return (
     <img
       src={source}
