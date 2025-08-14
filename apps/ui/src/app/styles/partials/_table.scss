@@ -4,32 +4,50 @@ table {
   background: $white;
   margin: 0 0 20px 0;
   caption-side: bottom;
-
-  tbody,
-  td,
-  tfoot,
-  th,
-  thead,
-  tr {
-    border: 0 solid;
-    border-color: inherit;
-  }
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   thead {
+    background: $primary;
+    color: $white;
     border-bottom: solid 2px $primary;
   }
 
-  td,
+  th,
+  td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 20px;
+    text-align: left;
+    vertical-align: middle;
+    transition: background 0.2s;
+  }
+
   th {
-    border: 1px solid #b8b9ba;
-    padding: 5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: lighten($primary, 10%);
+  }
+
+  tbody tr {
+    transition: background 0.2s;
+
+    &:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    &:hover {
+      background: #d9d8d8;
+    }
   }
 
   td {
-    padding: 10px 20px;
+    padding: 12px 20px;
+    font-size: 1rem;
   }
 
   img {
     width: 80px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   }
 }

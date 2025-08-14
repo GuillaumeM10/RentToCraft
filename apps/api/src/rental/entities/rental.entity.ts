@@ -32,6 +32,12 @@ export class RentalEntity extends Timestamp {
   description: string;
   @Column({ default: 1 })
   quantity: number;
+  @Column({ nullable: true })
+  price: number;
+  @Column({ nullable: true })
+  startAvailable: Date;
+  @Column({ nullable: true })
+  endAvailable: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.rentals)
   user: UserEntity;

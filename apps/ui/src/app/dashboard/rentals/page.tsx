@@ -28,6 +28,7 @@ const RentalsDashboard = () => {
               <tr>
                 <th>Date</th>
                 <th>Statut</th>
+                <th>Total</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -39,6 +40,7 @@ const RentalsDashboard = () => {
                       new Date(order.createdAt).toLocaleDateString()}
                   </td>
                   <td>{order.status}</td>
+                  <td>{order.total ?? 0} €</td>
                   <td>
                     <Link
                       href={`/dashboard/rentals/${order.id}`}

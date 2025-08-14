@@ -35,6 +35,8 @@ const AdminOrderPage = ({ params }: AdminOrderPageProps) => {
               <th>Quantité</th>
               <th>Propriétaire</th>
               <th>Contact</th>
+              <th>Prix</th>
+              <th>Disponibilité</th>
               <th>Ville</th>
             </tr>
           </thead>
@@ -49,6 +51,19 @@ const AdminOrderPage = ({ params }: AdminOrderPageProps) => {
                 <td>
                   {item.rental.user?.contactEmail ?? item.rental.user?.email}
                 </td>
+                <td>
+                  {item.quantity} x {item.rental.price ?? 0} € (
+                  {(item.rental.price ?? 0) * item.quantity} €)
+                </td>
+                <td>
+                  {item.rental.startAvailable
+                    ? new Date(item.rental.startAvailable).toLocaleDateString()
+                    : "Indéfini"}
+                  {" - "}
+                  {item.rental.endAvailable
+                    ? new Date(item.rental.endAvailable).toLocaleDateString()
+                    : "Indéfini"}
+                </td>
                 <td>{item.rental.user?.city?.name}</td>
               </tr>
             ))}
@@ -60,6 +75,7 @@ const AdminOrderPage = ({ params }: AdminOrderPageProps) => {
             <tr>
               <th>Date</th>
               <th>Statut</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +85,7 @@ const AdminOrderPage = ({ params }: AdminOrderPageProps) => {
                   new Date(order.createdAt).toLocaleDateString()}
               </td>
               <td>{order?.status}</td>
+              <td>{order?.total ?? 0} €</td>
             </tr>
           </tbody>
         </table>

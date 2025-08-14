@@ -223,7 +223,19 @@ const RentalPage = ({ params }: RentalPageProps) => {
                     </tr>
                     <tr>
                       <td>Prix</td>
-                      <td>12 €</td>
+                      <td>{rental.price ?? 0} €</td>
+                    </tr>
+                    <tr>
+                      <td>Disponibilité</td>
+                      <td>
+                        {rental.startAvailable
+                          ? new Date(rental.startAvailable).toLocaleDateString()
+                          : "Indéfini"}
+                        {" - "}
+                        {rental.endAvailable
+                          ? new Date(rental.endAvailable).toLocaleDateString()
+                          : "Indéfini"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Localisation</td>

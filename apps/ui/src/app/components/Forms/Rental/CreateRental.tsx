@@ -19,6 +19,9 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [cats, setCats] = useState<number[] | null>(null);
   const [existingCats, setExistingCats] = useState<RentalCatDto[]>([]);
+  const [price, setPrice] = useState<number | null>(null);
+  const [startAvailable, setStartAvailable] = useState<Date>(new Date());
+  const [endAvailable, setEndAvailable] = useState<Date>(new Date());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,10 +38,39 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
       description,
       quantity,
       cats: catsId ?? null,
+      price: price ?? 0,
+      startAvailable,
+      endAvailable,
     };
     const createdRental = await RentalService.create(rentalData, images);
     if (onSuccess) {
       onSuccess(createdRental);
+    }
+  };
+
+  const handleDateChange = (
+    element: React.ChangeEvent<HTMLInputElement>,
+    type: "end" | "start",
+  ) => {
+    const date = new Date(element.target.value);
+
+    if (type === "start") {
+      if (date.getTime() < Date.now()) {
+        setStartAvailable(new Date());
+      } else if (date.getTime() >= endAvailable.getTime()) {
+        setStartAvailable(date);
+        setEndAvailable(date);
+      } else {
+        setStartAvailable(date);
+      }
+    }
+
+    if (type === "end") {
+      if (date.getTime() <= startAvailable.getTime()) {
+        setEndAvailable(startAvailable);
+      } else {
+        setEndAvailable(date);
+      }
     }
   };
 
@@ -123,6 +155,70 @@ const CreateRental = ({ onSuccess }: CreateRentalProps) => {
             La quantité doit être supérieure ou égale à 1
           </div>
         )}
+      </div>
+      <div className="form-group">
+        <label className="form-label" htmlFor="price">
+          Prix
+        </label>
+        <input
+          id="price"
+          type="number"
+          value={price ?? 0}
+          onChange={(element) => setPrice(Number(element.target.value))}
+          className="form-input"
+          required
+          aria-required="true"
+          aria-invalid={price ? "false" : "true"}
+          aria-describedby={price ? undefined : "createrental-price-error"}
+        />
+      </div>
+      <div className="form-group">
+        <label className="form-label" htmlFor="startAvailable">
+          Date de début de disponibilité
+        </label>
+        <input
+          id="startAvailable"
+          type="date"
+          value={
+            startAvailable?.toISOString().split("T")[0] ??
+            new Date().toISOString().split("T")[0]
+          }
+          min={new Date().toISOString().split("T")[0]}
+          onChange={(element) => handleDateChange(element, "start")}
+          className="form-input"
+          required
+          aria-required="true"
+          aria-invalid={startAvailable ? "false" : "true"}
+          aria-describedby={
+            startAvailable ? undefined : "createrental-startAvailable-error"
+          }
+        />
+      </div>
+      <div className="form-group">
+        <label className="form-label" htmlFor="endAvailable">
+          Date de fin de disponibilité
+        </label>
+        <input
+          id="endAvailable"
+          type="date"
+          value={
+            endAvailable?.toISOString().split("T")[0] ??
+            new Date().toISOString().split("T")[0]
+          }
+          min={startAvailable.toISOString().split("T")[0]}
+          onChange={(element) => handleDateChange(element, "end")}
+          className="form-input"
+          required
+          aria-required="true"
+          aria-invalid={endAvailable ? "false" : "true"}
+          aria-describedby={
+            endAvailable ? undefined : "createrental-endAvailable-error"
+          }
+        />
+        <p className="form-input-hint">
+          La date de fin de disponibilité doit être après la date de début de
+          disponibilité.
+        </p>
       </div>
       <div className="form-group">
         <label className="form-label" htmlFor="images">
