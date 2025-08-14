@@ -55,7 +55,7 @@ export class CartItemService {
       .getOne();
 
     if (!cart) {
-      throw new NotFoundException('Cart not found');
+      throw new NotFoundException('Panier introuvable');
     }
 
     return this.cartItemRepository.findOne({ where: { id, cart } });

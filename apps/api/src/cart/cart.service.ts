@@ -22,7 +22,7 @@ export class CartService {
     });
 
     if (cart) {
-      throw new BadRequestException('Cart already exists');
+      throw new BadRequestException('Le panier existe déjà');
     }
 
     return this.cartRepository.save({
@@ -46,7 +46,7 @@ export class CartService {
       .getOne();
 
     if (!cart) {
-      throw new NotFoundException('Cart not found');
+      throw new NotFoundException('Panier introuvable');
     }
     return cart;
   }

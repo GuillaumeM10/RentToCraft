@@ -20,7 +20,7 @@ describe('AuthGuard', () => {
     guard = new AuthGuard(jwtService, reflector, validTokenService);
     context = {
       switchToHttp: jest.fn().mockReturnValue({
-        getRequest: jest.fn().mockReturnValue({ headers: {} })
+        getRequest: jest.fn().mockReturnValue({ headers: {} }),
       }),
       getHandler: jest.fn(),
       getClass: jest.fn(),
@@ -34,29 +34,45 @@ describe('AuthGuard', () => {
 
   it('should throw if no token', async () => {
     (reflector.getAllAndOverride as jest.Mock).mockReturnValue(false);
-    await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should throw if token is not valid', async () => {
     (reflector.getAllAndOverride as jest.Mock).mockReturnValue(false);
-    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({ headers: { authorization: 'Bearer token' } });
+    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({
+      headers: { authorization: 'Bearer token' },
+    });
     (validTokenService.findOne as jest.Mock).mockResolvedValue(false);
-    await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should allow admin user', async () => {
     (reflector.getAllAndOverride as jest.Mock).mockReturnValue(false);
-    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({ headers: { authorization: 'Bearer token' } });
+    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({
+      headers: { authorization: 'Bearer token' },
+    });
     (validTokenService.findOne as jest.Mock).mockResolvedValue(true);
-    (jwtService.verifyAsync as jest.Mock).mockResolvedValue({ role: UserRole.administrator });
+    (jwtService.verifyAsync as jest.Mock).mockResolvedValue({
+      role: UserRole.administrator,
+    });
     expect(await guard.canActivate(context)).toBe(true);
   });
 
   it('should throw if jwtService throws', async () => {
     (reflector.getAllAndOverride as jest.Mock).mockReturnValue(false);
-    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({ headers: { authorization: 'Bearer token' } });
+    (context.switchToHttp().getRequest as jest.Mock).mockReturnValue({
+      headers: { authorization: 'Bearer token' },
+    });
     (validTokenService.findOne as jest.Mock).mockResolvedValue(true);
-    (jwtService.verifyAsync as jest.Mock).mockRejectedValue(new Error('Invalid token'));
-    await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+    (jwtService.verifyAsync as jest.Mock).mockRejectedValue(
+      new Error('Token invalide'),
+    );
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 });

@@ -21,7 +21,7 @@ const Dashboard = () => {
     setUserProfile(fetchedUserProfile);
 
     if (!fetchedUserProfile) {
-      console.error("User profile not found");
+      console.error("Profil utilisateur non trouvé");
     }
   };
 

@@ -266,11 +266,11 @@ describe('RentalService', () => {
     it('should handle file upload errors', async () => {
       jest
         .spyOn(fileService, 'create')
-        .mockRejectedValue(new Error('Upload failed'));
+        .mockRejectedValue(new Error("Échec de l'upload"));
 
       await expect(
         service.create(createRentalDto as RentalDto, mockFiles, mockUser),
-      ).rejects.toThrow('Upload failed');
+      ).rejects.toThrow("Échec de l'upload");
     });
   });
 
@@ -753,10 +753,10 @@ describe('RentalService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockRental);
       jest
         .spyOn(fileService, 'create')
-        .mockRejectedValue(new Error('Upload failed'));
+        .mockRejectedValue(new Error("Échec de l'upload"));
 
       await expect(service.uploadFile(mockFiles, mockUser, 1)).rejects.toThrow(
-        'Upload failed',
+        "Échec de l'upload",
       );
     });
   });

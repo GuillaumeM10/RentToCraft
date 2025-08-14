@@ -82,7 +82,7 @@ export class RentalCommentService {
     const comment = await this.findOne(id);
 
     if (comment.author.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Non autorisé', 401);
     }
 
     const commentUpdate = {
@@ -98,7 +98,7 @@ export class RentalCommentService {
     const comment = await this.findOne(id);
 
     if (comment.author.id !== user.id && user.role !== 'administrator') {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Non autorisé', 401);
     }
 
     await this.commentRepository.softDelete(id);

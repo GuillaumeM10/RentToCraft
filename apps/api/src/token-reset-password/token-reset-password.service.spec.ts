@@ -120,19 +120,23 @@ describe('TokenResetPasswordService', () => {
       userService.findOneByEmail.mockResolvedValue(mockUser);
       jest.spyOn(service, 'findOneByEmail').mockResolvedValue(null);
       tokenRepository.create.mockReturnValue(mockToken);
-      tokenRepository.save.mockRejectedValue(new Error('Database error'));
+      tokenRepository.save.mockRejectedValue(
+        new Error('Erreur de base de données'),
+      );
 
-      await expect(service.create(createDto)).rejects.toThrow('Database error');
+      await expect(service.create(createDto)).rejects.toThrow(
+        'Erreur de base de données',
+      );
     });
 
     it('should handle findOneByEmail errors during create', async () => {
       userService.findOneByEmail.mockResolvedValue(mockUser);
       jest
         .spyOn(service, 'findOneByEmail')
-        .mockRejectedValue(new Error('Find token error'));
+        .mockRejectedValue(new Error('Erreur lors de la recherche du token'));
 
       await expect(service.create(createDto)).rejects.toThrow(
-        'Find token error',
+        'Erreur lors de la recherche du token',
       );
     });
   });
@@ -259,7 +263,7 @@ describe('TokenResetPasswordService', () => {
     });
 
     it('should throw HttpException when deletion fails', async () => {
-      const error = new Error('Database error');
+      const error = new Error('Erreur de base de données');
       tokenRepository.delete.mockRejectedValue(error);
       jest.spyOn(console, 'log').mockImplementation(() => {});
 
@@ -299,11 +303,11 @@ describe('TokenResetPasswordService', () => {
     });
 
     it('should handle repository delete errors', async () => {
-      const error = new Error('Database error');
+      const error = new Error('Erreur de base de données');
       tokenRepository.delete.mockRejectedValue(error);
 
       await expect(service.clearUserTokens(1)).rejects.toThrow(
-        'Database error',
+        'Erreur de base de données',
       );
     });
   });

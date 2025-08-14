@@ -47,12 +47,12 @@ const RentalPage = ({ params }: RentalPageProps) => {
         const response = await RentalService.getOne(id);
 
         if (!response) {
-          throw new Error("Rental not found");
+          throw new Error("Location non trouvée");
         }
 
         setRental(response);
       } catch (error) {
-        console.error("Error fetching rental:", error);
+        console.error("Erreur lors de la récupération de la location:", error);
       }
     };
 
