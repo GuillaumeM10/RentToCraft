@@ -166,7 +166,6 @@ const EditRental = ({ onSuccess, rental }: EditRentalProps) => {
         <input
           id="startAvailable"
           type="date"
-          defaultValue={startAvailable.toISOString().split("T")[0]}
           value={startAvailable.toISOString().split("T")[0]}
           min={new Date().toISOString().split("T")[0]}
           onChange={(element) => handleDateChange(element, "start")}
@@ -181,7 +180,6 @@ const EditRental = ({ onSuccess, rental }: EditRentalProps) => {
         <input
           id="endAvailable"
           type="date"
-          defaultValue={endAvailable.toISOString().split("T")[0]}
           value={endAvailable.toISOString().split("T")[0]}
           min={startAvailable.toISOString().split("T")[0]}
           onChange={(element) => handleDateChange(element, "end")}
