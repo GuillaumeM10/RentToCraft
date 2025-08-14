@@ -330,7 +330,7 @@ Enum order_status {
 }
 ```
 
-## 🚀 Installation et développement
+## Installation et développement
 
 ### Prérequis
 
@@ -340,6 +340,8 @@ Enum order_status {
 - PostgreSQL
 
 ### Installation
+
+#### Option 1 : Avec Make (recommandé)
 
 ```bash
 # Cloner le repository
@@ -359,11 +361,36 @@ make api
 make ui
 ```
 
+#### Option 2 : Avec pnpm directement
+
+```bash
+# Cloner le repository
+git clone https://github.com/GuillaumeM10/RentToCraft.git
+cd RentToCraft
+
+# Installer les dépendances
+pnpm install
+
+# Démarrer les services avec Docker
+docker compose up -d
+
+# Lancer l'API en mode développement
+pnpm dev:api
+
+# Lancer l'UI en mode développement
+pnpm dev:ui
+
+# Ou pour construire et démarrer en production
+pnpm build:api
+pnpm build:ui
+pnpm start:ui
+```
+
 ### Variables d'environnement
 
-Créez les fichiers `.env` nécessaires dans `apps/api` et `apps/ui` en vous basant sur les exemples fournis.
+Créez le fichier `.env` en vous basant sur les exemples fournis dans le fichier `.env.example`.
 
-## 🧪 Tests et qualité
+## Tests et qualité
 
 ### Exécution des tests
 
@@ -387,7 +414,7 @@ pnpm lint
 - **Couverture : ~65%**
 - Tests couvrant l'authentification, les CRUD, la sécurité et les middlewares
 
-## 📊 Monitoring et outils
+## Monitoring et outils
 
 ### Sentry
 
@@ -416,80 +443,124 @@ CI/CD automatisé avec :
 
 # Changelog
 
-## Week 3
+## Version 1.0.0 - Janvier 2025
 
-### Feature Highlights
+### Nouvelles fonctionnalités majeures
 
-- Add Swiper.js integration for rental cards display
-- Add rental categories management system
-- Edit rental images, rental archive page, rental cat archive page
-- Global style improvements
-- API init rentals cats data
-- UI add rental service
-- Global style updates
-- UI rentals cats admin panel, create rental, single rental page
-- Update rental DTO
-- API rental files
-- UI rework auth, profile, home page fixes
-- Global style and lint configuration
-- Next public folder setup
-- Remove Next API
-- API user routes for files
-- Front user dashboard, edit profile, front page
-- Images integration
-- Image handling
-- Front home page and layout
-- Backend rental in file and user
-- Backend rental system
-- Backend rental comments
-- Backend rental categories
-- Backend file, user, auth systems
-- Main action on push
-- Update/create types
-- API global configuration
+#### Interface utilisateur (Next.js 15.1.4)
 
-### Fixes and Improvements
+- **Interface responsive complète** avec Tailwind CSS et Sass
+- **Système d'authentification** avec JWT et gestion des rôles
+- **Tableau de bord utilisateur** avec gestion de profil et upload d'images
+- **Catalogue d'outils** avec filtres par catégorie et ville
+- **Système de panier** et gestion des commandes
+- **Interface d'administration** pour les administrateurs
+- **Intégration de cartes** avec Leaflet pour la géolocalisation
+- **PWA (Progressive Web App)** avec next-pwa
+- **Carrousel d'images** avec Swiper.js
+- **Notifications toast** avec react-toastify
 
-- Resolve Next.js build prerendering issues with AuthProvider
-- Optimize rental fetching to prevent duplicates
-- UI build issues
-- Auth hydration issues
-- UI lint CI
-- Action lint issues
-- CI configuration
+#### API Backend (NestJS 10.x)
 
-## Week 2
+- **Architecture modulaire** avec modules séparés pour chaque entité
+- **Système d'authentification complet** avec JWT, Passport.js et bcryptjs
+- **Gestion des fichiers** avec upload, compression et stockage
+- **API REST complète** pour toutes les entités (users, rentals, orders, etc.)
+- **Documentation Swagger** automatique
+- **Système d'emails** avec templates Handlebars
+- **Validation des données** avec DTOs et class-transformer
+- **Gestion des erreurs globale** avec intercepteurs et filtres
 
-### Fixes and Improvements
+#### Base de données
 
-- Build UI DTOs
-- UI build issues
-- UI package.json
-- npmrc configuration
-- Remove vercel.json
-- Multiple Vercel build fixes
-- Replace bcrypt with bcryptjs
-- Makefile corrections
-- Production API variables
-- UI linting issues
+- **Schéma PostgreSQL complet** avec 15+ tables
+- **Relations complexes** entre utilisateurs, locations, commandes
+- **Système de commentaires** et notations
+- **Gestion des catégories** d'outils
+- **Soft delete** pour la suppression sécurisée
+- **Timestamps automatiques** sur toutes les entités
 
-### Feature Highlights
+### Améliorations techniques
 
-0- Reset project state
+#### Architecture et DevOps
 
-- Default port configuration
-- Setup base Next.js context, routes and authentication
-- DTOs as global packages
-- API development - auth, user, global config
-- Packages and imports structure
+- **Architecture monorepo** avec pnpm workspaces
+- **Configuration Docker** pour développement et production
+- **CI/CD avec GitHub Actions** pour tests et linting automatiques
+- **Configuration SonarCloud** pour l'analyse de qualité du code
+- **Monitoring Sentry** pour le suivi d'erreurs en production
+- **Configuration ESLint** personnalisée avec règles strictes
+- **TypeScript strict** avec configuration @tsconfig/strictest
 
-## Week 1
+#### Tests et qualité
 
-### Feature Highlights
+- **135 tests unitaires** avec couverture ~65%
+- **Tests de sécurité** pour l'authentification et les guards
+- **Tests fonctionnels** pour tous les modules
+- **Tests d'intégration** pour les middlewares et intercepteurs
+- **Configuration Jest** avec reporting JUnit
+- **Helpers de test** centralisés pour la cohérence
 
-- Initialize Next.js application
-- Initialize NestJS application
-- Initial repository setup
+#### Sécurité
+
+- **Authentification JWT** avec validation des tokens
+- **Gestion des rôles** (user/admin) avec guards NestJS
+- **Hachage des mots de passe** avec bcryptjs
+- **Validation des entrées** avec DTOs
+- **Protection CORS** configurée
+- **Gestion des tokens de reset** de mot de passe
+- **Politique de sécurité** documentée
+
+### Corrections importantes
+
+#### Stabilité
+
+- **Résolution des problèmes de build** Next.js avec AuthProvider
+- **Optimisation des requêtes** pour éviter les doublons
+- **Correction des problèmes d'hydratation** React
+- **Amélioration de la gestion des erreurs** globales
+- **Optimisation des performances** de l'API
+
+#### Compatibilité
+
+- **Migration de bcrypt vers bcryptjs** pour la compatibilité
+- **Configuration des ports** par défaut
+- **Support des variables d'environnement** pour la production
+- **Configuration des workspaces** pnpm
+
+### Dépendances majeures
+
+#### Frontend
+
+- Next.js 15.1.4 avec React 19.0.0-rc.1
+- Tailwind CSS 3.4.1 pour le styling
+- Sentry 10.3.0 pour le monitoring
+- Leaflet 1.9.4 pour les cartes
+- Swiper 11.2.10 pour les carrousels
+
+#### Backend
+
+- NestJS 10.4.6 avec Express.js
+- TypeORM 0.3.20 avec PostgreSQL
+- Passport.js avec JWT
+- Multer pour l'upload de fichiers
+- Sharp pour le traitement d'images
+
+### Déploiement
+
+- **Application en ligne** : https://renttocraft-ui.onrender.com/
+- **Configuration Docker** pour production
+- **Variables d'environnement** documentées
+- **Health checks** pour tous les services
+- **Monitoring** avec Sentry et SonarCloud
+
+### Documentation
+
+- **README complet** avec guide d'utilisation
+- **Schéma de base de données** DBML
+- **Documentation Docker** pour production
+- **Politique de sécurité** détaillée
+- **Cahier de recettes** pour les tests
 
 # Cahier de Recettes — C2.3.1
 
