@@ -33,7 +33,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   if (/^\/rental\/(categorie|city)\//.test(pathname)) {
     isTransparentOnTop = false;
-  } else if (pathname.match("/rental/")) {
+  } else if (
+    pathname.match("/rental/") ||
+    pathname.match("/about") ||
+    pathname.match("/contact")
+  ) {
     isTransparentOnTop = true;
   }
 
