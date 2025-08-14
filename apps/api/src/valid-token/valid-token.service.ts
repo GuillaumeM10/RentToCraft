@@ -48,7 +48,7 @@ export class ValidTokenService {
 
       return validTokens;
     } catch {
-      throw new Error('Erreur lors de la récupération des tokens valides');
+      throw new Error('Erreur lors de la récupération du token valide');
     }
   }
 

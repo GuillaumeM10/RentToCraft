@@ -607,7 +607,8 @@ describe('UserService', () => {
   });
 
   describe('softDelete', () => {
-    it('should soft delete user successfully', async () => {
+    it('should soft delete user successfully when user is administrator', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
       const userToDelete = { ...mockUserDto, id: 2 };
       jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
       userRepository.softDelete.mockResolvedValue({
@@ -616,20 +617,21 @@ describe('UserService', () => {
         generatedMaps: [],
       });
 
-      const result = await service.softDelete(2, mockUserDto);
+      const result = await service.softDelete(2, adminUser);
 
       expect(userRepository.softDelete).toHaveBeenCalledWith(2);
       expect(result).toBeDefined();
     });
 
-    it('should throw NotFoundException when user tries to delete themselves', async () => {
-      jest.spyOn(service, 'findOne').mockResolvedValue(mockUserDto);
+    it('should throw UnauthorizedException when user tries to delete another user', async () => {
+      const userToDelete = { ...mockUserDto, id: 2 };
+      jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
 
-      await expect(service.softDelete(1, mockUserDto)).rejects.toThrow(
-        NotFoundException,
+      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow(
+        UnauthorizedException,
       );
-      await expect(service.softDelete(1, mockUserDto)).rejects.toThrow(
-        'Impossible de supprimer votre compte.',
+      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow(
+        'Vous ne pouvez pas supprimer un autre utilisateur.',
       );
     });
 
@@ -637,18 +639,22 @@ describe('UserService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
       await expect(service.softDelete(999, mockUserDto)).rejects.toThrow(
-        "Cannot read properties of null (reading 'id')",
+        NotFoundException,
+      );
+      await expect(service.softDelete(999, mockUserDto)).rejects.toThrow(
+        "Impossible de trouver l'utilisateur #999.",
       );
     });
 
     it('should handle repository softDelete errors', async () => {
+      const adminUser = { ...mockUserDto, role: UserRole.administrator };
       const userToDelete = { ...mockUserDto, id: 2 };
       jest.spyOn(service, 'findOne').mockResolvedValue(userToDelete);
       userRepository.softDelete.mockRejectedValue(
         new Error('Erreur de base de données'),
       );
 
-      await expect(service.softDelete(2, mockUserDto)).rejects.toThrow(
+      await expect(service.softDelete(2, adminUser)).rejects.toThrow(
         'Erreur de base de données',
       );
     });

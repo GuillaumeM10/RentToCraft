@@ -55,6 +55,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         access_token: { type: 'string' },
         user: { $ref: '#/components/schemas/UserDto' },
       },

@@ -14,7 +14,6 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         `Erreur lors de la lecture de la clé localStorage "${key}":`,
         error,
       );
-      return null;
     }
   }, [key, initialValue]);
 

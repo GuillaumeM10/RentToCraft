@@ -1,5 +1,6 @@
 "use client";
 import { type UserDto } from "@rent-to-craft/dtos";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import UpdateUser from "@/app/components/Forms/User/UpdateUser";
@@ -9,7 +10,6 @@ import { useAuth } from "@/app/contexts/auth.context";
 import UserService from "@/app/services/user.service";
 
 import Profile from "../components/Profile";
-import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const { user } = useAuth();
