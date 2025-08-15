@@ -51,3 +51,11 @@ table {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   }
 }
+
+.off-canvas .cart-table-container {
+  max-width: 800px;
+
+  table {
+    width: auto;
+  }
+}
