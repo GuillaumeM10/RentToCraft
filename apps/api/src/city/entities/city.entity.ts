@@ -3,7 +3,6 @@ import { UserEntity } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,6 +32,5 @@ export class CityEntity extends Timestamp {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  @JoinColumn()
   users: UserEntity[];
 }

@@ -8,6 +8,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -89,7 +90,7 @@ export class UserEntity extends Timestamp {
   })
   rentalComments: RentalCommentEntity[];
 
-  @OneToOne(() => CityEntity, (city) => city.users, {
+  @ManyToOne(() => CityEntity, (city) => city.users, {
     nullable: true,
   })
   @JoinColumn()
