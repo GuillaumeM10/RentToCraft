@@ -48,7 +48,7 @@ const Cart = memo(({ className }: CartProps) => {
 
       {cart?.cartItems?.length && cart.cartItems.length > 0 ? (
         <>
-          <div style={{ maxWidth: "800px" }}>
+          <div className="cart-table-container">
             <table style={{ overflowX: "auto" }} className="mx-auto">
               <thead>
                 <tr>
