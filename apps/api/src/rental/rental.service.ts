@@ -103,6 +103,8 @@ export class RentalService {
       .orderBy('rental.createdAt', 'DESC')
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
+      .leftJoinAndSelect('user.profilePicture', 'profilePicture')
+      .leftJoinAndSelect('user.city', 'city')
       .leftJoinAndSelect('rental.cats', 'cats')
       .getMany();
 
@@ -140,6 +142,7 @@ export class RentalService {
       .createQueryBuilder('rental')
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
+      .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('user.city', 'city')
       .leftJoinAndSelect('rental.cats', 'cats')
       .leftJoinAndSelect('rental.comments', 'comments')
@@ -167,6 +170,7 @@ export class RentalService {
       .where('rental.slug = :slug', { slug })
       .leftJoinAndSelect('rental.images', 'images')
       .leftJoinAndSelect('rental.user', 'user')
+      .leftJoinAndSelect('user.profilePicture', 'profilePicture')
       .leftJoinAndSelect('user.city', 'city')
       .leftJoinAndSelect('rental.cats', 'cats')
       .leftJoinAndSelect('rental.comments', 'comments')
