@@ -117,7 +117,11 @@ const Signup = () => {
       </div>
 
       {error && (
-        <div className="error-message" id="signup-error">
+        <div
+          className="error-message"
+          id="signup-error"
+          style={error === "Inscription réussie" ? { color: "green" } : {}}
+        >
           {error}
         </div>
       )}

@@ -1,7 +1,9 @@
 import { type CartItemDto, type FileDto } from "@rent-to-craft/dtos";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { memo } from "react";
+import { toast } from "react-toastify";
 
 import { useCart } from "../contexts/cart.context";
 import OrderService from "../services/order.service";
@@ -15,6 +17,7 @@ interface CartProps {
 const Cart = memo(({ className }: CartProps) => {
   const { cart, isLoading, removeItem, updateItem, clearCart, setCart } =
     useCart();
+  const router = useRouter();
 
   const handleRemoveItem = async (item: CartItemDto) => {
     await removeItem(item);
@@ -32,6 +35,10 @@ const Cart = memo(({ className }: CartProps) => {
           ...item,
         })),
       });
+      toast.success("Commande créée avec succès", {
+        position: "top-left",
+      });
+      router.push("/dashboard/rentals");
       setCart(null);
     } catch (error) {
       console.log(error);
@@ -88,7 +95,7 @@ const Cart = memo(({ className }: CartProps) => {
                     <td className="">
                       {item.rental.user?.firstName}{" "}
                       <span className="uppercase whitespace-nowrap">
-                        {item.rental.user?.lastName}
+                        {item.rental.user?.lastName ?? "Anonyme"}
                       </span>
                     </td>
                     <td>
@@ -104,7 +111,7 @@ const Cart = memo(({ className }: CartProps) => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between flex-col md:flex-row items-center gap-7 mt-14">
             <button className="btn btn-danger" onClick={handleClearCart}>
               Vider le panier
             </button>

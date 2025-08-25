@@ -15,6 +15,7 @@ import RentalComment from "@/app/components/Cards/RentalComment";
 import AddToCart from "@/app/components/Forms/Cart/AddToCart";
 import CreateRentalCommnent from "@/app/components/Forms/Rental/CreateRentalCommnent";
 import Img from "@/app/components/Img";
+import { LoadingSpinner } from "@/app/components/LoadingSpinner";
 import MapLeaflet from "@/app/components/MapLeaflet";
 import Landing from "@/app/components/Sections/Landing";
 import SwiperRentals from "@/app/components/Sections/SwiperRentals";
@@ -31,6 +32,7 @@ const RentalPage = ({ params }: RentalPageProps) => {
   const { id } = use(params);
   const { isAuthenticated } = useAuth();
   const [comments, setComments] = useState<RentalCommentDto[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [rental, setRental] = useState<RentalDto | null>(null);
 
@@ -43,6 +45,7 @@ const RentalPage = ({ params }: RentalPageProps) => {
 
   useEffect(() => {
     const fetchRental = async () => {
+      setLoading(true);
       try {
         const response = await RentalService.getOne(id);
 
@@ -53,6 +56,8 @@ const RentalPage = ({ params }: RentalPageProps) => {
         setRental(response);
       } catch (error) {
         console.error("Erreur lors de la récupération de la location:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -107,13 +112,21 @@ const RentalPage = ({ params }: RentalPageProps) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="layout-maxed mt-30 single-rental-template h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="layout-maxed mt-30 single-rental-template">
         <Landing
           image={
-            rental?.images[0]
-              ? AppService.createImageUrl(rental?.images[0] as FileDto)
+            rental && Array.isArray(rental.images) && rental.images.length > 0
+              ? AppService.createImageUrl(rental.images[0] as FileDto)
               : "https://images-ext-1.discordapp.net/external/rz9ILA7keWFyHgDlp2bRybCdRx2mWg1R4sYXG7Gntmw/https/picsum.photos/1280/720?format=webp&width=1600&height=900"
           }
           title={rental?.name}
@@ -175,7 +188,7 @@ const RentalPage = ({ params }: RentalPageProps) => {
               ))}
             </div>
 
-            {rental.images.length > 1 && (
+            {Array.isArray(rental.images) && rental.images.length > 1 && (
               <div className="images my-40 py-40 border-b-2 border-t-2 border-gray-300">
                 <Swiper
                   spaceBetween={10}
@@ -241,7 +254,7 @@ const RentalPage = ({ params }: RentalPageProps) => {
                       <td>Localisation</td>
                       <td>
                         <Link href={`/rental/city/${rental.user.city?.id}`}>
-                          {rental.user.city?.name}
+                          {rental.user.city?.name ?? "Non renseignée"}
                         </Link>
                       </td>
                     </tr>
@@ -297,7 +310,7 @@ const RentalPage = ({ params }: RentalPageProps) => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500">
+          <p className="text-center text-gray-500 mt-9">
             Aucun commentaire pour le moment.
           </p>
         )}

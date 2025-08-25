@@ -18,11 +18,11 @@ const Numbers = ({ title, data }: NumbersProps) => {
       {title && (
         <h2 className="text-center mb-8 text-2xl font-bold">{title}</h2>
       )}
-      <div className="md:flex justify-between gap-8">
+      <div className="lg:flex justify-between gap-8">
         {data?.map((item) => (
           <div
             key={`${item.title}-${item.value}`}
-            className="block-number tac text-center mb-6 md:mb-0"
+            className="block-number tac text-center mb-6 lg:mb-0"
           >
             <AnimatedNumber
               value={item.value}

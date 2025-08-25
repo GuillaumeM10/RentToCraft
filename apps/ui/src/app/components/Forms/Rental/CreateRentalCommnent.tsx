@@ -16,10 +16,13 @@ const CreateRentalCommnent = ({
   rental,
   onSuccess,
 }: CreateRentalCommentProps) => {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<string | null>(null);
 
   const handleSubmit = async (element: React.FormEvent) => {
     element.preventDefault();
+    if (!content) {
+      return;
+    }
     const commentData: Partial<RentalCommentDto> = {
       rental: { id: rental.id },
       content,
@@ -42,7 +45,7 @@ const CreateRentalCommnent = ({
         </label>
         <textarea
           id="content"
-          value={content}
+          value={content ?? ""}
           onChange={(element) => setContent(element.target.value)}
           className="form-input"
           required
@@ -53,14 +56,21 @@ const CreateRentalCommnent = ({
           rows={3}
           maxLength={255}
         />
-        {!content && (
+        {!content && typeof content === "string" && (
           <div className="error-message" id="comment-content-error">
             Le commentaire est requis
           </div>
         )}
       </div>
-      <p className="text-sm text-gray-500">{content.length} / 255 caractères</p>
-      <button type="submit" className="btn btn-primary">
+      <p className="text-sm text-gray-500">
+        {content?.length ?? 0} / 255 caractères
+      </p>
+      <button
+        type="submit"
+        className="btn btn-primary"
+        aria-label="Envoyer"
+        disabled={!content}
+      >
         Envoyer
       </button>
     </form>

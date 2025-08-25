@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Fragment } from "react";
 
 interface BreadcrumbItem {
   href: string;
@@ -65,26 +65,29 @@ const Breadcrumb = () => {
 
   return (
     <nav
-      className="flex items-center gap-2 text-sm text-gray-600 my-40"
+      className="flex items-center flex-wrap gap-2 text-sm text-gray-600 my-40"
       aria-label="Breadcrumb"
       role="navigation"
     >
       {breadcrumbs.map((breadcrumb, index) => (
-        <React.Fragment key={breadcrumb.href}>
+        <Fragment key={breadcrumb.href}>
           {index > 0 && <span className="text-gray-400 mx-2">/</span>}
           {breadcrumb.isActive ? (
-            <span className="text-gray-900 font-medium" aria-current="page">
+            <span
+              className="text-gray-900 font-medium whitespace-nowrap"
+              aria-current="page"
+            >
               {breadcrumb.label}
             </span>
           ) : (
             <Link
               href={breadcrumb.href}
-              className="text-gray-600 hover:text-gray-900 hover:underline transition-colors"
+              className="text-gray-600 hover:text-gray-900 hover:underline transition-colors whitespace-nowrap"
             >
               {breadcrumb.label}
             </Link>
           )}
-        </React.Fragment>
+        </Fragment>
       ))}
     </nav>
   );

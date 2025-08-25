@@ -66,7 +66,7 @@ api.interceptors.response.use(
         error.response.data?.message ??
         error.response.data?.error ??
         "Une erreur est survenue";
-      let messageVariable = "";
+      let messageVariable: string | null = null;
       switch (status) {
         case 400: {
           messageVariable = `Erreur de validation: ${message}`;
@@ -82,7 +82,7 @@ api.interceptors.response.use(
           break;
         }
         case 404: {
-          // messageVariable = "Ressource non trouvée";
+          messageVariable = null;
           break;
         }
         case 422: {
@@ -113,13 +113,15 @@ api.interceptors.response.use(
           messageVariable = message;
         }
       }
-      toast.error(messageVariable, {
-        position: "top-left",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-      });
+      if (messageVariable) {
+        toast.error(messageVariable, {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+      }
     } else if (error.request) {
       toast.error("Erreur de connexion. Vérifiez votre connexion internet.", {
         position: "top-left",

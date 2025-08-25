@@ -26,6 +26,7 @@ const eslintConfig = [
       "sonarjs/sonar-prefer-read-only-props": "off",
       "sonarjs/no-nested-functions": "off",
       "sonarjs/sonar-prefer-regexp-exec": "off",
+      "sonarjs/no-redundant-assignments": "off",
     },
   },
 ];
