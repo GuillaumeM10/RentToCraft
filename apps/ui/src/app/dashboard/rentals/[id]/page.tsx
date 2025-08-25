@@ -46,7 +46,14 @@ const RentalDashboard = ({ params }: RentalDashboardProps) => {
                 <td>{item.rental.name}</td>
                 <td>{item.quantity}</td>
                 <td>
-                  {item.rental.user?.firstName} {item.rental.user?.lastName}
+                  {(item.rental.user?.firstName ??
+                  item.rental.user?.lastName) ? (
+                    <>
+                      {item.rental.user?.firstName} {item.rental.user?.lastName}
+                    </>
+                  ) : (
+                    "Anonyme"
+                  )}
                 </td>
                 <td>
                   {item.rental.user?.contactEmail ?? item.rental.user?.email}
