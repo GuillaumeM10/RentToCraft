@@ -51,7 +51,7 @@ const AdminOrdersPage = () => {
                       new Date(order.createdAt).toLocaleDateString()}
                   </td>
                   <td>{order.status}</td>
-                  <td>{order.user.id ?? "Utilisateur supprimé"}</td>
+                  <td>{order.user?.id ?? "Utilisateur supprimé"}</td>
                   <td>{order.total ?? 0} €</td>
                   <td>
                     <Link
